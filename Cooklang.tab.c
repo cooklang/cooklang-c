@@ -1291,7 +1291,7 @@ yyreduce:
 #line 62 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 100);
-      sprintf((yyval.string), "%s%c", (yyvsp[-1].string), (yyvsp[0].character)); 
+      sprintf((yyval.string), "%s%c", (yyvsp[-1].string), (yyvsp[0].character));
     }
 #line 1297 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
@@ -1330,7 +1330,7 @@ yyreduce:
     { 
       printf("text_item number\n");
       (yyval.string) = malloc(10);
-      sprintf((yyval.string), "%.3f", (yyvsp[0].number)); 
+      sprintf((yyval.string), "%.3f", (yyvsp[0].number));
     }
 #line 1336 "Cooklang.tab.c" /* yacc.c:1652  */
     break;

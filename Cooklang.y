@@ -100,7 +100,7 @@ text_item:
   | NUMBER  { 
       printf("text_item number\n");
       $$ = malloc(10);
-      sprintf($$, "%.3f", $1); 
+      sprintf($$, "%.3f", $1);
     }
 
   | PUNC_CHAR { 
