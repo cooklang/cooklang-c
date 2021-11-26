@@ -26,7 +26,7 @@ test.o:
 parser:
 	flex Cooklang.l
 	bison -d Cooklang.y -v
-	gcc Cooklang.tab.c -lfl
+	gcc -g Cooklang.tab.c -lfl
 
 
 # clean

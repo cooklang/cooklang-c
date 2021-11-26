@@ -16,6 +16,62 @@ extern void yyrestart( FILE * input_file );
 
 char string[20] = "header string";
 
+
+char * addTwoStrings(char * first, char * second){
+  char * result = NULL;
+  int length = 0;
+
+  if( first == NULL || second == NULL){
+    return NULL;
+  }
+
+  length += strlen(first);
+  length += strlen(second);
+  length += 5;
+
+  result = malloc(sizeof(char) * length);
+  
+  if( result == NULL ){
+    printf("Error, malloc failed");
+    return NULL;
+  }
+
+  sprintf(result, "%s %s", first, second);
+
+
+  return result;
+}
+
+
+char * addThreeStrings(char * first, char * second, char * third){
+  char * result = NULL;
+  int length = 0;
+
+  if(first == NULL || second == NULL || third == NULL){
+    return NULL;
+  }
+
+  length += strlen(first);
+  length += strlen(second);
+  length += strlen(third);
+  length += 5;
+
+  result = malloc(sizeof(char) * length);
+  
+  if( result == NULL ){
+    printf("Error, malloc failed");
+    return NULL;
+  }
+
+  sprintf(result, "%s %s %s", first, second, third);
+
+ 
+
+  return result;
+}
+
+
+
 %}
 
 %union{
@@ -53,7 +109,7 @@ char string[20] = "header string";
 
 input:
   %empty
-  | input line  { printf("%s\n", $2); }
+  | input line  { }
   ;
 
 
@@ -67,28 +123,27 @@ line:
 
 
 step:
-    direction           
-  | step direction  { 
+    direction {
+        printf("***Direction: %s\n", $1);
+      }
+  | step direction {
+      printf("***Direction: %s\n", $2);
       $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
+      sprintf($$, "%s %s", $1, $2);
     }
   ;
 
 
 direction:
-    text_item         
+    text_item
   | timer             
   | cookware          
   | ingredient        
   | HWORD text_item   {
-      // make directions in the step for each 
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
+      $$ = addTwoStrings($1, $2);
     }
   | ATWORD text_item  {
-      // make directions in the step for each
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
+      $$ = addTwoStrings($1, $2);
     }
   ;
 
@@ -98,50 +153,42 @@ text_item:
     WORD
   | MULTIWORD
   | NUMBER  { 
-      printf("text_item number\n");
       $$ = malloc(10);
       sprintf($$, "%.3f", $1);
     }
 
   | PUNC_CHAR { 
-      $$ = malloc(5); 
-      $$[0] = $1;
-      $$[1] = '\0';
+      $$ = malloc(5);
+      sprintf($$, "%c", $1);
+    }
+    
+  | text_item WORD  { 
+      $$ = addTwoStrings($1, $2);
+    }
+    
+  | text_item MULTIWORD  { 
+      $$ = addTwoStrings($1, $2);
+    }
+
+  | text_item NUMBER  { 
+      $$ = malloc(strlen($1) + 15);
+      sprintf($$, "%s %.3f", $1, $2);
+      free($1);
+    }
+
+  | text_item PUNC_CHAR  { 
+      $$ = malloc(strlen($1) + 5);
+      sprintf($$, "%s %c", $1, $2);
+      free($1);
     }
   ;
-
-
-
-// have to fix - add no amount input and no curls for one word timer
-timer:
-    TILDE amount  {
-        $$ = $2;
-      }
-
-  | TILDE WORD amount { 
-        // make timer string
-        $$ = malloc(strlen($2) + strlen($3) + 10);
-        sprintf($$, "%s %s", $2, $3);
-        free($2);
-        free($3);
-      }
-
-  | TILDE MULTIWORD amount  { 
-        // make timer string
-        $$ = malloc(strlen($2) + strlen($3) + 10);
-        sprintf($$, "%s %s", $2, $3);
-        free($2);
-      }
-  ;
-
 
 
 amount:
     // an empty amount - for one word timers
     LCURL RCURL {
-      $$ = malloc(5);
-      $$[0] = ' ';
-      $$[1] = '\0';
+      $$ = malloc(50);
+      strcpy($$, "\0");
     }
 
   | LCURL NUMBER RCURL  { 
@@ -151,10 +198,8 @@ amount:
     }
 
   | LCURL NUMBER UNIT RCURL { 
-      // get string for amount
-      // remove % from unit 
-      $$ = malloc(100 + strlen($3) + 5);
-      sprintf($$, "%.3lf %s", $2, $3); 
+      $$ = malloc(strlen($3) + 20);
+      sprintf($$, "%.3f %s", $2, $3);
     }
 
   | LCURL WORD RCURL  {
@@ -162,8 +207,7 @@ amount:
     }
 
   | LCURL WORD UNIT RCURL {
-      $$ = malloc(strlen($2) + strlen($3) + 5);
-      sprintf($$, "%s%s", $2, $3);
+      $$ = addTwoStrings($2, $3);
     }
 
   | LCURL MULTIWORD RCURL {
@@ -171,54 +215,9 @@ amount:
     }
 
   | LCURL MULTIWORD UNIT RCURL {
-      $$ = malloc(strlen($2) + strlen($3) + 5);
-      sprintf($$, "%s%s", $2, $3);
+      $$ = addTwoStrings($2, $3);
     }
   ;
-
-
-
-cookware:
-  HWORD {
-      // get string
-      $$ = $1;
-    }
-
-  | HWORD LCURL RCURL {
-      // get string
-      $$ = $1;
-    }
-
-  | HWORD WORD LCURL RCURL  { 
-      // get string
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
-    }
-
-  | HWORD MULTIWORD LCURL RCURL { 
-      // get string
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
-    }
-
-  | HWORD cookware_amount  { 
-      // get string
-      $$ = $1;
-    }
-
-  | HWORD WORD cookware_amount { 
-      // get string
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
-    }
-
-  | HWORD MULTIWORD cookware_amount  { 
-      // get string
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
-    }
-  ;
-
 
 
 cookware_amount:
@@ -236,6 +235,29 @@ cookware_amount:
     }
   ;
 
+cookware:
+  HWORD {
+      $$ = $1;
+    }
+
+  | HWORD LCURL RCURL {
+      $$ = $1;
+    }
+
+  | HWORD WORD LCURL RCURL  { 
+      $$ = addTwoStrings($1, $2);
+    }
+
+  | HWORD MULTIWORD LCURL RCURL { 
+      $$ = addTwoStrings($1, $2);
+    }
+
+  | HWORD cookware_amount  { 
+      $$ = addTwoStrings($1, $2);
+    }
+  ;
+
+
 
 ingredient:
     ATWORD  {
@@ -243,22 +265,33 @@ ingredient:
     }
 
   | ATWORD amount {
-      $$ = $1;
+      $$ = addTwoStrings($1, $2);
     }
 
   | ATWORD WORD amount  {
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
+      $$ = addThreeStrings($1, $2, $3);
     }
 
   | ATWORD MULTIWORD amount  {
-      $$ = malloc(strlen($1) + strlen($2) + 5);
-      sprintf($$, "%s%s", $1, $2);
+      $$ = addThreeStrings($1, $2, $3);
     }
-
   ;
 
 
+// have to fix - add no amount input and no curls for one word timer
+timer:
+    TILDE amount  {
+        $$ = $2;
+      }
+
+  | TILDE WORD amount { 
+        $$ = addTwoStrings($2, $3);
+      }
+
+  | TILDE MULTIWORD amount  { 
+        $$ = addTwoStrings($2, $3);
+      }
+  ;
 
 
 %%

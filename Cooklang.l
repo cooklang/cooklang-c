@@ -28,8 +28,8 @@ FRACTIONAL            {INTEGER}{WHITE_SPACE}*"/"{WHITE_SPACE}*{INTEGER}{WHITE_SP
 
 WORD                  ({ALPHA_CHAR}|{DIGIT}|{SYMB_CHAR})+{WHITE_SPACE}*
 
-HWORD                 "#"{WHITE_SPACE}*{WORD}
-ATWORD                "@"{WHITE_SPACE}*{WORD}
+HWORD                 "#"{WORD}
+ATWORD                "@"{WORD}
 
 MULTIWORD             {WORD}{2,}
 
@@ -46,22 +46,19 @@ UNIT                  "%"{WHITE_SPACE}*({MULTIWORD}*|{PUNC_CHAR}*)?
 "}"                   {return RCURL;}
 "~"                   {return TILDE;}
 
-{ATWORD}              { yylval.string = malloc(strlen(yytext) + 1);
-                        yytext++;
-                        sprintf(yylval.string, "%s", yytext);
+{ATWORD}              { yytext++;
+                        yylval.string = strdup(yytext);
                         return ATWORD;
 }
 
-{HWORD}               { yylval.string = malloc(strlen(yytext) + 1);
-                        yytext++;
-                        sprintf(yylval.string, "%s", yytext);
+{HWORD}               { yytext++;
+                        yylval.string = strdup(yytext);
                         return HWORD;
                       }
 
                       
-{UNIT}                { yylval.string = malloc(strlen(yytext) + 5);
-                        yytext++;
-                        sprintf(yylval.string, "%s", yytext);
+{UNIT}                { yytext++;
+                        yylval.string = strdup(yytext);
                         return UNIT;}
 
 {DIGIT}               { yylval.number = strtod(yytext, NULL); return NUMBER;}
@@ -81,18 +78,17 @@ UNIT                  "%"{WHITE_SPACE}*({MULTIWORD}*|{PUNC_CHAR}*)?
 
                         return NUMBER;}
 
-{WORD}                { yylval.string = malloc(strlen(yytext) + 5);
-                        sprintf(yylval.string, "%s", yytext);
+{WORD}                { yylval.string = strdup(yytext);
                         return WORD;
                       }
-{MULTIWORD}           { yylval.string = malloc(strlen(yytext) + 5);
-                        sprintf(yylval.string, "%s", yytext);
+{MULTIWORD}           { yylval.string = strdup(yytext);
                         return MULTIWORD;
                       }
 
 
 
-{PUNC_CHAR}           { yylval.character = yytext[0];
+{PUNC_CHAR}           { char c = yytext[0];
+                        yylval.character = c;
                         return PUNC_CHAR; }
 
 {NEW_LINE}            {return NL;}
