@@ -19,6 +19,6 @@ main(int argc, char *argv[])
 
   if(cookparse()) exit(EXIT_FAILURE);
 
-  printf("Someday I'll parse lots of recipes!\n");
+
   exit(EXIT_SUCCESS);
 }
