@@ -17,7 +17,7 @@ COOKLANG_CHAR         ">"|"|"|"~"|"@"|"#"|":"|"{"|"}"|"%"
 
 
 ZERO                  "0" 
-NON_ZERO_DIGIT        [0-9]
+NON_ZERO_DIGIT        [1-9]
 
 
 DIGIT                 ({ZERO}|{NON_ZERO_DIGIT}){WHITE_SPACE}*
