@@ -5,6 +5,7 @@
 %}
 
 %option noyywrap
+%option yylineno
 
 SYMB_CHAR "$"|"="|"+"|"_"|"*"|"`"|"'"|"-"
 PUNC_CHAR             "!"|"?"|","|"."|"&"|"("|")"|":"|"/"
