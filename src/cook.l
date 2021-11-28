@@ -7,7 +7,7 @@
 %option noyywrap
 
 SYMB_CHAR "$"|"="|"+"|"_"|"*"|"`"|"'"|"-"
-PUNC_CHAR             "!"|"?"|","|"."|"&"|"("|")"|":"
+PUNC_CHAR             "!"|"?"|","|"."|"&"|"("|")"|":"|"/"
 NEW_LINE              "\n"
 WHITE_SPACE           " "|"\t"
 ALPHA_CHAR            [a-zA-Z]
@@ -43,10 +43,12 @@ MULTIWORD_WITH_LBRACE ({WORD}{WHITE_SPACE}+)*{WORD}"{"
 "%" {return(PERCENT);}
 "~" {return(TILDE);}
 "#" {return(HASH);}
+":" {return(COLON);}
+">>" {return(METADATA_BEGIN);}
 {WHITE_SPACE} {return(WHITE_SPACE);}
 {MULTIWORD_WITH_LBRACE} { int length = strlen(yytext); yylval.string = strndup(yytext,length-1); return(MULTIWORD_WITH_LBRACE);}
 {COMMENT_LINE} {return(COMMENT_LINE);}
 {COMMENT} {return(COMMENT);}
-{PUNC_CHAR} {return(PUNCTUATION);}
+{PUNC_CHAR} { yylval.string = strdup(yytext); return(PUNCTUATION);}
 
 .   { printf("UNKNOWN <%s> ",yytext); yyerror("Not known"); return(UNKNOWN);}

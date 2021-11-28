@@ -15,7 +15,8 @@
 }
 
 %token UNKNOWN
-%token AT TILDE HASH
+%token AT TILDE HASH COLON
+%token METADATA_BEGIN
 %token MULTIWORD_WITH_LBRACE
 %token WHITE_SPACE
 %token LBRACE RBRACE
@@ -33,6 +34,7 @@
 %type<string> WORD
 %type<string> phrase
 %type<string> MULTIWORD_WITH_LBRACE
+%type<string> phrase_component
 
 %start recipe
 %%
@@ -41,8 +43,10 @@ recipe:         recipe_component
         |       recipe recipe_component
                 ;
 
-recipe_component:
-                step recipe_component_ender {printf("=== New Step\n");}
+recipe_component: step recipe_component_ender {printf("=== New Step\n");}
+                | metadata NEW_LINE {printf("=== New Metadata\n");}
+                | NEW_LINE
+                | recipe_component_ender
                 ;
 
 recipe_component_ender:
@@ -50,6 +54,8 @@ recipe_component_ender:
         |       NEW_LINE END_OF_FILE
                 ;
 
+metadata:       METADATA_BEGIN optional_white_space WORD COLON optional_white_space phrase {printf("%s is %s ",$3,$6);}
+        ;
 
 step:           step_component
         |       step step_component
@@ -65,13 +71,14 @@ step_component: WORD
                 ;
 
 phrase:      phrase_component
-        |       phrase phrase_component
+        |       phrase phrase_component {$$ = malloc(strlen($1)+strlen($2)+1); sprintf($$,"%s%s",$1,$2);}
                 ;
 phrase_component: WORD
-        |       WHITE_SPACE
+        |       WHITE_SPACE {$$ = " ";}
         |       PUNCTUATION
         |       NUMBER
         |       PERCENT
+        |       COLON {$$=":";}
                 ;
 
 ingredient:     AT WORD optional_white_space optional_ingredient_quantity
