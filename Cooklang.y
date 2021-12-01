@@ -124,7 +124,7 @@ line:
 
 step:
     direction {
-        printf("***Direction: %s\n", $1);
+        printf("*New Step\n ***Direction: %s\n", $1);
       }
   | step direction {
       printf("***Direction: %s\n", $2);

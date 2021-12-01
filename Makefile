@@ -1,14 +1,14 @@
 # flags for compiling a .o file
-OFLAGS = -Wall -std=c99 -pedantic -I include/ -o $@ -c -g
-FLAGS = -Wall -std=c99 -pedantic -o $@ -g
+OFLAGS = -Wall -pedantic -I include/ -o $@ -c -g
+FLAGS = -Wall -pedantic -o $@ -g
 
 all: test
 
 parser: parser
 
 # executables
-test: test.o bin/CooklangParser.o bin/LinkedListLib.o
-	gcc $(FLAGS) test.o bin/CooklangParser.o bin/LinkedListLib.o
+test: test.o bin/CooklangRecipe.o bin/CooklangParser.o bin/LinkedListLib.o 
+	gcc $(FLAGS) test.o bin/CooklangRecipe.o bin/CooklangParser.o bin/LinkedListLib.o
 	
 
 # .o files	
@@ -17,6 +17,9 @@ bin/CooklangParser.o: src/CooklangParser.c
 
 bin/LinkedListLib.o: src/LinkedListLib.c
 	gcc $(OFLAGS) src/LinkedListLib.c
+
+bin/CooklangRecipe.o: src/CooklangRecipe.c
+	gcc $(OFLAGS) src/CooklangRecipe.c
 
 
 test.o:

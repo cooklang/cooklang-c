@@ -5,7 +5,12 @@
 #include "CooklangParser.h"
 
 
-int test(){
+void test(){
   printf("test\n");
-  return 0;
 }
+
+
+
+
+
+// creation functions
