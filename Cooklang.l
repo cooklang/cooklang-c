@@ -4,6 +4,7 @@
   #include <stdlib.h>
   void showError();
 
+
 %}
 
 
@@ -24,7 +25,7 @@ DIGIT                 ({ZERO}|{NON_ZERO_DIGIT}){WHITE_SPACE}*
 INTEGER               ({ZERO}|({NON_ZERO_DIGIT}{DIGIT}*)){WHITE_SPACE}*
 DECIMAL               {INTEGER}"."{INTEGER}{WHITE_SPACE}*
 FRACTIONAL            {INTEGER}{WHITE_SPACE}*"/"{WHITE_SPACE}*{INTEGER}{WHITE_SPACE}*
-
+NUMBER                {DIGIT}|{INTEGER}|{DECIMAL}|{FRACTIONAL}
 
 WORD                  ({ALPHA_CHAR}|{DIGIT}|{SYMB_CHAR})+{WHITE_SPACE}*
 
@@ -36,6 +37,7 @@ MULTIWORD             {WORD}{2,}
 
 UNIT                  "%"{WHITE_SPACE}*({MULTIWORD}*|{PUNC_CHAR}*)?
 
+METADATA              ">"">"{WHITE_SPACE}*({WORD}|{MULTIWORD})":"{WHITE_SPACE}*({PUNC_CHAR}|{WORD}|{MULTIWORD}|{NUMBER})*
 
 
 %%
@@ -57,8 +59,7 @@ UNIT                  "%"{WHITE_SPACE}*({MULTIWORD}*|{PUNC_CHAR}*)?
                       }
 
                       
-{UNIT}                { yytext++;
-                        yylval.string = strdup(yytext);
+{UNIT}                { yylval.string = strdup(yytext);
                         return UNIT;}
 
 {DIGIT}               { yylval.number = strtod(yytext, NULL); return NUMBER;}
@@ -93,7 +94,11 @@ UNIT                  "%"{WHITE_SPACE}*({MULTIWORD}*|{PUNC_CHAR}*)?
 
 {NEW_LINE}            {return NL;}
 
-
+{METADATA}            { yytext++;
+                        yytext++;
+                        yylval.string = strdup(yytext);
+                        return METADATA;
+                      }
 
 
 %%
@@ -108,11 +113,30 @@ int main( int argc, char ** argv ){
     yyin  = stdin;
   }
 
-  yyparse();
+  // setup the recipe
+  Recipe * finalRecipe = createRecipe();
 
-  yylex();
+  // create the first step
+  Step * currentStep = createStep();
+
+  insertBack(finalRecipe->stepList, currentStep);
+
+  printf("asdf\n");
+
+  yyparse(finalRecipe);
+
+  printf("asdf2\n");
+
   
-  printf("\n");
-  
+
+  printf("End of parsing\n");
+
+  // printf out the step steps 
+
+
+  char * stepListString = toString(finalRecipe->stepList);
+
+  printf("%s\n", stepListString);
+
   return 0;
 }

@@ -6,9 +6,6 @@
 
 #endif
 
-// functions
-void test();
-
 
 
 
@@ -26,3 +23,16 @@ typedef struct {
 
 } CooklangParser;
 
+
+
+// functions
+void test();
+
+
+char * addTwoStrings(char * first, char * second);
+char * addThreeStrings(char * first, char * second, char * third);
+
+void addDirection(Recipe * recipe, char * type, char * value, char * quantityString, double quantity, char * unit);
+
+
+char ** parseAmountString( char * amountString );

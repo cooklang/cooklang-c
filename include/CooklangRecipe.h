@@ -115,7 +115,6 @@ Recipe * createRecipe();
 
 void deleteRecipe( void * data );
 char * recipeToString( void * data );
-int compareRecipes( const void * first, const void * second );
 
 
 Metadata * createMetadata( char * identifier, char * content );

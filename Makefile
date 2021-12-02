@@ -26,10 +26,10 @@ test.o:
 	gcc $(OFLAGS) test.c
 
 # parser stuff
-parser:
+parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 	flex Cooklang.l
 	bison -d Cooklang.y -v
-	gcc -g Cooklang.tab.c -lfl
+	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 
 
 # clean

@@ -5,74 +5,26 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "include/CooklangParser.h"
 
 #define YYDEBUG 1
 
 int yylex();
 
-int yyerror ( const char * s);
+int yyerror ( Recipe * recipe, const char * s);
 
 extern void yyrestart( FILE * input_file );
 
 char string[20] = "header string";
 
-
-char * addTwoStrings(char * first, char * second){
-  char * result = NULL;
-  int length = 0;
-
-  if( first == NULL || second == NULL){
-    return NULL;
-  }
-
-  length += strlen(first);
-  length += strlen(second);
-  length += 5;
-
-  result = malloc(sizeof(char) * length);
-  
-  if( result == NULL ){
-    printf("Error, malloc failed");
-    return NULL;
-  }
-
-  sprintf(result, "%s %s", first, second);
-
-
-  return result;
-}
-
-
-char * addThreeStrings(char * first, char * second, char * third){
-  char * result = NULL;
-  int length = 0;
-
-  if(first == NULL || second == NULL || third == NULL){
-    return NULL;
-  }
-
-  length += strlen(first);
-  length += strlen(second);
-  length += strlen(third);
-  length += 5;
-
-  result = malloc(sizeof(char) * length);
-  
-  if( result == NULL ){
-    printf("Error, malloc failed");
-    return NULL;
-  }
-
-  sprintf(result, "%s %s %s", first, second, third);
-
- 
-
-  return result;
-}
+// create the parser actually but thats not setup right now
 
 
 
 %}
+
+%parse-param {Recipe * recipe}
+
 
 %union{
   char * string;
@@ -80,7 +32,7 @@ char * addThreeStrings(char * first, char * second, char * third){
   double number;
 }
 
-%token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NL TILDE HWORD ATWORD
+%token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NL TILDE HWORD ATWORD METADATA
 
 %type <string> WORD
 %type <string> MULTIWORD
@@ -91,6 +43,7 @@ char * addThreeStrings(char * first, char * second, char * third){
 %type <character> PUNC_CHAR
 %type <string> HWORD
 %type <string> ATWORD
+%type <string> METADATA
 %type <character> NL
 
 %type <string> text_item
@@ -118,6 +71,14 @@ line:
   | step NL {
       $$ = malloc(strlen($1) + 100);
       sprintf($$, "%s%c", $1, $2);
+      // after a step has been finished by a new line, have to add the step to the steplist
+      // and make a new step to accept directions
+      Step * newStep = createStep();
+
+      insertBack(recipe->stepList, newStep);
+    }
+  | METADATA NL {
+      printf("metadata: %S\n", $1);
     }
   ;
 
@@ -135,15 +96,21 @@ step:
 
 
 direction:
-    text_item
+    text_item {
+      addDirection(recipe, "TextItem", $1, NULL, -1, NULL);
+    }
   | timer             
   | cookware          
   | ingredient        
   | HWORD text_item   {
       $$ = addTwoStrings($1, $2);
+      addDirection(recipe, "Cookware", $1, NULL, -1, NULL);
+      addDirection(recipe, "TextItem", $2, NULL, -1, NULL);
     }
   | ATWORD text_item  {
       $$ = addTwoStrings($1, $2);
+      addDirection(recipe, "Ingredient", $1, NULL, -1, NULL);
+      addDirection(recipe, "TextItem", $2, NULL, -1, NULL);
     }
   ;
 
@@ -187,7 +154,7 @@ text_item:
 amount:
     // an empty amount - for one word timers
     LCURL RCURL {
-      $$ = malloc(50);
+      $$ = malloc(5);
       strcpy($$, "\0");
     }
 
@@ -278,12 +245,18 @@ ingredient:
   ;
 
 
-// have to fix - add no amount input and no curls for one word timer
 timer:
     TILDE amount  {
         $$ = $2;
-      }
+        // parse the amount
+        char ** results = parseAmountString($2);
 
+        addDirection(recipe, "Timer", $2, )
+      }
+  | TILDE WORD {
+        $$ = $2;
+        addDirection(recipe, "Timer", $2, NULL, -1, NULL);        
+      }
   | TILDE WORD amount { 
         $$ = addTwoStrings($2, $3);
       }
@@ -298,7 +271,7 @@ timer:
 
 
 
-int yyerror( const char *s){
+int yyerror( Recipe * recipe, const char *s){
   printf("\nError\n%s", s);
 }
 

@@ -1,8 +1,8 @@
 State 9 conflicts: 4 shift/reduce
 State 10 conflicts: 4 shift/reduce
-State 14 conflicts: 4 shift/reduce
-State 25 conflicts: 4 shift/reduce
-State 29 conflicts: 4 shift/reduce
+State 15 conflicts: 4 shift/reduce
+State 26 conflicts: 4 shift/reduce
+State 30 conflicts: 4 shift/reduce
 
 
 Grammar
@@ -14,95 +14,98 @@ Grammar
 
     3 line: NL
     4     | step NL
+    5     | METADATA NL
 
-    5 step: direction
-    6     | step direction
+    6 step: direction
+    7     | step direction
 
-    7 direction: text_item
-    8          | timer
-    9          | cookware
-   10          | ingredient
-   11          | HWORD text_item
-   12          | ATWORD text_item
+    8 direction: text_item
+    9          | timer
+   10          | cookware
+   11          | ingredient
+   12          | HWORD text_item
+   13          | ATWORD text_item
 
-   13 text_item: WORD
-   14          | MULTIWORD
-   15          | NUMBER
-   16          | PUNC_CHAR
-   17          | text_item WORD
-   18          | text_item MULTIWORD
-   19          | text_item NUMBER
-   20          | text_item PUNC_CHAR
+   14 text_item: WORD
+   15          | MULTIWORD
+   16          | NUMBER
+   17          | PUNC_CHAR
+   18          | text_item WORD
+   19          | text_item MULTIWORD
+   20          | text_item NUMBER
+   21          | text_item PUNC_CHAR
 
-   21 amount: LCURL RCURL
-   22       | LCURL NUMBER RCURL
-   23       | LCURL NUMBER UNIT RCURL
-   24       | LCURL WORD RCURL
-   25       | LCURL WORD UNIT RCURL
-   26       | LCURL MULTIWORD RCURL
-   27       | LCURL MULTIWORD UNIT RCURL
+   22 amount: LCURL RCURL
+   23       | LCURL NUMBER RCURL
+   24       | LCURL NUMBER UNIT RCURL
+   25       | LCURL WORD RCURL
+   26       | LCURL WORD UNIT RCURL
+   27       | LCURL MULTIWORD RCURL
+   28       | LCURL MULTIWORD UNIT RCURL
 
-   28 cookware_amount: LCURL NUMBER RCURL
-   29                | LCURL WORD RCURL
-   30                | LCURL MULTIWORD RCURL
+   29 cookware_amount: LCURL NUMBER RCURL
+   30                | LCURL WORD RCURL
+   31                | LCURL MULTIWORD RCURL
 
-   31 cookware: HWORD
-   32         | HWORD LCURL RCURL
-   33         | HWORD WORD LCURL RCURL
-   34         | HWORD MULTIWORD LCURL RCURL
-   35         | HWORD cookware_amount
+   32 cookware: HWORD
+   33         | HWORD LCURL RCURL
+   34         | HWORD WORD LCURL RCURL
+   35         | HWORD MULTIWORD LCURL RCURL
+   36         | HWORD cookware_amount
 
-   36 ingredient: ATWORD
-   37           | ATWORD amount
-   38           | ATWORD WORD amount
-   39           | ATWORD MULTIWORD amount
+   37 ingredient: ATWORD
+   38           | ATWORD amount
+   39           | ATWORD WORD amount
+   40           | ATWORD MULTIWORD amount
 
-   40 timer: TILDE amount
-   41      | TILDE WORD amount
-   42      | TILDE MULTIWORD amount
+   41 timer: TILDE amount
+   42      | TILDE WORD
+   43      | TILDE WORD amount
+   44      | TILDE MULTIWORD amount
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-WORD <string> (258) 13 17 24 25 29 33 38 41
-MULTIWORD <string> (259) 14 18 26 27 30 34 39 42
-UNIT <string> (260) 23 25 27
-NUMBER <number> (261) 15 19 22 23 28
-LCURL <character> (262) 21 22 23 24 25 26 27 28 29 30 32 33 34
-RCURL <character> (263) 21 22 23 24 25 26 27 28 29 30 32 33 34
-PUNC_CHAR <character> (264) 16 20
-NL <character> (265) 3 4
-TILDE (266) 40 41 42
-HWORD <string> (267) 11 31 32 33 34 35
-ATWORD <string> (268) 12 36 37 38 39
+WORD <string> (258) 14 18 25 26 30 34 39 42 43
+MULTIWORD <string> (259) 15 19 27 28 31 35 40 44
+UNIT <string> (260) 24 26 28
+NUMBER <number> (261) 16 20 23 24 29
+LCURL <character> (262) 22 23 24 25 26 27 28 29 30 31 33 34 35
+RCURL <character> (263) 22 23 24 25 26 27 28 29 30 31 33 34 35
+PUNC_CHAR <character> (264) 17 21
+NL <character> (265) 3 4 5
+TILDE (266) 41 42 43 44
+HWORD <string> (267) 12 32 33 34 35 36
+ATWORD <string> (268) 13 37 38 39 40
+METADATA <string> (269) 5
 
 
 Nonterminals, with rules where they appear
 
-$accept (14)
+$accept (15)
     on left: 0
-input <string> (15)
+input <string> (16)
     on left: 1 2, on right: 0 2
-line <string> (16)
-    on left: 3 4, on right: 2
-step <string> (17)
-    on left: 5 6, on right: 4 6
-direction <string> (18)
-    on left: 7 8 9 10 11 12, on right: 5 6
-text_item <string> (19)
-    on left: 13 14 15 16 17 18 19 20, on right: 7 11 12 17 18 19 20
-amount <string> (20)
-    on left: 21 22 23 24 25 26 27, on right: 37 38 39 40 41 42
-cookware_amount <string> (21)
-    on left: 28 29 30, on right: 35
-cookware <string> (22)
-    on left: 31 32 33 34 35, on right: 9
-ingredient <string> (23)
-    on left: 36 37 38 39, on right: 10
-timer <string> (24)
-    on left: 40 41 42, on right: 8
+line <string> (17)
+    on left: 3 4 5, on right: 2
+step <string> (18)
+    on left: 6 7, on right: 4 7
+direction <string> (19)
+    on left: 8 9 10 11 12 13, on right: 6 7
+text_item <string> (20)
+    on left: 14 15 16 17 18 19 20 21, on right: 8 12 13 18 19 20 21
+amount <string> (21)
+    on left: 22 23 24 25 26 27 28, on right: 38 39 40 41 43 44
+cookware_amount <string> (22)
+    on left: 29 30 31, on right: 36
+cookware <string> (23)
+    on left: 32 33 34 35 36, on right: 10
+ingredient <string> (24)
+    on left: 37 38 39 40, on right: 11
+timer <string> (25)
+    on left: 41 42 43 44, on right: 9
 
 
 State 0
@@ -128,14 +131,15 @@ State 1
     TILDE      shift, and go to state 8
     HWORD      shift, and go to state 9
     ATWORD     shift, and go to state 10
+    METADATA   shift, and go to state 11
 
-    line        go to state 11
-    step        go to state 12
-    direction   go to state 13
-    text_item   go to state 14
-    cookware    go to state 15
-    ingredient  go to state 16
-    timer       go to state 17
+    line        go to state 12
+    step        go to state 13
+    direction   go to state 14
+    text_item   go to state 15
+    cookware    go to state 16
+    ingredient  go to state 17
+    timer       go to state 18
 
 
 State 2
@@ -147,30 +151,30 @@ State 2
 
 State 3
 
-   13 text_item: WORD .
-
-    $default  reduce using rule 13 (text_item)
-
-
-State 4
-
-   14 text_item: MULTIWORD .
+   14 text_item: WORD .
 
     $default  reduce using rule 14 (text_item)
 
 
-State 5
+State 4
 
-   15 text_item: NUMBER .
+   15 text_item: MULTIWORD .
 
     $default  reduce using rule 15 (text_item)
 
 
-State 6
+State 5
 
-   16 text_item: PUNC_CHAR .
+   16 text_item: NUMBER .
 
     $default  reduce using rule 16 (text_item)
+
+
+State 6
+
+   17 text_item: PUNC_CHAR .
+
+    $default  reduce using rule 17 (text_item)
 
 
 State 7
@@ -182,279 +186,239 @@ State 7
 
 State 8
 
-   40 timer: TILDE . amount
-   41      | TILDE . WORD amount
-   42      | TILDE . MULTIWORD amount
+   41 timer: TILDE . amount
+   42      | TILDE . WORD
+   43      | TILDE . WORD amount
+   44      | TILDE . MULTIWORD amount
 
-    WORD       shift, and go to state 18
-    MULTIWORD  shift, and go to state 19
-    LCURL      shift, and go to state 20
+    WORD       shift, and go to state 19
+    MULTIWORD  shift, and go to state 20
+    LCURL      shift, and go to state 21
 
-    amount  go to state 21
+    amount  go to state 22
 
 
 State 9
 
-   11 direction: HWORD . text_item
-   31 cookware: HWORD .
-   32         | HWORD . LCURL RCURL
-   33         | HWORD . WORD LCURL RCURL
-   34         | HWORD . MULTIWORD LCURL RCURL
-   35         | HWORD . cookware_amount
+   12 direction: HWORD . text_item
+   32 cookware: HWORD .
+   33         | HWORD . LCURL RCURL
+   34         | HWORD . WORD LCURL RCURL
+   35         | HWORD . MULTIWORD LCURL RCURL
+   36         | HWORD . cookware_amount
 
-    WORD       shift, and go to state 22
-    MULTIWORD  shift, and go to state 23
+    WORD       shift, and go to state 23
+    MULTIWORD  shift, and go to state 24
     NUMBER     shift, and go to state 5
-    LCURL      shift, and go to state 24
+    LCURL      shift, and go to state 25
     PUNC_CHAR  shift, and go to state 6
 
-    WORD       [reduce using rule 31 (cookware)]
-    MULTIWORD  [reduce using rule 31 (cookware)]
-    NUMBER     [reduce using rule 31 (cookware)]
-    PUNC_CHAR  [reduce using rule 31 (cookware)]
-    $default   reduce using rule 31 (cookware)
+    WORD       [reduce using rule 32 (cookware)]
+    MULTIWORD  [reduce using rule 32 (cookware)]
+    NUMBER     [reduce using rule 32 (cookware)]
+    PUNC_CHAR  [reduce using rule 32 (cookware)]
+    $default   reduce using rule 32 (cookware)
 
-    text_item        go to state 25
-    cookware_amount  go to state 26
+    text_item        go to state 26
+    cookware_amount  go to state 27
 
 
 State 10
 
-   12 direction: ATWORD . text_item
-   36 ingredient: ATWORD .
-   37           | ATWORD . amount
-   38           | ATWORD . WORD amount
-   39           | ATWORD . MULTIWORD amount
+   13 direction: ATWORD . text_item
+   37 ingredient: ATWORD .
+   38           | ATWORD . amount
+   39           | ATWORD . WORD amount
+   40           | ATWORD . MULTIWORD amount
 
-    WORD       shift, and go to state 27
-    MULTIWORD  shift, and go to state 28
+    WORD       shift, and go to state 28
+    MULTIWORD  shift, and go to state 29
     NUMBER     shift, and go to state 5
-    LCURL      shift, and go to state 20
+    LCURL      shift, and go to state 21
     PUNC_CHAR  shift, and go to state 6
 
-    WORD       [reduce using rule 36 (ingredient)]
-    MULTIWORD  [reduce using rule 36 (ingredient)]
-    NUMBER     [reduce using rule 36 (ingredient)]
-    PUNC_CHAR  [reduce using rule 36 (ingredient)]
-    $default   reduce using rule 36 (ingredient)
+    WORD       [reduce using rule 37 (ingredient)]
+    MULTIWORD  [reduce using rule 37 (ingredient)]
+    NUMBER     [reduce using rule 37 (ingredient)]
+    PUNC_CHAR  [reduce using rule 37 (ingredient)]
+    $default   reduce using rule 37 (ingredient)
 
-    text_item  go to state 29
-    amount     go to state 30
+    text_item  go to state 30
+    amount     go to state 31
 
 
 State 11
+
+    5 line: METADATA . NL
+
+    NL  shift, and go to state 32
+
+
+State 12
 
     2 input: input line .
 
     $default  reduce using rule 2 (input)
 
 
-State 12
+State 13
 
     4 line: step . NL
-    6 step: step . direction
+    7 step: step . direction
 
     WORD       shift, and go to state 3
     MULTIWORD  shift, and go to state 4
     NUMBER     shift, and go to state 5
     PUNC_CHAR  shift, and go to state 6
-    NL         shift, and go to state 31
+    NL         shift, and go to state 33
     TILDE      shift, and go to state 8
     HWORD      shift, and go to state 9
     ATWORD     shift, and go to state 10
 
-    direction   go to state 32
-    text_item   go to state 14
-    cookware    go to state 15
-    ingredient  go to state 16
-    timer       go to state 17
-
-
-State 13
-
-    5 step: direction .
-
-    $default  reduce using rule 5 (step)
+    direction   go to state 34
+    text_item   go to state 15
+    cookware    go to state 16
+    ingredient  go to state 17
+    timer       go to state 18
 
 
 State 14
 
-    7 direction: text_item .
-   17 text_item: text_item . WORD
-   18          | text_item . MULTIWORD
-   19          | text_item . NUMBER
-   20          | text_item . PUNC_CHAR
+    6 step: direction .
 
-    WORD       shift, and go to state 33
-    MULTIWORD  shift, and go to state 34
-    NUMBER     shift, and go to state 35
-    PUNC_CHAR  shift, and go to state 36
-
-    WORD       [reduce using rule 7 (direction)]
-    MULTIWORD  [reduce using rule 7 (direction)]
-    NUMBER     [reduce using rule 7 (direction)]
-    PUNC_CHAR  [reduce using rule 7 (direction)]
-    $default   reduce using rule 7 (direction)
+    $default  reduce using rule 6 (step)
 
 
 State 15
 
-    9 direction: cookware .
+    8 direction: text_item .
+   18 text_item: text_item . WORD
+   19          | text_item . MULTIWORD
+   20          | text_item . NUMBER
+   21          | text_item . PUNC_CHAR
 
-    $default  reduce using rule 9 (direction)
+    WORD       shift, and go to state 35
+    MULTIWORD  shift, and go to state 36
+    NUMBER     shift, and go to state 37
+    PUNC_CHAR  shift, and go to state 38
+
+    WORD       [reduce using rule 8 (direction)]
+    MULTIWORD  [reduce using rule 8 (direction)]
+    NUMBER     [reduce using rule 8 (direction)]
+    PUNC_CHAR  [reduce using rule 8 (direction)]
+    $default   reduce using rule 8 (direction)
 
 
 State 16
 
-   10 direction: ingredient .
+   10 direction: cookware .
 
     $default  reduce using rule 10 (direction)
 
 
 State 17
 
-    8 direction: timer .
+   11 direction: ingredient .
 
-    $default  reduce using rule 8 (direction)
+    $default  reduce using rule 11 (direction)
 
 
 State 18
 
-   41 timer: TILDE WORD . amount
+    9 direction: timer .
 
-    LCURL  shift, and go to state 20
-
-    amount  go to state 37
+    $default  reduce using rule 9 (direction)
 
 
 State 19
 
-   42 timer: TILDE MULTIWORD . amount
+   42 timer: TILDE WORD .
+   43      | TILDE WORD . amount
 
-    LCURL  shift, and go to state 20
+    LCURL  shift, and go to state 21
 
-    amount  go to state 38
+    $default  reduce using rule 42 (timer)
+
+    amount  go to state 39
 
 
 State 20
 
-   21 amount: LCURL . RCURL
-   22       | LCURL . NUMBER RCURL
-   23       | LCURL . NUMBER UNIT RCURL
-   24       | LCURL . WORD RCURL
-   25       | LCURL . WORD UNIT RCURL
-   26       | LCURL . MULTIWORD RCURL
-   27       | LCURL . MULTIWORD UNIT RCURL
+   44 timer: TILDE MULTIWORD . amount
 
-    WORD       shift, and go to state 39
-    MULTIWORD  shift, and go to state 40
-    NUMBER     shift, and go to state 41
-    RCURL      shift, and go to state 42
+    LCURL  shift, and go to state 21
+
+    amount  go to state 40
 
 
 State 21
 
-   40 timer: TILDE amount .
+   22 amount: LCURL . RCURL
+   23       | LCURL . NUMBER RCURL
+   24       | LCURL . NUMBER UNIT RCURL
+   25       | LCURL . WORD RCURL
+   26       | LCURL . WORD UNIT RCURL
+   27       | LCURL . MULTIWORD RCURL
+   28       | LCURL . MULTIWORD UNIT RCURL
 
-    $default  reduce using rule 40 (timer)
+    WORD       shift, and go to state 41
+    MULTIWORD  shift, and go to state 42
+    NUMBER     shift, and go to state 43
+    RCURL      shift, and go to state 44
 
 
 State 22
 
-   13 text_item: WORD .
-   33 cookware: HWORD WORD . LCURL RCURL
+   41 timer: TILDE amount .
 
-    LCURL  shift, and go to state 43
-
-    $default  reduce using rule 13 (text_item)
+    $default  reduce using rule 41 (timer)
 
 
 State 23
 
-   14 text_item: MULTIWORD .
-   34 cookware: HWORD MULTIWORD . LCURL RCURL
+   14 text_item: WORD .
+   34 cookware: HWORD WORD . LCURL RCURL
 
-    LCURL  shift, and go to state 44
+    LCURL  shift, and go to state 45
 
     $default  reduce using rule 14 (text_item)
 
 
 State 24
 
-   28 cookware_amount: LCURL . NUMBER RCURL
-   29                | LCURL . WORD RCURL
-   30                | LCURL . MULTIWORD RCURL
-   32 cookware: HWORD LCURL . RCURL
+   15 text_item: MULTIWORD .
+   35 cookware: HWORD MULTIWORD . LCURL RCURL
 
-    WORD       shift, and go to state 45
-    MULTIWORD  shift, and go to state 46
-    NUMBER     shift, and go to state 47
-    RCURL      shift, and go to state 48
+    LCURL  shift, and go to state 46
+
+    $default  reduce using rule 15 (text_item)
 
 
 State 25
 
-   11 direction: HWORD text_item .
-   17 text_item: text_item . WORD
-   18          | text_item . MULTIWORD
-   19          | text_item . NUMBER
-   20          | text_item . PUNC_CHAR
+   29 cookware_amount: LCURL . NUMBER RCURL
+   30                | LCURL . WORD RCURL
+   31                | LCURL . MULTIWORD RCURL
+   33 cookware: HWORD LCURL . RCURL
 
-    WORD       shift, and go to state 33
-    MULTIWORD  shift, and go to state 34
-    NUMBER     shift, and go to state 35
-    PUNC_CHAR  shift, and go to state 36
-
-    WORD       [reduce using rule 11 (direction)]
-    MULTIWORD  [reduce using rule 11 (direction)]
-    NUMBER     [reduce using rule 11 (direction)]
-    PUNC_CHAR  [reduce using rule 11 (direction)]
-    $default   reduce using rule 11 (direction)
+    WORD       shift, and go to state 47
+    MULTIWORD  shift, and go to state 48
+    NUMBER     shift, and go to state 49
+    RCURL      shift, and go to state 50
 
 
 State 26
 
-   35 cookware: HWORD cookware_amount .
+   12 direction: HWORD text_item .
+   18 text_item: text_item . WORD
+   19          | text_item . MULTIWORD
+   20          | text_item . NUMBER
+   21          | text_item . PUNC_CHAR
 
-    $default  reduce using rule 35 (cookware)
-
-
-State 27
-
-   13 text_item: WORD .
-   38 ingredient: ATWORD WORD . amount
-
-    LCURL  shift, and go to state 20
-
-    $default  reduce using rule 13 (text_item)
-
-    amount  go to state 49
-
-
-State 28
-
-   14 text_item: MULTIWORD .
-   39 ingredient: ATWORD MULTIWORD . amount
-
-    LCURL  shift, and go to state 20
-
-    $default  reduce using rule 14 (text_item)
-
-    amount  go to state 50
-
-
-State 29
-
-   12 direction: ATWORD text_item .
-   17 text_item: text_item . WORD
-   18          | text_item . MULTIWORD
-   19          | text_item . NUMBER
-   20          | text_item . PUNC_CHAR
-
-    WORD       shift, and go to state 33
-    MULTIWORD  shift, and go to state 34
-    NUMBER     shift, and go to state 35
-    PUNC_CHAR  shift, and go to state 36
+    WORD       shift, and go to state 35
+    MULTIWORD  shift, and go to state 36
+    NUMBER     shift, and go to state 37
+    PUNC_CHAR  shift, and go to state 38
 
     WORD       [reduce using rule 12 (direction)]
     MULTIWORD  [reduce using rule 12 (direction)]
@@ -463,252 +427,310 @@ State 29
     $default   reduce using rule 12 (direction)
 
 
+State 27
+
+   36 cookware: HWORD cookware_amount .
+
+    $default  reduce using rule 36 (cookware)
+
+
+State 28
+
+   14 text_item: WORD .
+   39 ingredient: ATWORD WORD . amount
+
+    LCURL  shift, and go to state 21
+
+    $default  reduce using rule 14 (text_item)
+
+    amount  go to state 51
+
+
+State 29
+
+   15 text_item: MULTIWORD .
+   40 ingredient: ATWORD MULTIWORD . amount
+
+    LCURL  shift, and go to state 21
+
+    $default  reduce using rule 15 (text_item)
+
+    amount  go to state 52
+
+
 State 30
 
-   37 ingredient: ATWORD amount .
+   13 direction: ATWORD text_item .
+   18 text_item: text_item . WORD
+   19          | text_item . MULTIWORD
+   20          | text_item . NUMBER
+   21          | text_item . PUNC_CHAR
 
-    $default  reduce using rule 37 (ingredient)
+    WORD       shift, and go to state 35
+    MULTIWORD  shift, and go to state 36
+    NUMBER     shift, and go to state 37
+    PUNC_CHAR  shift, and go to state 38
+
+    WORD       [reduce using rule 13 (direction)]
+    MULTIWORD  [reduce using rule 13 (direction)]
+    NUMBER     [reduce using rule 13 (direction)]
+    PUNC_CHAR  [reduce using rule 13 (direction)]
+    $default   reduce using rule 13 (direction)
 
 
 State 31
+
+   38 ingredient: ATWORD amount .
+
+    $default  reduce using rule 38 (ingredient)
+
+
+State 32
+
+    5 line: METADATA NL .
+
+    $default  reduce using rule 5 (line)
+
+
+State 33
 
     4 line: step NL .
 
     $default  reduce using rule 4 (line)
 
 
-State 32
-
-    6 step: step direction .
-
-    $default  reduce using rule 6 (step)
-
-
-State 33
-
-   17 text_item: text_item WORD .
-
-    $default  reduce using rule 17 (text_item)
-
-
 State 34
 
-   18 text_item: text_item MULTIWORD .
+    7 step: step direction .
 
-    $default  reduce using rule 18 (text_item)
+    $default  reduce using rule 7 (step)
 
 
 State 35
 
-   19 text_item: text_item NUMBER .
+   18 text_item: text_item WORD .
 
-    $default  reduce using rule 19 (text_item)
+    $default  reduce using rule 18 (text_item)
 
 
 State 36
 
-   20 text_item: text_item PUNC_CHAR .
+   19 text_item: text_item MULTIWORD .
 
-    $default  reduce using rule 20 (text_item)
+    $default  reduce using rule 19 (text_item)
 
 
 State 37
 
-   41 timer: TILDE WORD amount .
+   20 text_item: text_item NUMBER .
 
-    $default  reduce using rule 41 (timer)
+    $default  reduce using rule 20 (text_item)
 
 
 State 38
 
-   42 timer: TILDE MULTIWORD amount .
+   21 text_item: text_item PUNC_CHAR .
 
-    $default  reduce using rule 42 (timer)
+    $default  reduce using rule 21 (text_item)
 
 
 State 39
 
-   24 amount: LCURL WORD . RCURL
-   25       | LCURL WORD . UNIT RCURL
+   43 timer: TILDE WORD amount .
 
-    UNIT   shift, and go to state 51
-    RCURL  shift, and go to state 52
+    $default  reduce using rule 43 (timer)
 
 
 State 40
 
-   26 amount: LCURL MULTIWORD . RCURL
-   27       | LCURL MULTIWORD . UNIT RCURL
+   44 timer: TILDE MULTIWORD amount .
+
+    $default  reduce using rule 44 (timer)
+
+
+State 41
+
+   25 amount: LCURL WORD . RCURL
+   26       | LCURL WORD . UNIT RCURL
 
     UNIT   shift, and go to state 53
     RCURL  shift, and go to state 54
 
 
-State 41
+State 42
 
-   22 amount: LCURL NUMBER . RCURL
-   23       | LCURL NUMBER . UNIT RCURL
+   27 amount: LCURL MULTIWORD . RCURL
+   28       | LCURL MULTIWORD . UNIT RCURL
 
     UNIT   shift, and go to state 55
     RCURL  shift, and go to state 56
 
 
-State 42
-
-   21 amount: LCURL RCURL .
-
-    $default  reduce using rule 21 (amount)
-
-
 State 43
 
-   33 cookware: HWORD WORD LCURL . RCURL
+   23 amount: LCURL NUMBER . RCURL
+   24       | LCURL NUMBER . UNIT RCURL
 
-    RCURL  shift, and go to state 57
+    UNIT   shift, and go to state 57
+    RCURL  shift, and go to state 58
 
 
 State 44
 
-   34 cookware: HWORD MULTIWORD LCURL . RCURL
+   22 amount: LCURL RCURL .
 
-    RCURL  shift, and go to state 58
+    $default  reduce using rule 22 (amount)
 
 
 State 45
 
-   29 cookware_amount: LCURL WORD . RCURL
+   34 cookware: HWORD WORD LCURL . RCURL
 
     RCURL  shift, and go to state 59
 
 
 State 46
 
-   30 cookware_amount: LCURL MULTIWORD . RCURL
+   35 cookware: HWORD MULTIWORD LCURL . RCURL
 
     RCURL  shift, and go to state 60
 
 
 State 47
 
-   28 cookware_amount: LCURL NUMBER . RCURL
+   30 cookware_amount: LCURL WORD . RCURL
 
     RCURL  shift, and go to state 61
 
 
 State 48
 
-   32 cookware: HWORD LCURL RCURL .
-
-    $default  reduce using rule 32 (cookware)
-
-
-State 49
-
-   38 ingredient: ATWORD WORD amount .
-
-    $default  reduce using rule 38 (ingredient)
-
-
-State 50
-
-   39 ingredient: ATWORD MULTIWORD amount .
-
-    $default  reduce using rule 39 (ingredient)
-
-
-State 51
-
-   25 amount: LCURL WORD UNIT . RCURL
+   31 cookware_amount: LCURL MULTIWORD . RCURL
 
     RCURL  shift, and go to state 62
 
 
-State 52
+State 49
 
-   24 amount: LCURL WORD RCURL .
-
-    $default  reduce using rule 24 (amount)
-
-
-State 53
-
-   27 amount: LCURL MULTIWORD UNIT . RCURL
+   29 cookware_amount: LCURL NUMBER . RCURL
 
     RCURL  shift, and go to state 63
 
 
-State 54
+State 50
 
-   26 amount: LCURL MULTIWORD RCURL .
-
-    $default  reduce using rule 26 (amount)
-
-
-State 55
-
-   23 amount: LCURL NUMBER UNIT . RCURL
-
-    RCURL  shift, and go to state 64
-
-
-State 56
-
-   22 amount: LCURL NUMBER RCURL .
-
-    $default  reduce using rule 22 (amount)
-
-
-State 57
-
-   33 cookware: HWORD WORD LCURL RCURL .
+   33 cookware: HWORD LCURL RCURL .
 
     $default  reduce using rule 33 (cookware)
 
 
-State 58
+State 51
 
-   34 cookware: HWORD MULTIWORD LCURL RCURL .
+   39 ingredient: ATWORD WORD amount .
 
-    $default  reduce using rule 34 (cookware)
-
-
-State 59
-
-   29 cookware_amount: LCURL WORD RCURL .
-
-    $default  reduce using rule 29 (cookware_amount)
+    $default  reduce using rule 39 (ingredient)
 
 
-State 60
+State 52
 
-   30 cookware_amount: LCURL MULTIWORD RCURL .
+   40 ingredient: ATWORD MULTIWORD amount .
 
-    $default  reduce using rule 30 (cookware_amount)
-
-
-State 61
-
-   28 cookware_amount: LCURL NUMBER RCURL .
-
-    $default  reduce using rule 28 (cookware_amount)
+    $default  reduce using rule 40 (ingredient)
 
 
-State 62
+State 53
 
-   25 amount: LCURL WORD UNIT RCURL .
+   26 amount: LCURL WORD UNIT . RCURL
+
+    RCURL  shift, and go to state 64
+
+
+State 54
+
+   25 amount: LCURL WORD RCURL .
 
     $default  reduce using rule 25 (amount)
 
 
-State 63
+State 55
 
-   27 amount: LCURL MULTIWORD UNIT RCURL .
+   28 amount: LCURL MULTIWORD UNIT . RCURL
+
+    RCURL  shift, and go to state 65
+
+
+State 56
+
+   27 amount: LCURL MULTIWORD RCURL .
 
     $default  reduce using rule 27 (amount)
 
 
-State 64
+State 57
 
-   23 amount: LCURL NUMBER UNIT RCURL .
+   24 amount: LCURL NUMBER UNIT . RCURL
+
+    RCURL  shift, and go to state 66
+
+
+State 58
+
+   23 amount: LCURL NUMBER RCURL .
 
     $default  reduce using rule 23 (amount)
+
+
+State 59
+
+   34 cookware: HWORD WORD LCURL RCURL .
+
+    $default  reduce using rule 34 (cookware)
+
+
+State 60
+
+   35 cookware: HWORD MULTIWORD LCURL RCURL .
+
+    $default  reduce using rule 35 (cookware)
+
+
+State 61
+
+   30 cookware_amount: LCURL WORD RCURL .
+
+    $default  reduce using rule 30 (cookware_amount)
+
+
+State 62
+
+   31 cookware_amount: LCURL MULTIWORD RCURL .
+
+    $default  reduce using rule 31 (cookware_amount)
+
+
+State 63
+
+   29 cookware_amount: LCURL NUMBER RCURL .
+
+    $default  reduce using rule 29 (cookware_amount)
+
+
+State 64
+
+   26 amount: LCURL WORD UNIT RCURL .
+
+    $default  reduce using rule 26 (amount)
+
+
+State 65
+
+   28 amount: LCURL MULTIWORD UNIT RCURL .
+
+    $default  reduce using rule 28 (amount)
+
+
+State 66
+
+   24 amount: LCURL NUMBER UNIT RCURL .
+
+    $default  reduce using rule 24 (amount)

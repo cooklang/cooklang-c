@@ -21,20 +21,6 @@ void test2(){
 
 
 
-
-void deleteMetadata( void * data ){
-
-}
-
-char * metadataToString( void * data ){
-  return "empty metadata \n";
-}
-
-int compareMetadata( const void * first, const void * second ){
-  return 0;
-}
-
-
 Metadata * createMetadata( char * identifier, char * content ){
 
   // check valid input
@@ -56,11 +42,34 @@ Metadata * createMetadata( char * identifier, char * content ){
   return tempMeta;
 }
 
+// parse meta data function
+
+
+
+void deleteMetadata( void * data ){
+  Metadata * meta = data;
+
+  free(meta->content);
+  free(meta->identifier);
+  free(meta);
+} 
+
+char * metadataToString( void * data ){
+  return "empty metadata \n";
+}
+
+int compareMetadata( const void * first, const void * second ){
+  return 0;
+}
 
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+
+
+
+
+// * * * * * * * * * * * * * * * * * * * *
 // ******** Direction Functions **********
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -76,7 +85,7 @@ Direction * createDirection( char * type, char * value, char * quantityString, d
   }
 
   // value can only be null if the type is a timer, this case comes from a no name timer
-  if( strcmp(type, "timer") != 0 && value == NULL ){
+  if( strcmp(type, "Timer") != 0 && value == NULL ){
     return NULL;
   }
 
@@ -122,6 +131,7 @@ Direction * createDirection( char * type, char * value, char * quantityString, d
   return tempDir;
 }
 
+
 void deleteDirection( void * data ){
   Direction * dir = data;
 
@@ -130,7 +140,10 @@ void deleteDirection( void * data ){
   free(dir->value);
   free(dir->quantityString);
   free(dir->unit);
+
+  free(dir);
 }
+
 
 char * directionToString( void * data ){
   Direction * dir = data;
@@ -247,7 +260,10 @@ Step * createStep(){
 }
 
 void deleteStep( void * data ){
+  Step * step = data;
 
+  freeList(step->directions);
+  free(step);
 }
 
 char * stepToString( void * data ){
@@ -265,7 +281,7 @@ char * stepToString( void * data ){
 
   char * stepString = malloc(sizeof(char) * strlen(dirString) + 20);
 
-  sprintf(stepString, " Step:%s", dirString);
+  sprintf(stepString, " Step: %s", dirString);
 
   free(dirString);
 
@@ -306,8 +322,4 @@ char * recipeToString( void * data ){
   return "empty recipe\n";
 }
 
-
-int compareRecipes( const void * first, const void * second ){
-  return 0;
-}
 
