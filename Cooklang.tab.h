@@ -69,7 +69,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 29 "Cooklang.y" /* yacc.c:1921  */
+#line 25 "Cooklang.y" /* yacc.c:1921  */
 
   char * string;
   char character;

@@ -18,7 +18,7 @@ COOKLANG_CHAR         ">"|"|"|"~"|"@"|"#"|":"|"{"|"}"|"%"
 
 
 ZERO                  "0" 
-NON_ZERO_DIGIT        [0-9]
+NON_ZERO_DIGIT        [1-9]
 
 
 DIGIT                 ({ZERO}|{NON_ZERO_DIGIT}){WHITE_SPACE}*
@@ -107,8 +107,11 @@ int main( int argc, char ** argv ){
   ++argv;
   --argc;
 
+  FILE * file = NULL;
+
   if( argc > 0 ){
-    yyin = fopen(argv[0], "r");
+    file = fopen(argv[0], "r");
+    yyin = file;
   } else {
     yyin  = stdin;
   }
@@ -131,12 +134,29 @@ int main( int argc, char ** argv ){
 
   printf("End of parsing\n");
 
+  char * metaDataString = toString(finalRecipe->metaData);
+
+  printf("%s\n", metaDataString);
+
+  free(metaDataString);
+
+
   // printf out the step steps 
-
-
   char * stepListString = toString(finalRecipe->stepList);
 
   printf("%s\n", stepListString);
+
+  free(stepListString);
+
+  
+  freeList(finalRecipe->metaData);
+  freeList(finalRecipe->stepList);
+  free(finalRecipe);
+
+  if( file != NULL ){
+    fclose(file);
+  }
+
 
   return 0;
 }

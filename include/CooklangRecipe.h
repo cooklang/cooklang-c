@@ -110,6 +110,11 @@ typedef struct {
 // * * * * * * * * * * * * * * * * * * * *
 void test2();
 
+char ** parseAmountString( char * amountString );
+char ** parseMetaString( char * metaString );
+
+
+
 
 Recipe * createRecipe();
 
@@ -117,14 +122,14 @@ void deleteRecipe( void * data );
 char * recipeToString( void * data );
 
 
-Metadata * createMetadata( char * identifier, char * content );
+Metadata * createMetadata( char * metaString );
 
 void deleteMetadata( void * data );
 char * metadataToString( void * data );
 int compareMetadata( const void * first, const void * second );
 
 
-Direction * createDirection( char * type, char * value, char * quantityString, double quantity, char * unit );
+Direction * createDirection( char * type, char * value, char * amountString );
 
 void deleteDirection( void * data );
 char * directionToString( void * data );

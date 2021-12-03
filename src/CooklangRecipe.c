@@ -12,7 +12,92 @@ void test2(){
 
 
 
+// amount can be:
+//  - just a number - number + unit - just a word - word + unit - just a multiword - multiword + unit
 
+char ** parseAmountString( char * amountString ){
+
+  if( amountString == NULL ){
+    return NULL;
+  }
+
+  char ** results = malloc(sizeof(char *) * 2);
+  char * quantityDest = NULL;
+  char * unitDest = NULL;
+  
+  // check if empty - an empty amount - if so set null results and return
+  if( amountString[0] == '\0' ){
+    results[0] = NULL;
+    results[1] = NULL;
+    return results;
+  }
+
+  // all other cases either string or string + unit string
+  char * token = strtok(amountString, "%");
+
+  if( token != NULL ){
+    quantityDest = malloc(sizeof(char) * strlen(token) + 1);
+    strcpy(quantityDest, token); 
+  } else {
+    // no quantity therefore no unit, set null results and return
+    results[0] = NULL;
+    results[1] = NULL;
+    return results;
+  }
+
+  token = strtok(NULL, "%");
+
+  if( token != NULL ){
+    unitDest = malloc(sizeof(char) * strlen(token) + 1);
+    strcpy(unitDest, token);
+  } else {
+    unitDest = NULL;
+  }
+
+  results[0] = quantityDest;
+  results[1] = unitDest;
+
+
+  return results;
+}
+
+
+char ** parseMetaString( char * metaString ){
+  char ** results;
+  char * token;
+  
+  // check input
+  if( metaString == NULL ){
+    return NULL;
+  }
+
+  // tokenize input
+  token = strtok(metaString, ":");
+
+  if( token == NULL ){
+    return NULL;
+  }
+
+  // make space for two string pointers
+  results = malloc(sizeof(char *) * 2);
+
+  results[0] = malloc(sizeof(char) * strlen(token) + 1);
+  strcpy(results[0], token);
+
+  // tokenize again and check for a string
+  token = strtok(NULL, ":");
+
+  if( token == NULL ){
+    results[1] = NULL;
+    return results;
+  }
+
+  results[1] = malloc(sizeof(char) * strlen(token) + 1);
+  strcpy(results[1], token);
+
+  return results;
+
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * 
@@ -21,7 +106,13 @@ void test2(){
 
 
 
-Metadata * createMetadata( char * identifier, char * content ){
+Metadata * createMetadata( char * metaString ){
+
+  // parse the metadata first
+  char ** results = parseMetaString(metaString);
+
+  char * identifier = results[0];
+  char * content = results[1];
 
   // check valid input
   if( identifier == NULL || content == NULL ){
@@ -39,6 +130,10 @@ Metadata * createMetadata( char * identifier, char * content ){
   tempMeta->identifier = strdup(identifier);
   tempMeta->content = strdup(content);
 
+  free(results[0]);
+  free(results[1]);
+  free(results);
+
   return tempMeta;
 }
 
@@ -55,7 +150,15 @@ void deleteMetadata( void * data ){
 } 
 
 char * metadataToString( void * data ){
-  return "empty metadata \n";
+  Metadata * meta = data;
+
+  int length = strlen(meta->identifier) + strlen(meta->content) + 50;
+
+  char * returnString = malloc(sizeof(char) * length);
+
+  sprintf(returnString, "{ Identifier: \"%s\", Content: \"%s\" }", meta->identifier, meta->content);
+
+  return returnString;
 }
 
 int compareMetadata( const void * first, const void * second ){
@@ -77,7 +180,12 @@ int compareMetadata( const void * first, const void * second ){
 
 
 
-Direction * createDirection( char * type, char * value, char * quantityString, double quantity, char * unit ){
+Direction * createDirection( char * type, char * value, char * amountString ){
+  char ** amountResults = NULL;
+  char * quantityString;
+  char * unit;
+  double quantity;
+
 
   // check input - must be a type
   if( type == NULL ){
@@ -87,6 +195,31 @@ Direction * createDirection( char * type, char * value, char * quantityString, d
   // value can only be null if the type is a timer, this case comes from a no name timer
   if( strcmp(type, "Timer") != 0 && value == NULL ){
     return NULL;
+  }
+
+  // parse amountString
+  if( amountString == NULL ){
+    quantityString = NULL;
+    quantity = -1;
+    unit = NULL;
+
+  } else {
+    amountResults = parseAmountString(amountString);
+
+    quantityString = amountResults[0];
+    unit = amountResults[1];
+
+    // check if quantity string can be a double
+    quantity = strtod(quantityString, NULL);
+  }
+  
+
+  // if quantity is a double, that means the quantity string can be represented as a double, so it should be saved as one
+  // so convert it to a double if it can be else make it negative one and keep quantityString as is
+  if( quantity > 0 ){
+    quantityString = NULL;
+  } else {
+    quantity = -1;
   }
 
   Direction * tempDir = malloc(sizeof(Direction));
@@ -100,6 +233,8 @@ Direction * createDirection( char * type, char * value, char * quantityString, d
 
   if( value != NULL ){
     tempDir->value = strdup(value);
+  } else {
+    tempDir->value = NULL;
   }
 
   // there is no quantity and the direction is done
@@ -126,6 +261,12 @@ Direction * createDirection( char * type, char * value, char * quantityString, d
     tempDir->unit = strdup(unit);
   } else {
     tempDir->unit = NULL;
+  }
+
+  if( amountResults != NULL){
+    free(amountResults[0]);
+    free(amountResults[1]);
+    free(amountResults);
   }
 
   return tempDir;
@@ -303,12 +444,19 @@ int compareSteps( const void * first, const void * second){
 // creation functions
 
 Recipe * createRecipe(){
-  // initialize all lists in the recipe
+  
+  // make a new recipe
   Recipe * tempRec = malloc(sizeof(Recipe));
-  // steps
-  List * stepList = initializeList( stepToString, deleteStep, compareSteps );
+  
+  // initialize all the lists in the recipe
 
+  // steps
+  List * stepList = initializeList(stepToString, deleteStep, compareSteps);
   tempRec->stepList = stepList;
+
+  // metadata
+  List * metaDataList = initializeList(metadataToString, deleteMetadata, compareMetadata);
+  tempRec->metaData = metaDataList;
 
   return tempRec;
 }

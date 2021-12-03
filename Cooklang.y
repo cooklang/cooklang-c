@@ -15,10 +15,6 @@ int yyerror ( Recipe * recipe, const char * s);
 
 extern void yyrestart( FILE * input_file );
 
-char string[20] = "header string";
-
-// create the parser actually but thats not setup right now
-
 
 
 %}
@@ -34,83 +30,83 @@ char string[20] = "header string";
 
 %token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NL TILDE HWORD ATWORD METADATA
 
-%type <string> WORD
-%type <string> MULTIWORD
-%type <string> UNIT
+%type <character> LCURL RCURL PUNC_CHAR NL
+%type <string> WORD MULTIWORD UNIT HWORD ATWORD METADATA
 %type <number> NUMBER
-%type <character> LCURL
-%type <character> RCURL
-%type <character> PUNC_CHAR
-%type <string> HWORD
-%type <string> ATWORD
-%type <string> METADATA
-%type <character> NL
 
-%type <string> text_item
-%type <string> step
-%type <string> direction
-%type <string> amount
-%type <string> timer
-%type <string> cookware
-%type <string> cookware_amount ingredient line input
+%type <string> text_item ingredient cookware timer amount cookware_amount
+%type <string> input line step direction
 
 
 %define parse.error verbose
 
+%expect 20
 
 %%
 
 input:
   %empty
-  | input line  { }
+  | input line
   ;
 
 
 line:
     NL      {}
   | step NL {
-      $$ = malloc(strlen($1) + 100);
-      sprintf($$, "%s%c", $1, $2);
       // after a step has been finished by a new line, have to add the step to the steplist
       // and make a new step to accept directions
       Step * newStep = createStep();
 
       insertBack(recipe->stepList, newStep);
+      free($1);
     }
   | METADATA NL {
-      printf("metadata: %S\n", $1);
+      printf("metadata: %s\n", $1);
+      // add metadata to the recipe
+      addMetaData(recipe, $1);
+      free($1);
     }
   ;
 
 
 step:
     direction {
+        $$ = strdup($1);
         printf("*New Step\n ***Direction: %s\n", $1);
+        free($1);
       }
   | step direction {
       printf("***Direction: %s\n", $2);
       $$ = malloc(strlen($1) + strlen($2) + 5);
       sprintf($$, "%s %s", $1, $2);
+      free($1);
+      free($2);
     }
   ;
 
 
 direction:
     text_item {
-      addDirection(recipe, "TextItem", $1, NULL, -1, NULL);
+      $$ = strdup($1);
+      addDirection(recipe, "TextItem", $1, NULL);
+      free($1);
     }
   | timer             
   | cookware          
   | ingredient        
   | HWORD text_item   {
       $$ = addTwoStrings($1, $2);
-      addDirection(recipe, "Cookware", $1, NULL, -1, NULL);
-      addDirection(recipe, "TextItem", $2, NULL, -1, NULL);
+      addDirection(recipe, "Cookware", $1, NULL);
+      addDirection(recipe, "TextItem", $2, NULL);
+      free($1);
+      free($2);
     }
   | ATWORD text_item  {
       $$ = addTwoStrings($1, $2);
-      addDirection(recipe, "Ingredient", $1, NULL, -1, NULL);
-      addDirection(recipe, "TextItem", $2, NULL, -1, NULL);
+      addDirection(recipe, "Ingredient", $1, NULL);
+      addDirection(recipe, "TextItem", $2, NULL);
+      free($1);
+      free($2);
     }
   ;
 
@@ -131,10 +127,14 @@ text_item:
     
   | text_item WORD  { 
       $$ = addTwoStrings($1, $2);
+      free($1);
+      free($2);
     }
     
-  | text_item MULTIWORD  { 
+  | text_item MULTIWORD  {
       $$ = addTwoStrings($1, $2);
+      free($1);
+      free($2);
     }
 
   | text_item NUMBER  { 
@@ -167,6 +167,7 @@ amount:
   | LCURL NUMBER UNIT RCURL { 
       $$ = malloc(strlen($3) + 20);
       sprintf($$, "%.3f %s", $2, $3);
+      free($3);
     }
 
   | LCURL WORD RCURL  {
@@ -175,6 +176,8 @@ amount:
 
   | LCURL WORD UNIT RCURL {
       $$ = addTwoStrings($2, $3);
+      free($2);
+      free($3);
     }
 
   | LCURL MULTIWORD RCURL {
@@ -183,6 +186,8 @@ amount:
 
   | LCURL MULTIWORD UNIT RCURL {
       $$ = addTwoStrings($2, $3);
+      free($2);
+      free($3);
     }
   ;
 
@@ -205,22 +210,51 @@ cookware_amount:
 cookware:
   HWORD {
       $$ = $1;
+      addDirection(recipe, "Cookware", $1, NULL);
     }
 
   | HWORD LCURL RCURL {
       $$ = $1;
+      addDirection(recipe, "Cookware", $1, NULL);
     }
 
   | HWORD WORD LCURL RCURL  { 
       $$ = addTwoStrings($1, $2);
+      char * valueString = addTwoStrings($1, $2);
+      addDirection(recipe, "Cookware", valueString, NULL);
+      free(valueString);
     }
 
   | HWORD MULTIWORD LCURL RCURL { 
       $$ = addTwoStrings($1, $2);
+      char * valueString = addTwoStrings($1, $2);
+      addDirection(recipe, "Cookware", valueString, NULL);
+      free(valueString);
     }
 
   | HWORD cookware_amount  { 
       $$ = addTwoStrings($1, $2);
+      addDirection(recipe, "Cookware", $1, $2);
+    }
+  
+  | HWORD WORD cookware_amount {
+      $$ = addThreeStrings($1, $2, $3);
+      char * valueString = addTwoStrings($1, $2);
+      addDirection(recipe, "Cookware", valueString, $3);
+      free(valueString);
+      free($1);
+      free($2);
+      free($3);
+    }
+  
+  | HWORD MULTIWORD cookware_amount {
+      $$ = addThreeStrings($1, $2, $3);
+      char * valueString = addTwoStrings($1, $2);
+      addDirection(recipe, "Cookware", valueString, $3);
+      free(valueString);
+      free($1);
+      free($2);
+      free($3);
     }
   ;
 
@@ -228,41 +262,63 @@ cookware:
 
 ingredient:
     ATWORD  {
-      $$ = $1;
+      $$ = strdup($1);
+      addDirection(recipe, "Ingredient", $1, NULL);
+      free($1);
     }
 
   | ATWORD amount {
       $$ = addTwoStrings($1, $2);
+      addDirection(recipe, "Ingredient", $1, $2);
+      free($1);
+      free($2);
     }
 
   | ATWORD WORD amount  {
       $$ = addThreeStrings($1, $2, $3);
+      char * valueString = addTwoStrings($1, $2);
+      addDirection(recipe, "Ingredient", valueString, $3);
+      free(valueString);
+      free($1);
+      free($2);
+      free($3);
     }
 
   | ATWORD MULTIWORD amount  {
       $$ = addThreeStrings($1, $2, $3);
+      char * valueString = addTwoStrings($1, $2);
+      addDirection(recipe, "Ingredient", valueString, $3);
+      free(valueString);
+      free($1);
+      free($2);
+      free($3);
     }
   ;
 
 
 timer:
     TILDE amount  {
-        $$ = $2;
-        // parse the amount
-        char ** results = parseAmountString($2);
-
-        addDirection(recipe, "Timer", $2, )
+        $$ = strdup($2);
+        addDirection(recipe, "Timer", NULL, $2);
+        free($2);
       }
   | TILDE WORD {
-        $$ = $2;
-        addDirection(recipe, "Timer", $2, NULL, -1, NULL);        
+        $$ = strdup($2);
+        addDirection(recipe, "Timer", $2, NULL);
+        free($2);
       }
   | TILDE WORD amount { 
         $$ = addTwoStrings($2, $3);
+        addDirection(recipe, "Timer", $2, $3);
+        free($2);
+        free($3);
       }
 
   | TILDE MULTIWORD amount  { 
         $$ = addTwoStrings($2, $3);
+        addDirection(recipe, "Timer", $2, $3);
+        free($2);
+        free($3);
       }
   ;
 

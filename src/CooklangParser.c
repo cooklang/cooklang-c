@@ -58,7 +58,6 @@ char * addThreeStrings(char * first, char * second, char * third){
 
   sprintf(result, "%s %s %s", first, second, third);
 
- 
 
   return result;
 }
@@ -66,64 +65,27 @@ char * addThreeStrings(char * first, char * second, char * third){
 
 // adds the new direction corresponding to arguments 2-6, to the recipe in argument 1
 // always adds to the last step in the list
-void addDirection(Recipe * recipe, char * type, char * value, char * quantityString, double quantity, char * unit){
+void addDirection( Recipe * recipe, char * type, char * value, char * amountString ){
 
   // create a direction then add it to the direction list
-  Direction * tempDir = createDirection(type, value, quantityString, quantity, unit);
+  Direction * tempDir = createDirection(type, value, amountString);
 
   Step * step = getFromBack(recipe->stepList);
 
-  insertBack(step->directions, tempDir);
+  if( tempDir != NULL ){
+    insertBack(step->directions, tempDir);
+  }
 }
 
 
+void addMetaData( Recipe * recipe, char * metaDataString ){
 
-
-// amount can be:
-//  - just a number - number + unit - just a word - word + unit - just a multiword - multiword + unit
-
-char ** parseAmountString( char * amountString ){
-
-  if( amountString == NULL ){
-    return NULL;
-  }
-
-  char ** results = malloc(sizeof(char *) * 2);
-  char * quantityDest = NULL;
-  char * unitDest = NULL;
+  // create a new metadata and add it to the list at the back
+  Metadata * tempMeta = createMetadata(metaDataString);
   
-  // check if empty - an empty amount - if so set null results and return
-  if( amountString[0] == '\0' ){
-    results[0] = NULL;
-    results[1] = NULL;
-    return results;
+  if( tempMeta != NULL ){
+    insertBack(recipe->metaData, tempMeta);
   }
-
-  // all other cases either string or string + unit string
-  char * token = strtok(amountString, "%");
-
-  if( token != NULL ){
-    quantityDest = malloc(sizeof(char) * strlen(token) + 1);
-    strcpy(quantityDest, token); 
-  } else {
-    // no quantity therefore no unit, set null results and return
-    results[0] = NULL;
-    results[1] = NULL;
-    return results;
-  }
-
-  token = strtok(NULL, "%");
-
-  if( token != NULL ){
-    unitDest = malloc(sizeof(char) * strlen(token) + 1);
-    strcpy(unitDest, token);
-  } else {
-    unitDest = NULL;
-  }
-
-  results[0] = quantityDest;
-  results[1] = unitDest;
-
-
-  return results;
 }
+
+
