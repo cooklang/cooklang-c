@@ -1,3 +1,4 @@
 *.o
 test.c
 test
+test.h

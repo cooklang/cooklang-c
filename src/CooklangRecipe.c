@@ -10,96 +10,6 @@ void test2(){
 }
 
 
-
-
-// amount can be:
-//  - just a number - number + unit - just a word - word + unit - just a multiword - multiword + unit
-
-char ** parseAmountString( char * amountString ){
-
-  if( amountString == NULL ){
-    return NULL;
-  }
-
-  char ** results = malloc(sizeof(char *) * 2);
-  char * quantityDest = NULL;
-  char * unitDest = NULL;
-  
-  // check if empty - an empty amount - if so set null results and return
-  if( amountString[0] == '\0' ){
-    results[0] = NULL;
-    results[1] = NULL;
-    return results;
-  }
-
-  // all other cases either string or string + unit string
-  char * token = strtok(amountString, "%");
-
-  if( token != NULL ){
-    quantityDest = malloc(sizeof(char) * strlen(token) + 1);
-    strcpy(quantityDest, token); 
-  } else {
-    // no quantity therefore no unit, set null results and return
-    results[0] = NULL;
-    results[1] = NULL;
-    return results;
-  }
-
-  token = strtok(NULL, "%");
-
-  if( token != NULL ){
-    unitDest = malloc(sizeof(char) * strlen(token) + 1);
-    strcpy(unitDest, token);
-  } else {
-    unitDest = NULL;
-  }
-
-  results[0] = quantityDest;
-  results[1] = unitDest;
-
-
-  return results;
-}
-
-
-char ** parseMetaString( char * metaString ){
-  char ** results;
-  char * token;
-  
-  // check input
-  if( metaString == NULL ){
-    return NULL;
-  }
-
-  // tokenize input
-  token = strtok(metaString, ":");
-
-  if( token == NULL ){
-    return NULL;
-  }
-
-  // make space for two string pointers
-  results = malloc(sizeof(char *) * 2);
-
-  results[0] = malloc(sizeof(char) * strlen(token) + 1);
-  strcpy(results[0], token);
-
-  // tokenize again and check for a string
-  token = strtok(NULL, ":");
-
-  if( token == NULL ){
-    results[1] = NULL;
-    return results;
-  }
-
-  results[1] = malloc(sizeof(char) * strlen(token) + 1);
-  strcpy(results[1], token);
-
-  return results;
-
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * 
 // ******** Metadata Functions ***********
 // * * * * * * * * * * * * * * * * * * * *
@@ -285,6 +195,9 @@ void deleteDirection( void * data ){
   free(dir);
 }
 
+void dummyDeleteDirection( void * data){
+  // does nothing
+}
 
 char * directionToString( void * data ){
   Direction * dir = data;
@@ -394,8 +307,13 @@ Step * createStep(){
   Step * tempStep = malloc(sizeof(Step));
 
   List * dirList = initializeList( directionToString, deleteDirection, compareDirections );
-
   tempStep->directions = dirList;
+
+  List * ingredientList = initializeList(ingredientToString, dummyDeleteDirection, compareDirections);
+  tempStep->ingredientList = ingredientList;
+
+  List * equipmentList = initializeList(ingredientToString, dummyDeleteDirection, compareDirections);
+  tempStep->equipmentList = equipmentList;
 
   return tempStep;
 }
@@ -404,27 +322,60 @@ void deleteStep( void * data ){
   Step * step = data;
 
   freeList(step->directions);
+  freeList(step->ingredientList);
+  freeList(step->equipmentList);
   free(step);
 }
 
 char * stepToString( void * data ){
   Step * step = data;
-  // get the direcitions string
-  
-  char * dirString;
 
+  char * stepString;
+  char * dirString;
+  char * ingredientString;
+  char * equipmentString;
+
+  int length = 0;
+
+  // get the directions string
   if( getLength(step->directions) != 0 ){
     dirString = toString(step->directions);
   } else {
-    dirString = malloc(sizeof(char) * 50);
-    sprintf(dirString, "Empty step\n");
+    stepString = malloc(sizeof(char) * 20);
+    sprintf(stepString, "Empty step\n");
+    return stepString;
   }
 
-  char * stepString = malloc(sizeof(char) * strlen(dirString) + 20);
+  // get the ingredients string
+  if( getLength(step->ingredientList) != 0 ){
+    ingredientString = toString(step->ingredientList);
+  } else {
+    ingredientString = malloc(20);
+    sprintf(ingredientString, " ");
+  }
 
-  sprintf(stepString, " Step: %s", dirString);
+  // get the equipment string
+  if( getLength(step->equipmentList) != 0 ){
+    equipmentString = toString(step->equipmentList);
+  } else {
+    equipmentString = malloc(20);
+    sprintf(equipmentString, " ");
+  }
+
+  // find the length the string should be
+  length += strlen(dirString);
+  length += strlen(ingredientString);
+  length += strlen(equipmentString);
+  length += 50;
+
+  // make the string
+  stepString = malloc(sizeof(char) * length);
+
+  sprintf(stepString, " Step: %s\n ingredients: %s \n equipment: %s", dirString, ingredientString, equipmentString);
 
   free(dirString);
+  free(ingredientString);
+  free(equipmentString);
 
   return stepString;
 }
@@ -448,8 +399,6 @@ Recipe * createRecipe(){
   // make a new recipe
   Recipe * tempRec = malloc(sizeof(Recipe));
   
-  // initialize all the lists in the recipe
-
   // steps
   List * stepList = initializeList(stepToString, deleteStep, compareSteps);
   tempRec->stepList = stepList;
@@ -471,3 +420,184 @@ char * recipeToString( void * data ){
 }
 
 
+
+// * * * * * * * * * * * * * * * * * * * * 
+// ********   Other Functions  ***********
+// * * * * * * * * * * * * * * * * * * * *
+
+
+// print ingredient - used for the ingredient list instead of a the usual direction printing function
+// also works for cookware
+char * ingredientToString( void * data ){
+  Direction * ingredient = data;
+
+  if( ingredient == NULL ){
+    return NULL;
+  }
+
+  int length = 0;
+  char * ingrString = NULL;
+  char * quanString = NULL;
+  char * unitString = NULL;
+
+  // need value, quantity and unit if any
+  length += strlen(ingredient->value);
+
+  // if uses double  type
+  if(ingredient->quantity != -1){
+    length += 10;
+  }
+
+  // if uses string type
+  if( ingredient->quantityString != NULL ){
+    length += strlen(ingredient->quantityString);
+  }
+
+  // check for unit
+  if(ingredient->unit != NULL){
+    length += strlen(ingredient->unit);
+  }
+
+  length += 50;
+
+  // start making string
+  ingrString = malloc(sizeof(char) * length);
+
+  if(ingrString == NULL){
+    printf("error, malloc failed - ingredientToString11\n");
+    return NULL;
+  }
+
+  sprintf(ingrString, "%s", ingredient->value);
+
+  // add quantity string
+  if( ingredient->quantity == -1 ){
+    if( ingredient->quantityString != NULL ){
+      quanString = malloc(sizeof(char) * strlen(ingredient->quantityString) + 20);
+      sprintf(quanString, ": %s", ingredient->quantityString);
+    }
+  } else {
+    quanString = malloc(sizeof(char) * 20);
+    sprintf(quanString, ": %.3f", ingredient->quantity);
+  }
+
+  // there is no quantity and no quantity string, therefore no units
+  if( quanString == NULL ){
+    return ingrString;
+  } else {
+    strcat(ingrString, quanString);
+  }
+
+  // add the unit string if there is one
+  // if there isnt
+  if( ingredient->unit == NULL ){
+    return ingrString;
+
+  // if there is
+  } else {
+    unitString = malloc(sizeof(char) * strlen(ingredient->unit) + 20);
+    sprintf(unitString, " %s", ingredient->unit);
+  }
+
+  strcat(ingrString, unitString);
+
+  free(unitString);
+  free(quanString);
+
+  return ingrString;
+}
+
+
+
+
+// print cookware - used for the ingredient list instead of a the usual direction printing function
+
+
+// amount can be:
+//  - just a number - number + unit - just a word - word + unit - just a multiword - multiword + unit
+// parses an amount string to get the unit and quantity
+char ** parseAmountString( char * amountString ){
+
+  if( amountString == NULL ){
+    return NULL;
+  }
+
+  char ** results = malloc(sizeof(char *) * 2);
+  char * quantityDest = NULL;
+  char * unitDest = NULL;
+  
+  // check if empty - an empty amount - if so set null results and return
+  if( amountString[0] == '\0' ){
+    results[0] = NULL;
+    results[1] = NULL;
+    return results;
+  }
+
+  // all other cases either string or string + unit string
+  char * token = strtok(amountString, "%");
+
+  if( token != NULL ){
+    quantityDest = malloc(sizeof(char) * strlen(token) + 1);
+    strcpy(quantityDest, token); 
+  } else {
+    // no quantity therefore no unit, set null results and return
+    results[0] = NULL;
+    results[1] = NULL;
+    return results;
+  }
+
+  token = strtok(NULL, "%");
+
+  if( token != NULL ){
+    unitDest = malloc(sizeof(char) * strlen(token) + 1);
+    strcpy(unitDest, token);
+  } else {
+    unitDest = NULL;
+  }
+
+  results[0] = quantityDest;
+  results[1] = unitDest;
+
+
+  return results;
+}
+
+
+// need to fix still
+// parses a meta data string to get the identifier and content of metadata
+char ** parseMetaString( char * metaString ){
+  char ** results;
+  char * token;
+  
+  // check input
+  if( metaString == NULL ){
+    return NULL;
+  }
+
+  // tokenize input
+  token = strtok(metaString, ":");
+
+  if( token == NULL ){
+    return NULL;
+  }
+
+  // make space for two string pointers
+  results = malloc(sizeof(char *) * 2);
+
+  results[0] = malloc(sizeof(char) * strlen(token) + 1);
+  strcpy(results[0], token);
+
+  // tokenize again and check for a string
+  token = strtok(NULL, ":");
+
+  if( token == NULL ){
+    results[1] = NULL;
+    return results;
+  }
+
+  results[1] = malloc(sizeof(char) * strlen(token) + 1);
+  strcpy(results[1], token);
+
+  return results;
+
+}

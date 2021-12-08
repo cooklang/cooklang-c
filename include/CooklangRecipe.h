@@ -15,12 +15,6 @@ typedef struct {
 
   List * stepList;
 
-  List * equipmentList;
-
-  List * ingredientList;
-
-  List * shoppingList;
-
 } Recipe;
 
 
@@ -74,28 +68,12 @@ typedef struct {
   // just a list of directions
   List * directions;
 
+  List * ingredientList;
+  
+  List * equipmentList;
+
 } Step;
 
-
-
-
-// shopping list
-typedef struct {
-
-  char * category;
-  List * shoppingItem;
-
-} ShoppingList;
-
-typedef struct {
-  
-  // required, the first name
-  char * name;
-
-  // any other synonyms
-  List * synonyms;
-
-} ShoppingItem;
 
 
 
@@ -109,10 +87,6 @@ typedef struct {
 // ******** Function Definitions *********
 // * * * * * * * * * * * * * * * * * * * *
 void test2();
-
-char ** parseAmountString( char * amountString );
-char ** parseMetaString( char * metaString );
-
 
 
 
@@ -132,6 +106,7 @@ int compareMetadata( const void * first, const void * second );
 Direction * createDirection( char * type, char * value, char * amountString );
 
 void deleteDirection( void * data );
+void dummyDeleteDirection( void * data);
 char * directionToString( void * data );
 int compareDirections( const void * first, const void * second );
 
@@ -141,3 +116,12 @@ Step * createStep();
 void deleteStep( void * data );
 char * stepToString( void * data );
 int compareSteps( const void * first, const void * second );
+
+
+
+
+char * ingredientToString( void * data );
+
+char ** parseAmountString( char * amountString );
+char ** parseMetaString( char * metaString );
+

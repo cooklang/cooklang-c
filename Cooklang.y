@@ -61,7 +61,6 @@ line:
       free($1);
     }
   | METADATA NL {
-      printf("metadata: %s\n", $1);
       // add metadata to the recipe
       addMetaData(recipe, $1);
       free($1);
@@ -72,11 +71,9 @@ line:
 step:
     direction {
         $$ = strdup($1);
-        printf("*New Step\n ***Direction: %s\n", $1);
         free($1);
       }
   | step direction {
-      printf("***Direction: %s\n", $2);
       $$ = malloc(strlen($1) + strlen($2) + 5);
       sprintf($$, "%s %s", $1, $2);
       free($1);
@@ -209,13 +206,15 @@ cookware_amount:
 
 cookware:
   HWORD {
-      $$ = $1;
+      $$ = strdup($1);
       addDirection(recipe, "Cookware", $1, NULL);
+      free($1);
     }
 
   | HWORD LCURL RCURL {
-      $$ = $1;
+      $$ = strdup($1);
       addDirection(recipe, "Cookware", $1, NULL);
+      free($1);
     }
 
   | HWORD WORD LCURL RCURL  { 
@@ -223,6 +222,8 @@ cookware:
       char * valueString = addTwoStrings($1, $2);
       addDirection(recipe, "Cookware", valueString, NULL);
       free(valueString);
+      free($1);
+      free($2);
     }
 
   | HWORD MULTIWORD LCURL RCURL { 
@@ -230,11 +231,15 @@ cookware:
       char * valueString = addTwoStrings($1, $2);
       addDirection(recipe, "Cookware", valueString, NULL);
       free(valueString);
+      free($1);
+      free($2);
     }
 
   | HWORD cookware_amount  { 
       $$ = addTwoStrings($1, $2);
       addDirection(recipe, "Cookware", $1, $2);
+      free($1);
+      free($2);
     }
   
   | HWORD WORD cookware_amount {

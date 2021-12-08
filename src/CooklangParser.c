@@ -29,7 +29,7 @@ char * addTwoStrings(char * first, char * second){
     return NULL;
   }
 
-  sprintf(result, "%s %s", first, second);
+  sprintf(result, "%s%s", first, second);
 
 
   return result;
@@ -56,7 +56,7 @@ char * addThreeStrings(char * first, char * second, char * third){
     return NULL;
   }
 
-  sprintf(result, "%s %s %s", first, second, third);
+  sprintf(result, "%s%s%s", first, second, third);
 
 
   return result;
@@ -75,6 +75,15 @@ void addDirection( Recipe * recipe, char * type, char * value, char * amountStri
   if( tempDir != NULL ){
     insertBack(step->directions, tempDir);
   }
+
+  // if cookware/ingredient, add to the appropriate lists
+  if( strcmp(type, "Cookware") == 0 ){
+    insertBack(step->equipmentList, tempDir);
+  }
+
+  if( strcmp(type, "Ingredient") == 0 ){
+    insertBack(step->ingredientList, tempDir);
+  }
 }
 
 
@@ -87,5 +96,4 @@ void addMetaData( Recipe * recipe, char * metaDataString ){
     insertBack(recipe->metaData, tempMeta);
   }
 }
-
 

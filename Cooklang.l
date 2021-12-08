@@ -128,11 +128,8 @@ int main( int argc, char ** argv ){
 
   yyparse(finalRecipe);
 
-  printf("asdf2\n");
 
-  
-
-  printf("End of parsing\n");
+  printf("\nEnd of parsing\n");
 
   char * metaDataString = toString(finalRecipe->metaData);
 
@@ -148,7 +145,7 @@ int main( int argc, char ** argv ){
 
   free(stepListString);
 
-  
+
   freeList(finalRecipe->metaData);
   freeList(finalRecipe->stepList);
   free(finalRecipe);
