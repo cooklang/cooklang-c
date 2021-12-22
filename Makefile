@@ -27,7 +27,7 @@ test.o:
 
 # parser stuff
 parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	flex Cooklang.l
+	flex -Ca --align Cooklang.l
 	bison -d Cooklang.y -v
 	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 
