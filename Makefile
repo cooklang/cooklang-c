@@ -34,4 +34,4 @@ parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 
 # clean
 clean: 
-	rm bin/*.o *.o test test.o lex.yy.c parser Cooklang.tab.c a.out Cooklang.tab.o lex.yy.o
+	rm -f bin/*.o *.o test test.o lex.yy.c parser Cooklang.tab.c a.out Cooklang.tab.o lex.yy.o
