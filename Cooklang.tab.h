@@ -59,7 +59,9 @@ extern int yydebug;
     NL = 265,
     TILDE = 266,
     HWORD = 267,
-    ATWORD = 268
+    ATWORD = 268,
+    METADATA = 269,
+    COMMENT = 270
   };
 #endif
 
@@ -68,13 +70,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "Cooklang.y" /* yacc.c:1921  */
+#line 30 "Cooklang.y" /* yacc.c:1921  */
 
   char * string;
   char character;
   double number;
 
-#line 78 "Cooklang.tab.h" /* yacc.c:1921  */
+#line 80 "Cooklang.tab.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -85,6 +87,6 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
-int yyparse (void);
+int yyparse (Recipe * recipe);
 
 #endif /* !YY_YY_COOKLANG_TAB_H_INCLUDED  */
