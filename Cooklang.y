@@ -21,7 +21,7 @@ extern void yyrestart( FILE * input_file );
 %}
 %define parse.error verbose
 
-
+%expect 17
 
 
 %parse-param {Recipe * recipe}
