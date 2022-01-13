@@ -61,7 +61,8 @@ extern int yydebug;
     HWORD = 267,
     ATWORD = 268,
     METADATA = 269,
-    COMMENT = 270
+    COMMENT = 270,
+    WHTS = 271
   };
 #endif
 
@@ -70,13 +71,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 30 "Cooklang.y" /* yacc.c:1921  */
+#line 29 "Cooklang.y" /* yacc.c:1921  */
 
   char * string;
   char character;
   double number;
 
-#line 80 "Cooklang.tab.h" /* yacc.c:1921  */
+#line 81 "Cooklang.tab.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -16,12 +16,11 @@ int yyerror ( Recipe * recipe, const char * s);
 
 extern void yyrestart( FILE * input_file );
 
-
-
 %}
+
 %define parse.error verbose
 
-%expect 17
+%expect 18
 
 
 %parse-param {Recipe * recipe}
@@ -33,16 +32,16 @@ extern void yyrestart( FILE * input_file );
   double number;
 }
 
-%token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NL TILDE HWORD ATWORD METADATA COMMENT
+%token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NL TILDE HWORD ATWORD METADATA COMMENT WHTS
 
-%type <character> LCURL RCURL  NL
-%type <string> WORD MULTIWORD UNIT HWORD ATWORD METADATA PUNC_CHAR
+%type <character> LCURL RCURL NL
+%type <string> WORD MULTIWORD UNIT HWORD ATWORD METADATA PUNC_CHAR WHTS
 %type <number> NUMBER
 
-%type <string> text_item ingredient cookware timer amount cookware_amount
+%type <string> text_item ingredient cookware timer amount
 %type <string> input line step direction
 
-
+%type <string> cookware_amount
 
 
 %%
@@ -82,6 +81,15 @@ step:
       free($1);
       free($2);
     }
+  | step WHTS {
+      $$ = malloc(strlen($1) + strlen($2) + 5);
+      sprintf($$, "%s %s", $1, $2);
+
+      addDirection(recipe, "text", $2, NULL);
+
+      free($1);
+      free($2);
+    }
   ;
 
 
@@ -108,6 +116,14 @@ direction:
       free($1);
       free($2);
     }
+  | text_item WHTS {
+    $$ = addTwoStrings($1, $2);
+    char * tempString = addTwoStrings($1, $2);
+    addDirection(recipe, "text", tempString, NULL);
+    free(tempString);
+    free($1);
+    free($2);
+  }
   ;
 
 text_item:
@@ -118,7 +134,7 @@ text_item:
       sprintf($$, "%.3f", $1);
     }
   | PUNC_CHAR
-  | text_item WORD  { 
+  | text_item WORD  {
       $$ = addTwoStrings($1, $2);
       free($1);
       free($2);
@@ -150,6 +166,10 @@ amount:
       $$ = malloc(5);
       strcpy($$, "\0");
     }
+  | LCURL WHTS RCURL {
+    $$ = malloc(5);
+    strcpy($$, "\0");
+  }
 
   | LCURL NUMBER RCURL  { 
       // get string for amount
@@ -186,18 +206,28 @@ amount:
 
 
 cookware_amount:
-    LCURL NUMBER RCURL  {
+    LCURL RCURL {
+        $$ = malloc(5);
+        strcpy($$, "\0");
+      }
+
+  | LCURL WHTS RCURL {
+        $$ = malloc(5);
+        strcpy($$, "\0");
+      }
+
+  | LCURL NUMBER RCURL  {
         $$ = malloc(100);
         sprintf($$, "%.3f", $2);
       }
 
-  | LCURL WORD RCURL      {
+  | LCURL WORD RCURL  {
         $$ = $2;
       }
 
   | LCURL MULTIWORD RCURL {
         $$ = $2;
-    }
+      } 
   ;
 
 cookware:
@@ -205,30 +235,6 @@ cookware:
       $$ = strdup($1);
       addDirection(recipe, "cookware", $1, NULL);
       free($1);
-    }
-
-  | HWORD LCURL RCURL {
-      $$ = strdup($1);
-      addDirection(recipe, "cookware", $1, NULL);
-      free($1);
-    }
-
-  | HWORD WORD LCURL RCURL  { 
-      $$ = addTwoStrings($1, $2);
-      char * valueString = addTwoStrings($1, $2);
-      addDirection(recipe, "cookware", valueString, NULL);
-      free(valueString);
-      free($1);
-      free($2);
-    }
-
-  | HWORD MULTIWORD LCURL RCURL { 
-      $$ = addTwoStrings($1, $2);
-      char * valueString = addTwoStrings($1, $2);
-      addDirection(recipe, "cookware", valueString, NULL);
-      free(valueString);
-      free($1);
-      free($2);
     }
 
   | HWORD cookware_amount  { 

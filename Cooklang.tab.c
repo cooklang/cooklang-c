@@ -85,9 +85,7 @@ int yyerror ( Recipe * recipe, const char * s);
 extern void yyrestart( FILE * input_file );
 
 
-
-
-#line 91 "Cooklang.tab.c" /* yacc.c:337  */
+#line 89 "Cooklang.tab.c" /* yacc.c:337  */
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
 #   if 201103L <= __cplusplus
@@ -137,7 +135,8 @@ extern int yydebug;
     HWORD = 267,
     ATWORD = 268,
     METADATA = 269,
-    COMMENT = 270
+    COMMENT = 270,
+    WHTS = 271
   };
 #endif
 
@@ -146,13 +145,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 30 "Cooklang.y" /* yacc.c:352  */
+#line 29 "Cooklang.y" /* yacc.c:352  */
 
   char * string;
   char character;
   double number;
 
-#line 156 "Cooklang.tab.c" /* yacc.c:352  */
+#line 155 "Cooklang.tab.c" /* yacc.c:352  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -400,19 +399,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   83
+#define YYLAST   80
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  16
+#define YYNTOKENS  17
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  11
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  47
+#define YYNRULES  49
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  69
+#define YYNSTATES  71
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   270
+#define YYMAXUTOK   271
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
@@ -450,18 +449,18 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15
+      15,    16
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    51,    51,    52,    57,    58,    66,    75,    79,    89,
-      94,    95,    96,    97,   104,   114,   115,   116,   120,   121,
-     127,   133,   139,   149,   154,   160,   166,   170,   176,   180,
-     189,   194,   198,   204,   210,   216,   225,   234,   241,   251,
-     265,   271,   278,   288,   301,   306,   311,   318
+       0,    50,    50,    51,    56,    57,    65,    74,    78,    84,
+      97,   102,   103,   104,   105,   112,   119,   130,   131,   132,
+     136,   137,   143,   149,   155,   165,   169,   174,   180,   186,
+     190,   196,   200,   209,   214,   219,   224,   228,   234,   240,
+     247,   257,   271,   277,   284,   294,   307,   312,   317,   324
 };
 #endif
 
@@ -472,9 +471,9 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "WORD", "MULTIWORD", "UNIT", "NUMBER",
   "LCURL", "RCURL", "PUNC_CHAR", "NL", "TILDE", "HWORD", "ATWORD",
-  "METADATA", "COMMENT", "$accept", "input", "line", "step", "direction",
-  "text_item", "amount", "cookware_amount", "cookware", "ingredient",
-  "timer", YY_NULLPTR
+  "METADATA", "COMMENT", "WHTS", "$accept", "input", "line", "step",
+  "direction", "text_item", "amount", "cookware_amount", "cookware",
+  "ingredient", "timer", YY_NULLPTR
 };
 #endif
 
@@ -484,7 +483,7 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270
+     265,   266,   267,   268,   269,   270,   271
 };
 # endif
 
@@ -502,13 +501,14 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -11,     2,   -11,   -11,   -11,   -11,   -11,   -11,     0,    34,
-      41,    -9,   -11,    23,   -11,    17,   -11,   -11,   -11,    10,
-      10,    48,   -11,    15,    32,    54,    17,   -11,    10,    10,
-      17,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,
-     -11,    20,    68,    70,   -11,    60,   -11,    66,   -11,    16,
-      22,    38,   -11,   -11,   -11,    45,   -11,    47,   -11,    51,
-     -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11
+     -11,     2,   -11,   -11,   -11,   -11,   -11,   -11,     0,    58,
+      65,    -9,   -11,    17,   -11,    28,   -11,   -11,   -11,    10,
+      10,    32,   -11,    30,    30,    43,    49,   -11,    10,    10,
+      49,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,
+     -11,   -11,   -11,    52,    68,    70,   -11,    14,   -11,   -11,
+      31,    33,    35,   -11,    37,   -11,   -11,    42,   -11,    46,
+     -11,    48,   -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11,
+     -11
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -516,19 +516,20 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     0,     1,    15,    16,    17,    18,     4,     0,    33,
-      40,     0,     3,     0,     7,     9,    11,    12,    10,    45,
-       0,     0,    44,    15,    16,     0,    13,    37,    15,    16,
-      14,    41,     6,     5,     8,    19,    20,    21,    22,    46,
-      47,     0,     0,     0,    23,     0,    38,     0,    39,     0,
-       0,     0,    34,    42,    43,     0,    26,     0,    28,     0,
-      24,    35,    36,    31,    32,    30,    27,    29,    25
+       2,     0,     1,    17,    18,    19,    20,     4,     0,    38,
+      42,     0,     3,     0,     7,    10,    12,    13,    11,    47,
+       0,     0,    46,    17,    18,     0,    14,    39,    17,    18,
+      15,    43,     6,     5,     9,     8,    21,    22,    23,    24,
+      16,    48,    49,     0,     0,     0,    25,     0,    40,    41,
+       0,     0,     0,    33,     0,    44,    45,     0,    29,     0,
+      31,     0,    27,    26,    36,    37,    35,    34,    30,    32,
+      28
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -11,   -11,   -11,   -11,    29,    71,   -10,    59,   -11,   -11,
+     -11,   -11,   -11,   -11,    45,    15,   -10,    56,   -11,   -11,
      -11
 };
 
@@ -544,61 +545,62 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      31,    32,     2,    19,    20,     3,     4,    21,     5,    39,
-      40,     6,     7,     8,     9,    10,    11,    21,    53,    54,
-      35,    36,    45,    37,    63,    55,     3,     4,    56,     5,
-      64,    38,     6,    33,     8,     9,    10,    23,    24,    47,
-       5,    25,    34,     6,    28,    29,    65,     5,    21,     0,
-       6,    41,    42,    66,    43,    67,    44,    49,    50,    68,
-      51,     0,    52,    49,    50,     0,    51,     0,    61,    49,
-      50,     0,    51,    57,    62,    59,    58,     0,    60,     0,
-      26,    30,    46,    48
+      31,    32,     2,    19,    20,     3,     4,    21,     5,    41,
+      42,     6,     7,     8,     9,    10,    11,    21,    55,    56,
+       3,     4,    63,     5,    26,    30,     6,    33,     8,     9,
+      10,    36,    37,    34,    38,    43,    44,    25,    45,    64,
+      46,    65,    39,    66,    40,    67,    50,    51,    47,    52,
+      68,    53,    36,    37,    69,    38,    70,    57,    35,    54,
+      58,    23,    24,    39,     5,    25,     0,     6,    28,    29,
+       0,     5,    21,    59,     6,    61,    60,     0,    62,    48,
+      49
 };
 
 static const yytype_int8 yycheck[] =
 {
       10,    10,     0,     3,     4,     3,     4,     7,     6,    19,
       20,     9,    10,    11,    12,    13,    14,     7,    28,    29,
-       3,     4,     7,     6,     8,     5,     3,     4,     8,     6,
-       8,    14,     9,    10,    11,    12,    13,     3,     4,     7,
-       6,     7,    13,     9,     3,     4,     8,     6,     7,    -1,
-       9,     3,     4,     8,     6,     8,     8,     3,     4,     8,
-       6,    -1,     8,     3,     4,    -1,     6,    -1,     8,     3,
-       4,    -1,     6,     5,     8,     5,     8,    -1,     8,    -1,
-       9,    10,    23,    24
+       3,     4,     8,     6,     9,    10,     9,    10,    11,    12,
+      13,     3,     4,    16,     6,     3,     4,     7,     6,     8,
+       8,     8,    14,     8,    16,     8,     3,     4,    16,     6,
+       8,     8,     3,     4,     8,     6,     8,     5,    13,    16,
+       8,     3,     4,    14,     6,     7,    -1,     9,     3,     4,
+      -1,     6,     7,     5,     9,     5,     8,    -1,     8,    23,
+      24
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    17,     0,     3,     4,     6,     9,    10,    11,    12,
-      13,    14,    18,    19,    20,    21,    24,    25,    26,     3,
-       4,     7,    22,     3,     4,     7,    21,    23,     3,     4,
-      21,    22,    10,    10,    20,     3,     4,     6,    14,    22,
-      22,     3,     4,     6,     8,     7,    23,     7,    23,     3,
-       4,     6,     8,    22,    22,     5,     8,     5,     8,     5,
-       8,     8,     8,     8,     8,     8,     8,     8,     8
+       0,    18,     0,     3,     4,     6,     9,    10,    11,    12,
+      13,    14,    19,    20,    21,    22,    25,    26,    27,     3,
+       4,     7,    23,     3,     4,     7,    22,    24,     3,     4,
+      22,    23,    10,    10,    16,    21,     3,     4,     6,    14,
+      16,    23,    23,     3,     4,     6,     8,    16,    24,    24,
+       3,     4,     6,     8,    16,    23,    23,     5,     8,     5,
+       8,     5,     8,     8,     8,     8,     8,     8,     8,     8,
+       8
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    16,    17,    17,    18,    18,    18,    19,    19,    20,
-      20,    20,    20,    20,    20,    21,    21,    21,    21,    21,
-      21,    21,    21,    22,    22,    22,    22,    22,    22,    22,
-      23,    23,    23,    24,    24,    24,    24,    24,    24,    24,
-      25,    25,    25,    25,    26,    26,    26,    26
+       0,    17,    18,    18,    19,    19,    19,    20,    20,    20,
+      21,    21,    21,    21,    21,    21,    21,    22,    22,    22,
+      22,    22,    22,    22,    22,    23,    23,    23,    23,    23,
+      23,    23,    23,    24,    24,    24,    24,    24,    25,    25,
+      25,    25,    26,    26,    26,    26,    27,    27,    27,    27
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     1,     2,     2,     1,     2,     1,
-       1,     1,     1,     2,     2,     1,     1,     1,     1,     2,
-       2,     2,     2,     2,     3,     4,     3,     4,     3,     4,
-       3,     3,     3,     1,     3,     4,     4,     2,     3,     3,
-       1,     2,     3,     3,     2,     2,     3,     3
+       0,     2,     0,     2,     1,     2,     2,     1,     2,     2,
+       1,     1,     1,     1,     2,     2,     2,     1,     1,     1,
+       1,     2,     2,     2,     2,     2,     3,     3,     4,     3,
+       4,     3,     4,     2,     3,     3,     3,     3,     1,     2,
+       3,     3,     1,     2,     3,     3,     2,     2,     3,     3
 };
 
 
@@ -1286,13 +1288,13 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 57 "Cooklang.y" /* yacc.c:1652  */
+#line 56 "Cooklang.y" /* yacc.c:1652  */
     {}
-#line 1292 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1294 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 5:
-#line 58 "Cooklang.y" /* yacc.c:1652  */
+#line 57 "Cooklang.y" /* yacc.c:1652  */
     {
       // after a step has been finished by a new line, have to add the step to the steplist
       // and make a new step to accept directions
@@ -1301,51 +1303,65 @@ yyreduce:
       insertBack(recipe->stepList, newStep);
       free((yyvsp[-1].string));
     }
-#line 1305 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1307 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 6:
-#line 66 "Cooklang.y" /* yacc.c:1652  */
+#line 65 "Cooklang.y" /* yacc.c:1652  */
     {
       // add metadata to the recipe
       addMetaData(recipe, (yyvsp[-1].string));
       free((yyvsp[-1].string));
     }
-#line 1315 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1317 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 7:
-#line 75 "Cooklang.y" /* yacc.c:1652  */
+#line 74 "Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = strdup((yyvsp[0].string));
         free((yyvsp[0].string));
       }
-#line 1324 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1326 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 8:
-#line 79 "Cooklang.y" /* yacc.c:1652  */
+#line 78 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + strlen((yyvsp[0].string)) + 5);
       sprintf((yyval.string), "%s %s", (yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1335 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1337 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 9:
-#line 89 "Cooklang.y" /* yacc.c:1652  */
+#line 84 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = malloc(strlen((yyvsp[-1].string)) + strlen((yyvsp[0].string)) + 5);
+      sprintf((yyval.string), "%s %s", (yyvsp[-1].string), (yyvsp[0].string));
+
+      addDirection(recipe, "text", (yyvsp[0].string), NULL);
+
+      free((yyvsp[-1].string));
+      free((yyvsp[0].string));
+    }
+#line 1351 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 10:
+#line 97 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = strdup((yyvsp[0].string));
       addDirection(recipe, "text", (yyvsp[0].string), NULL);
       free((yyvsp[0].string));
     }
-#line 1345 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1361 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 13:
-#line 97 "Cooklang.y" /* yacc.c:1652  */
+  case 14:
+#line 105 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[-1].string), NULL);
@@ -1353,11 +1369,11 @@ yyreduce:
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1357 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1373 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 14:
-#line 104 "Cooklang.y" /* yacc.c:1652  */
+  case 15:
+#line 112 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "ingredient", (yyvsp[-1].string), NULL);
@@ -1365,326 +1381,330 @@ yyreduce:
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1369 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1385 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 17:
-#line 116 "Cooklang.y" /* yacc.c:1652  */
+  case 16:
+#line 119 "Cooklang.y" /* yacc.c:1652  */
+    {
+    (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
+    char * tempString = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
+    addDirection(recipe, "text", tempString, NULL);
+    free(tempString);
+    free((yyvsp[-1].string));
+    free((yyvsp[0].string));
+  }
+#line 1398 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 19:
+#line 132 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(10);
       sprintf((yyval.string), "%.3f", (yyvsp[0].number));
     }
-#line 1378 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1407 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 19:
-#line 121 "Cooklang.y" /* yacc.c:1652  */
-    { 
-      (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
-      free((yyvsp[-1].string));
-      free((yyvsp[0].string));
-    }
-#line 1388 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 20:
-#line 127 "Cooklang.y" /* yacc.c:1652  */
+  case 21:
+#line 137 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1398 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1417 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 21:
-#line 133 "Cooklang.y" /* yacc.c:1652  */
+  case 22:
+#line 143 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
+      free((yyvsp[-1].string));
+      free((yyvsp[0].string));
+    }
+#line 1427 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 23:
+#line 149 "Cooklang.y" /* yacc.c:1652  */
     { 
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 15);
       sprintf((yyval.string), "%s %.3f", (yyvsp[-1].string), (yyvsp[0].number));
       free((yyvsp[-1].string));
     }
-#line 1408 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1437 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 22:
-#line 139 "Cooklang.y" /* yacc.c:1652  */
+  case 24:
+#line 155 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1418 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1447 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 23:
-#line 149 "Cooklang.y" /* yacc.c:1652  */
+  case 25:
+#line 165 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(5);
       strcpy((yyval.string), "\0");
     }
-#line 1427 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1456 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 24:
-#line 154 "Cooklang.y" /* yacc.c:1652  */
+  case 26:
+#line 169 "Cooklang.y" /* yacc.c:1652  */
+    {
+    (yyval.string) = malloc(5);
+    strcpy((yyval.string), "\0");
+  }
+#line 1465 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 27:
+#line 174 "Cooklang.y" /* yacc.c:1652  */
     { 
       // get string for amount
       (yyval.string) = malloc(100);
       sprintf((yyval.string), "%.3lf", (yyvsp[-1].number));
     }
-#line 1437 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1475 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 25:
-#line 160 "Cooklang.y" /* yacc.c:1652  */
+  case 28:
+#line 180 "Cooklang.y" /* yacc.c:1652  */
     { 
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 20);
       sprintf((yyval.string), "%.3f %s", (yyvsp[-2].number), (yyvsp[-1].string));
       free((yyvsp[-1].string));
     }
-#line 1447 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 26:
-#line 166 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = (yyvsp[-1].string);
-    }
-#line 1455 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 27:
-#line 170 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
-      free((yyvsp[-2].string));
-      free((yyvsp[-1].string));
-    }
-#line 1465 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 28:
-#line 176 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = (yyvsp[-1].string);
-    }
-#line 1473 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1485 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 29:
-#line 180 "Cooklang.y" /* yacc.c:1652  */
+#line 186 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = (yyvsp[-1].string);
+    }
+#line 1493 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 30:
+#line 190 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
       free((yyvsp[-2].string));
       free((yyvsp[-1].string));
     }
-#line 1483 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1503 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 30:
-#line 189 "Cooklang.y" /* yacc.c:1652  */
+  case 31:
+#line 196 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = (yyvsp[-1].string);
+    }
+#line 1511 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 32:
+#line 200 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
+      free((yyvsp[-2].string));
+      free((yyvsp[-1].string));
+    }
+#line 1521 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 33:
+#line 209 "Cooklang.y" /* yacc.c:1652  */
+    {
+        (yyval.string) = malloc(5);
+        strcpy((yyval.string), "\0");
+      }
+#line 1530 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 34:
+#line 214 "Cooklang.y" /* yacc.c:1652  */
+    {
+        (yyval.string) = malloc(5);
+        strcpy((yyval.string), "\0");
+      }
+#line 1539 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 35:
+#line 219 "Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = malloc(100);
         sprintf((yyval.string), "%.3f", (yyvsp[-1].number));
       }
-#line 1492 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1548 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 31:
-#line 194 "Cooklang.y" /* yacc.c:1652  */
+  case 36:
+#line 224 "Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = (yyvsp[-1].string);
       }
-#line 1500 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1556 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 32:
-#line 198 "Cooklang.y" /* yacc.c:1652  */
+  case 37:
+#line 228 "Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = (yyvsp[-1].string);
-    }
-#line 1508 "Cooklang.tab.c" /* yacc.c:1652  */
+      }
+#line 1564 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 33:
-#line 204 "Cooklang.y" /* yacc.c:1652  */
+  case 38:
+#line 234 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = strdup((yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[0].string), NULL);
       free((yyvsp[0].string));
     }
-#line 1518 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1574 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 34:
-#line 210 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = strdup((yyvsp[-2].string));
-      addDirection(recipe, "cookware", (yyvsp[-2].string), NULL);
-      free((yyvsp[-2].string));
-    }
-#line 1528 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 35:
-#line 216 "Cooklang.y" /* yacc.c:1652  */
-    { 
-      (yyval.string) = addTwoStrings((yyvsp[-3].string), (yyvsp[-2].string));
-      char * valueString = addTwoStrings((yyvsp[-3].string), (yyvsp[-2].string));
-      addDirection(recipe, "cookware", valueString, NULL);
-      free(valueString);
-      free((yyvsp[-3].string));
-      free((yyvsp[-2].string));
-    }
-#line 1541 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 36:
-#line 225 "Cooklang.y" /* yacc.c:1652  */
-    { 
-      (yyval.string) = addTwoStrings((yyvsp[-3].string), (yyvsp[-2].string));
-      char * valueString = addTwoStrings((yyvsp[-3].string), (yyvsp[-2].string));
-      addDirection(recipe, "cookware", valueString, NULL);
-      free(valueString);
-      free((yyvsp[-3].string));
-      free((yyvsp[-2].string));
-    }
-#line 1554 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 37:
-#line 234 "Cooklang.y" /* yacc.c:1652  */
+  case 39:
+#line 240 "Cooklang.y" /* yacc.c:1652  */
     { 
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1565 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 38:
-#line 241 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
-      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
-      addDirection(recipe, "cookware", valueString, (yyvsp[0].string));
-      free(valueString);
-      free((yyvsp[-2].string));
-      free((yyvsp[-1].string));
-      free((yyvsp[0].string));
-    }
-#line 1579 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 39:
-#line 251 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
-      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
-      addDirection(recipe, "cookware", valueString, (yyvsp[0].string));
-      free(valueString);
-      free((yyvsp[-2].string));
-      free((yyvsp[-1].string));
-      free((yyvsp[0].string));
-    }
-#line 1593 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1585 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 40:
-#line 265 "Cooklang.y" /* yacc.c:1652  */
+#line 247 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
+      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
+      addDirection(recipe, "cookware", valueString, (yyvsp[0].string));
+      free(valueString);
+      free((yyvsp[-2].string));
+      free((yyvsp[-1].string));
+      free((yyvsp[0].string));
+    }
+#line 1599 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 41:
+#line 257 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
+      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
+      addDirection(recipe, "cookware", valueString, (yyvsp[0].string));
+      free(valueString);
+      free((yyvsp[-2].string));
+      free((yyvsp[-1].string));
+      free((yyvsp[0].string));
+    }
+#line 1613 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 42:
+#line 271 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = strdup((yyvsp[0].string));
       addDirection(recipe, "ingredient", (yyvsp[0].string), NULL);
       free((yyvsp[0].string));
     }
-#line 1603 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1623 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 41:
-#line 271 "Cooklang.y" /* yacc.c:1652  */
+  case 43:
+#line 277 "Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "ingredient", (yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
       free((yyvsp[0].string));
     }
-#line 1614 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 42:
-#line 278 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
-      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
-      addDirection(recipe, "ingredient", valueString, (yyvsp[0].string));
-      free(valueString);
-      free((yyvsp[-2].string));
-      free((yyvsp[-1].string));
-      free((yyvsp[0].string));
-    }
-#line 1628 "Cooklang.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 43:
-#line 288 "Cooklang.y" /* yacc.c:1652  */
-    {
-      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
-      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
-      addDirection(recipe, "ingredient", valueString, (yyvsp[0].string));
-      free(valueString);
-      free((yyvsp[-2].string));
-      free((yyvsp[-1].string));
-      free((yyvsp[0].string));
-    }
-#line 1642 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1634 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 44:
-#line 301 "Cooklang.y" /* yacc.c:1652  */
+#line 284 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
+      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
+      addDirection(recipe, "ingredient", valueString, (yyvsp[0].string));
+      free(valueString);
+      free((yyvsp[-2].string));
+      free((yyvsp[-1].string));
+      free((yyvsp[0].string));
+    }
+#line 1648 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 45:
+#line 294 "Cooklang.y" /* yacc.c:1652  */
+    {
+      (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
+      char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
+      addDirection(recipe, "ingredient", valueString, (yyvsp[0].string));
+      free(valueString);
+      free((yyvsp[-2].string));
+      free((yyvsp[-1].string));
+      free((yyvsp[0].string));
+    }
+#line 1662 "Cooklang.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 46:
+#line 307 "Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = strdup((yyvsp[0].string));
         addDirection(recipe, "timer", NULL, (yyvsp[0].string));
         free((yyvsp[0].string));
       }
-#line 1652 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1672 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 45:
-#line 306 "Cooklang.y" /* yacc.c:1652  */
+  case 47:
+#line 312 "Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = strdup((yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[0].string), NULL);
         free((yyvsp[0].string));
       }
-#line 1662 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1682 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 46:
-#line 311 "Cooklang.y" /* yacc.c:1652  */
+  case 48:
+#line 317 "Cooklang.y" /* yacc.c:1652  */
     { 
         (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[-1].string), (yyvsp[0].string));
         free((yyvsp[-1].string));
         free((yyvsp[0].string));
       }
-#line 1673 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1693 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
-  case 47:
-#line 318 "Cooklang.y" /* yacc.c:1652  */
+  case 49:
+#line 324 "Cooklang.y" /* yacc.c:1652  */
     { 
         (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[-1].string), (yyvsp[0].string));
         free((yyvsp[-1].string));
         free((yyvsp[0].string));
       }
-#line 1684 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1704 "Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
 
-#line 1688 "Cooklang.tab.c" /* yacc.c:1652  */
+#line 1708 "Cooklang.tab.c" /* yacc.c:1652  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1915,7 +1935,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 327 "Cooklang.y" /* yacc.c:1918  */
+#line 333 "Cooklang.y" /* yacc.c:1918  */
 
 
 
