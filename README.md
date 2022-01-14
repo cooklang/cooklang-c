@@ -24,22 +24,22 @@ typedef struct {
 will hold all the metaData and steps in the file after parsing with the yyparse() function, with the previously allocated recipe. A recipe can be made for use via:
 ```C
 // setup the recipe
-  Recipe * finalRecipe = createRecipe();
+Recipe * finalRecipe = createRecipe();
 
-  // create the first step and insert it
-  Step * currentStep = createStep();
-  insertBack(finalRecipe->stepList, currentStep);
+// create the first step and insert it
+Step * currentStep = createStep();
+insertBack(finalRecipe->stepList, currentStep);
 
-  // parse the file
-  yyparse(finalRecipe);
+// parse the file
+yyparse(finalRecipe);
 ```
 The yyparse file automatically pulls input from the variable 'yyin', which can be set to an input file, STDIN, or other forms of an input stream like this:
 ```C
-  yyin = file;
+yyin = file;
 ```
 or:
 ```C
-  yyin  = stdin;
+yyin  = stdin;
 ```
 
 
