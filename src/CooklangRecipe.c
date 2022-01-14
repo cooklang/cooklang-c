@@ -613,46 +613,43 @@ char ** parseAmountString( char * amountString ){
 }
 
 
-// need to fix still
 // parses a meta data string to get the identifier and content of metadata
 char ** parseMetaString( char * metaString ){
+  char * beginning;
   char ** results;
-  char * token;
+  int i = 0;
   
-  // check input
   if( metaString == NULL ){
     return NULL;
   }
-
+  
+  // remove first two '>'
   if( metaString[0] == '>' && metaString[1] == '>' ){
+    printf("hiu\n");
     metaString++;
     metaString++;
   }
-
-  // tokenize input
-  token = strtok(metaString, ":");
-
-  if( token == NULL ){
-    return NULL;
-  }
-
-  // make space for two string pointers
+  beginning = metaString;
+  
   results = malloc(sizeof(char *) * 2);
-
-
-  char * trimmed = trimWhiteSpace(token);
+  if( results == NULL) {
+    printf("error, malloc failed - parseMetaString1");
+  }
+  
+  // loop through to find the first ':' then set to end of string
+  while( metaString[i] != ':' && metaString[i] != '\0'){
+    metaString++;
+  }
+  metaString[i] = '\0';
+  
+  // copy the into the identifier
+  char * trimmed = trimWhiteSpace(beginning);
   results[0] = strdup(trimmed);
   free(trimmed);
 
-  // tokenize again and check for a string
-  token = strtok(NULL, ":");
-
-  if( token == NULL ){
-    results[1] = NULL;
-    return results;
-  }
-
-  trimmed = trimWhiteSpace(token);
+  metaString++;
+  // copy the remainder into the content
+  trimmed = trimWhiteSpace(metaString);
   results[1] = strdup(trimmed);
   free(trimmed);
 

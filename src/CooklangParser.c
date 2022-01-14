@@ -96,9 +96,3 @@ void addMetaData( Recipe * recipe, char * metaDataString ){
     insertBack(recipe->metaData, tempMeta);
   }
 }
-
-
-
-void executeLine( char * inputLine ){
-  // 
-}
