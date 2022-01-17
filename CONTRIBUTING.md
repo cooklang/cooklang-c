@@ -58,7 +58,7 @@ While using the shared library:
 ## Testing:
 To test the parser against some of your own test cases or files, the _testing.py_ file under the _testing_ folder can be used. It is written in Python and uses **ctypes** to interface with the shared object file. 
 
-1. The script takes input tests in JSON format. The JSON format is the same as the testing format described in the _.yaml_ file in the Cooklang spec under _spec/tests/canonical.yaml_. It is simple to convert the yaml to JSON using an online yaml to JSON converter. Have the tests to run in the _test.json_ file using the correct format.
+1. The script takes input tests in JSON format. The JSON format is the same as the testing format described in the _canonical.yaml_ file in the Cooklang spec under _spec/tests/canonical.yaml_. It is simple to convert the yaml to JSON using an online yaml to JSON converter. Have the tests to run in the _test.json_ file using the correct format.
 
 2. Follow the steps above under **_via Python/other_** to compile the shared object file. After it has completed, move the Cooklang.so file into the _testing_ folder, the same directory as the _testing.py_ file is in. The user will have to update the value of **so** in the _testing.py_ file to the absolute path to the shared object file, which might look something like:
 ```
@@ -93,3 +93,46 @@ It will show how many tests have been passed, and will display an array of the t
 
 ### Note:
 The tests will not be completed in any specific order, regardless of the order in the _tests.json_ file, since Python uses unordered dictionaries.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
