@@ -7,24 +7,6 @@
 #endif
 
 
-
-
-typedef struct {
-
-  // the origin file of the recipe
-  char * fileName;
-
-  // the recipe from the file
-  Recipe * recipe;
-
-  // pictures that go with the recipe steps
-  // 
-  List * pictures;
-
-} CooklangParser;
-
-
-
 // functions
 void test();
 

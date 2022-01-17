@@ -38,6 +38,7 @@ parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 	bison -d Cooklang.y -v
 	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o 
 
+
 # clean
 clean: 
 	rm -f bin/*.o *.o *.so test test.o lex.yy.c parser Cooklang.tab.c a.out Cooklang.tab.o lex.yy.o
