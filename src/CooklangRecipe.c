@@ -625,7 +625,6 @@ char ** parseMetaString( char * metaString ){
   
   // remove first two '>'
   if( metaString[0] == '>' && metaString[1] == '>' ){
-    printf("hiu\n");
     metaString++;
     metaString++;
   }
