@@ -53,8 +53,6 @@ def prettyPrintResult(result):
     print(meta)  
 
 
-
-
 def jsonPrintResult(result):
   stepString = ''
   for step in result['steps']:
@@ -75,10 +73,8 @@ def jsonPrintResult(result):
 
       stepString += '}'
 
-
   for meta in result['metadata']:
     stepString += '{ \"Identifier\": \"' + meta + '\", \"Content\": \"' + result['metadata'][meta] + '\"}'
-
 
   return stepString
 
@@ -86,16 +82,36 @@ def jsonPrintResult(result):
 def secondPrettyPrint(result):
   for line in result.split('\n'):
     if line.strip():
-      if line.strip() != "Empty step":
+      if line.strip() != "Empty step}":
         print(line)
 
 
 
 def noneEmptyString(string):
   if string.strip():
-    if string.strip() != "Empty step":
+    if string.strip() == "Empty step":
+      return False;
+    else: 
       return True;
   return False;
+
+
+def compareQuantities(inputExpectedQuantity, inputActualQuantity):
+  # convert both to float
+  try:
+    expectedQuantity = float(inputExpectedQuantity);
+    actualQuantity = float(inputActualQuantity);
+    #compare the floats
+    if( expectedQuantity == actualQuantity):
+      return 1;
+    return 0;
+
+  except:
+    # if fails, it is a string, compare them
+    if( inputExpectedQuantity == inputActualQuantity ):
+      return 1;
+    return 0;
+
 
 
 
@@ -123,31 +139,36 @@ def compareTest(expectedInput, actualInput):
     return
 
   for i in range(0, len(expectedLines)):
-          
     try:
       expected = json.loads(expectedLines[i])
       actual = json.loads(actualLines[i])
-
       for item in expected:
         if( item not in actual ):
           print('  Test failed. Could not find \"' + item + '\" in Actual Result' )
           return 1
 
-        if( expected[item] != actual[item]):
-          print('  Test failed. \"' + item + '\" did not match' )
-          return 1
+        if( item == "quantity"):
+          if not compareQuantities( expected[item], actual[item]):
+            print('  Test failed. Quantities did not match')
+            return 1
+          
+        else:
+          if( expected[item] != actual[item]):
+            print('  Test failed. \"' + item + '\" did not match' )
+            return 1
 
     except:
       print('  Test failed. Input could not be converted to json')
-      return 1;
+      return 1
 
   print('  Test Passed.')
-  return 0;
+  return 0
 
 
 # main
 
-so = './testing/Cooklang.so'
+# so = './testing/Cooklang.so'
+so = '/mnt/c/Users/sjhar/Documents/Work/Cooklang Final/cook-in-c/testing/Cooklang.so'
 cooklang = CDLL(so)
 
 #parse input test file and get each test
@@ -158,8 +179,8 @@ testFunc = cooklang.testFile
 testFunc.restype = c_char_p
 
 
-passed = 0;
-total = 0;
+passed = 0
+total = 0
 unpassed = []
 
 # for each test found, put the test in the file

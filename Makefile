@@ -39,6 +39,15 @@ parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o 
 
 
+recompile: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
+	bison -d Cooklang.y -v
+	gcc -fPIC -c -g Cooklang.tab.c -lfl
+	gcc -shared -o Cooklang.so bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o Cooklang.tab.o
+
+
+binary_clean:
+	rm -f bin/*.o Cooklang.tab.o
+
 # clean
 clean: 
 	rm -f bin/*.o *.o *.so test test.o lex.yy.c parser Cooklang.tab.c a.out Cooklang.tab.o lex.yy.o

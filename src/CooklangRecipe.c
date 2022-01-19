@@ -243,6 +243,8 @@ char * directionToString( void * data ){
 
   if( dir->value != NULL ){
     length += strlen(dir->value);
+  } else {
+    length += 50;
   }
 
   if( dir->quantityString != NULL ){
@@ -251,6 +253,8 @@ char * directionToString( void * data ){
   
   if( dir->unit != NULL ){
     length += strlen(dir->unit);
+  } else {
+    length += 50;
   }
 
   length += 100;
@@ -278,7 +282,7 @@ char * directionToString( void * data ){
     if( dir->value != NULL ){
       sprintf(tempString, "{ \"type\": \"%s\", \"name\": \"%s\"", dir->type, dir->value);
     } else {
-      sprintf(tempString, "{ \"type\": \"%s\"", dir->type);
+      sprintf(tempString, "{ \"type\": \"%s\", \"name\": \"\"", dir->type);
     }
 
     // quantity, string format
@@ -305,12 +309,18 @@ char * directionToString( void * data ){
       return tempString;
     }
 
-    // add the unit if there is one, else close the tag
+    // add the unit if there is one, else add empty units
     // only ingredients/timers
     if( strcmp(dir->type, "cookware") != 0 ){
       if( dir->unit != NULL ){
         char * unitString = malloc(sizeof(dir->unit) + 20);
         sprintf(unitString, ", \"units\": \"%s\"", dir->unit);
+
+        strcat(tempString, unitString);
+        free(unitString);
+      } else {
+        char * unitString = malloc(sizeof(char) * 50);
+        strcpy(unitString, ", \"units\": \"\"");
 
         strcat(tempString, unitString);
         free(unitString);
@@ -377,7 +387,7 @@ char * stepToString( void * data ){
     dirString = toString(step->directions);
   } else {
     stepString = malloc(sizeof(char) * 20);
-    sprintf(stepString, "Empty step\n");
+    sprintf(stepString, "Empty step}\n");
     return stepString;
   }
 

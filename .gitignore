@@ -24,6 +24,7 @@
 
 # Shared objects (inc. Windows DLLs)
 *.dll
+*.so
 *.so.*
 *.dylib
 
@@ -49,3 +50,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+
+test_file.cook
+test_output.txt
+tests2.txt
