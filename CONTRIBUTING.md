@@ -109,6 +109,13 @@ If you would like to make your own changes to the parser itself, the parser is w
 Flex manual can be found here: http://dinosaur.compilertools.net/flex/index.html
 Bison manual can be found here: https://www.gnu.org/software/bison/manual/html_node/index.html
 
+If you make any changes to the flex file, you will have to rebuild it. Use the command:
+```
+flex -Ca --align Cooklang.l
+```
+to do so. Please check the note at the bottom of the page before doing so.
+
+
 ### Working with the parser:
 To begin working with the parser, a Recipe has to be initialized with these steps:
 ```C
@@ -172,6 +179,12 @@ tempRec->stepList = stepList;
 Keep in mind that whenever you swap out a function for your own, you must follow the original function's header for it be usable by the linked list library. The footprints can be found in the LinkedListLib.h file, in the initializeList header.
 
 Also keep in mind that the default printing function is built to output strings that can be easily converted to JSON. Making any changes to this function might break the testing capabilities of the library.
+
+If you make any changes to the .C files, or the Bison file (.y), run the following to recompile the binaries:
+```
+make binary_clean
+```
+Then follow the compilation steps under _Run as an executable_ or _Run as a shared library_
 
 
 ## Note:
