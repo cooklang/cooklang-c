@@ -3,6 +3,15 @@
 If you are using the library, and find any problems, or even have any suggestions, please open an issue on the github and we can work towards a solution.
 
 ## How to contribute:
+
+### Install:
+
+Download the code as a zip file and extract, or use the git clone command to download:
+
+```
+git clone https://github.com/cooklang/cook-in-c.git
+
+```
 If you would like to work with the library you will need the following packages installed: flex, bison, and make and gcc for the compilation. These can all be installed via:
 ```
 sudo apt-get install flex bison make gcc
@@ -17,17 +26,10 @@ gcc (Debian 8.3.0-6) 8.3.0
 ```
 The library was built on: Debian GNU/Linux 10
 
-### Install:
-
-Download the code as a zip file and extract, or use the git clone command to download:
-
-```
-git clone https://github.com/cooklang/cook-in-c.git
-
-```
 
 
-### As an executable:
+
+### Run as an executable:
 
 To compile the code as an executable use the command:
 ```
@@ -43,7 +45,7 @@ While using the executable file, the desired file can be chosen to be parsed by 
 The output will be printed to stdout.
 
 
-### As a shared library:
+### Run as a shared library:
 To use the library via a higher level language, the language must be installed. In this library, python was used to do the testing, with version 2.7.16. A library like *ctypes* for python can be used to interact with the shared library file. The user must also be able to run C executables.
 
 
@@ -168,6 +170,8 @@ List * stepList = initializeList(yourFunctionName, deleteStep, compareSteps);
 tempRec->stepList = stepList;
 ```
 Keep in mind that whenever you swap out a function for your own, you must follow the original function's header for it be usable by the linked list library. The footprints can be found in the LinkedListLib.h file, in the initializeList header.
+
+Also keep in mind that the default printing function is built to output strings that can be easily converted to JSON. Making any changes to this function might break the testing capabilities of the library.
 
 
 ## Note:
