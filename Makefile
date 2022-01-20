@@ -1,15 +1,7 @@
 # flags for compiling a .o file
 OFLAGS = -Wall -pedantic -I include/ -o $@ -g -fPIC -c
-FLAGS = -Wall -pedantic -o $@ -g
 
-all: test
-
-parser: parser
-
-# executables
-test: test.o bin/CooklangRecipe.o bin/CooklangParser.o bin/LinkedListLib.o 
-	gcc $(FLAGS) test.o bin/CooklangRecipe.o bin/CooklangParser.o bin/LinkedListLib.o
-	
+all: recompile_parser
 
 # .o files	
 bin/CooklangParser.o: src/CooklangParser.c
@@ -22,32 +14,25 @@ bin/CooklangRecipe.o: src/CooklangRecipe.c
 	gcc $(OFLAGS) src/CooklangRecipe.c
 
 
-test.o:
-	gcc $(OFLAGS) test.c
 
+# recompile lex file
+flex:
+	flex -Ca --align Cooklang.l
 
-# parser stuff
-parser_library: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	flex -DLIB -Ca --align Cooklang.l
+# parser from lex file
+library: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 	bison -d Cooklang.y -v
 	gcc -fPIC -c -g Cooklang.tab.c -lfl
 	gcc -shared -o Cooklang.so bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o Cooklang.tab.o
 
 parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	flex -Ca --align Cooklang.l
 	bison -d Cooklang.y -v
 	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o 
 
 
-recompile: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	bison -d Cooklang.y -v
-	gcc -fPIC -c -g Cooklang.tab.c -lfl
-	gcc -shared -o Cooklang.so bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o Cooklang.tab.o
-
-
 binary_clean:
-	rm -f bin/*.o Cooklang.tab.o
+	rm -f bin/*.o Cooklang.tab.o a.out Cooklang.so
 
 # clean
-clean: 
+full_clean: 
 	rm -f bin/*.o *.o *.so test test.o lex.yy.c parser Cooklang.tab.c a.out Cooklang.tab.o lex.yy.o

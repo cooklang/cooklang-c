@@ -488,7 +488,7 @@ int runFile( char * fileName ){
 
 #ifndef LIB
 int main( int argc, char ** argv ){
-  yydebug = 1;
+  // yydebug = 1;
   ++argv;
   --argc;
 
