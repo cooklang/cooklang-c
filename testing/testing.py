@@ -167,8 +167,7 @@ def compareTest(expectedInput, actualInput):
 
 # main
 
-# so = './testing/Cooklang.so'
-so = '/mnt/c/Users/sjhar/Documents/Work/Cooklang Final/cook-in-c/testing/Cooklang.so'
+so = './testing/Cooklang.so'
 cooklang = CDLL(so)
 
 #parse input test file and get each test
