@@ -180,6 +180,12 @@ Keep in mind that whenever you swap out a function for your own, you must follow
 
 Also keep in mind that the default printing function is built to output strings that can be easily converted to JSON. Making any changes to this function might break the testing capabilities of the library.
 
+If you make any changes to the .C files, or the Bison file (.y), run the following to recompile the binaries:
+```
+make binary_clean
+```
+Then follow the compilation steps under _Run as an executable_ or _Run as a shared library_
+
 
 ## Note:
 
