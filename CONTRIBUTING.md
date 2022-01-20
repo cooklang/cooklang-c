@@ -109,6 +109,13 @@ If you would like to make your own changes to the parser itself, the parser is w
 Flex manual can be found here: http://dinosaur.compilertools.net/flex/index.html
 Bison manual can be found here: https://www.gnu.org/software/bison/manual/html_node/index.html
 
+If you make any changes to the flex file, you will have to rebuild it. Use the command:
+```
+flex -Ca --align Cooklang.l
+```
+to do so. Please check the note at the bottom of the page before doing so.
+
+
 ### Working with the parser:
 To begin working with the parser, a Recipe has to be initialized with these steps:
 ```C
