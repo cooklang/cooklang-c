@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: debian-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - run: apt-get install gcc bison flex make
+    - run: make binary_clean
+    - run: make library
+    - uses: jannekem/run-python-script-action@v1
+      with:
+        script: python testing.py
