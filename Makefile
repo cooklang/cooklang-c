@@ -1,38 +1,37 @@
 # flags for compiling a .o file
-OFLAGS = -Wall -pedantic -I include/ -o $@ -g -fPIC -c
+OFLAGS = -Wall -pedantic -I include/ -g -fPIC -c
+OBJ=bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 
-all: recompile_parser
+all: parser
 
-# .o files	
-bin/CooklangParser.o: src/CooklangParser.c
-	gcc $(OFLAGS) src/CooklangParser.c
-
-bin/LinkedListLib.o: src/LinkedListLib.c
-	gcc $(OFLAGS) src/LinkedListLib.c
-
-bin/CooklangRecipe.o: src/CooklangRecipe.c
-	gcc $(OFLAGS) src/CooklangRecipe.c
-
-
+# .o files
+-include $(OBJ:.o=.d)
+bin/%.o: src/%.c
+	gcc $(OFLAGS) -MMD -o $@ $<
 
 # recompile lex file
-flex:
-	flex -Ca --align Cooklang.l
+lex.yy.c: Cooklang.l
+	flex -Ca $<
+
+flex: lex.yy.c
+
+Cooklang.tab.c: Cooklang.y
+	bison -d  $< -v
+
+bison: Cooklang.tab.c
 
 # parser from lex file
-library: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	bison -d Cooklang.y -v
-	gcc -fPIC -c -g Cooklang.tab.c -lfl
-	gcc -shared -o Cooklang.so bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o Cooklang.tab.o
+library: Cooklang.tab.c $(OBJ)
+	gcc -fPIC -DLIB -c -g Cooklang.tab.c -lfl
+	gcc -shared -o Cooklang.so $(OBJ) Cooklang.tab.o
 
-parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	bison -d Cooklang.y -v
-	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o 
+parser: Cooklang.tab.c $(OBJ)
+	gcc -g $< -lfl $(OBJ) -o $@
 
 
 binary_clean:
-	rm -f bin/*.o Cooklang.tab.o a.out Cooklang.so
+	rm -f bin/*.o *.o *.so *.out parser
 
 # clean
-full_clean: 
-	rm -f bin/*.o *.o *.so test test.o lex.yy.c parser Cooklang.tab.c a.out Cooklang.tab.o lex.yy.o
+full_clean: binary_clean
+	rm -f bin/*.d  test Cooklang.tab.c lex.yy.c
