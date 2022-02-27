@@ -2,6 +2,7 @@ import ctypes
 from ctypes import *
 
 import json
+import yaml
 
 
 def format_number(num):
@@ -171,8 +172,8 @@ so = '../Cooklang.so'
 cooklang = CDLL(so)
 
 #parse input test file and get each test
-tests_input_file = open('tests.json')
-tests_input = json.load(tests_input_file)
+tests_input_file = open('tests.yaml')
+tests_input = yaml.load(tests_input_file)
 
 testFunc = cooklang.testFile
 testFunc.restype = c_char_p

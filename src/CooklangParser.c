@@ -2,12 +2,67 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "CooklangParser.h"
+#include "../include/CooklangParser.h"
+#include "../Cooklang.tab.h"
 
 
-void test(){
-  printf("test\n");
+extern FILE * yyin;
+
+
+// wrapper functions
+Recipe * parseRecipe( char * fileName ){
+  
+  FILE * file;
+
+  if( fileName != NULL ){
+    file = fopen(fileName, "r");
+    if( file != NULL ){
+      yyin = file;
+    } else {
+      return NULL;
+    }
+  } else {
+    return NULL;
+  }
+  
+
+  // setup the recipe
+  Recipe * finalRecipe = createRecipe();
+
+  // create the first step
+  Step * currentStep = createStep();
+  insertBack(finalRecipe->stepList, currentStep);
+
+  yyparse(finalRecipe);
+
+  fclose(file);
+
+  // // initialize the iterators on the recipe
+  // if( finalRecipe->stepList != NULL ){
+  //   finalRecipe->stepIter = createIterator(finalRecipe->stepList);
+  // } else {
+  //   finalRecipe->stepIter = NULL;
+  // }
+  return finalRecipe;
 }
+
+
+
+// function to get the i-th step in a recipe
+
+// function to get the i-th direction in a step
+
+// function to return the number of steps in a recipe
+
+// function to return the number of direction in a step
+
+// function to nicely print the step data
+
+// function to nicely print the direction data
+
+
+
+
 
 
 char * addTwoStrings(char * first, char * second){

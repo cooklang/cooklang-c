@@ -21,13 +21,11 @@ flex:
 
 # parser from lex file
 library: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	bison -d Cooklang.y -v
-	gcc -fPIC -c -g Cooklang.tab.c -lfl
-	gcc -shared -o Cooklang.so bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o Cooklang.tab.o
+	gcc -fPIC -c -g Cooklang.tab.c -DLIB
+	gcc -shared -DLIB -o Cooklang.so bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o Cooklang.tab.o
 
 parser: bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
-	bison -d Cooklang.y -v
-	gcc -g Cooklang.tab.c -lfl bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o 
+	gcc -g Cooklang.tab.c bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 
 
 binary_clean:

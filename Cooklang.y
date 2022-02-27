@@ -16,6 +16,11 @@ int yyerror ( Recipe * recipe, const char * s);
 
 extern void yyrestart( FILE * input_file );
 
+
+
+
+
+
 %}
 
 %define parse.error verbose
@@ -334,11 +339,12 @@ timer:
 
 
 
-int yyerror( Recipe * recipe, const char *s){
-  printf("\nError\n%s", s);
-}
-
-
-
 
 #include "lex.yy.c"
+
+
+
+int yyerror( Recipe * recipe, const char * s){
+  printf("\nError\n%s", s);
+  return 1;
+}

@@ -1,5 +1,5 @@
 
-#include "LinkedListLib.h"
+#include "../include/LinkedListLib.h"
 #include "assert.h"
 
 /** Function to initialize the list metadata head to the appropriate function pointers. Allocates memory to the struct.
