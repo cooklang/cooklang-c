@@ -1,5 +1,5 @@
-#include "include/LinkedListLib.h"
-#include "include/ShoppingListParser.h"
+#include "../include/LinkedListLib.h"
+#include "../include/ShoppingListParser.h"
 
 // * * * * * * * * * * * * * * * * * * * * 
 // ******  Functions Definitions  ********
@@ -9,7 +9,6 @@
 
 
 // parse a shopping list file
-// written in this file because its easiest to put it here
 // does not use flex/bison just simple string manipulation techniques in C
 List * parseShoppingLists( char * fileName ){
   
@@ -35,19 +34,21 @@ List * parseShoppingLists( char * fileName ){
   inputLine = malloc(sizeof(char) * maxLineLength);
 
   while( fgets(inputLine, maxLineLength, file) != NULL ){
+    // remove empty lines
+    if( inputLine[0] != 10 && inputLine[0] != 13 ){
+      // look for [ and 
+      if( inputLine[0] == '['){
+        // create a list from it
+        ShoppingList * tempSList = parseShoppingList(inputLine);
+        insertBack(shoppingLists, tempSList);
+      } else {
+        // get each input and add it to the list after that until found another [ and ]
+        ShoppingItem * tempSItem = parseShoppingItem(inputLine);
 
-    // look for [ and 
-    if( inputLine[0] == '['){
-      // create a list from it
-      ShoppingList * tempSList = parseShoppingList(inputLine);
-      insertBack(shoppingLists, tempSList);
-    } else {
-      // get each input and add it to the list after that until found another [ and ]
-      ShoppingItem * tempSItem = parseShoppingItem(inputLine);
-
-      if( tempSItem != NULL ){
-        ShoppingList * currentSList = getFromBack(shoppingLists);
-        insertBack(currentSList->shoppingItems, tempSItem);
+        if( tempSItem != NULL ){
+          ShoppingList * currentSList = getFromBack(shoppingLists);
+          insertBack(currentSList->shoppingItems, tempSItem);
+        }
       }
     }
   }
@@ -158,6 +159,20 @@ ShoppingList * parseShoppingList(char * inputLine){
 
 ShoppingItem * createShoppingItem( char * name ){
 
+  int loc = strcspn(name, "\r");
+
+  if(loc != strlen(name)){
+    name[loc] = 0;
+  }
+
+  loc = strcspn(name, "\n");
+
+  if(loc != strlen(name)){
+    name[loc] = 0;
+  }
+
+
+
   ShoppingItem * tempSItem = malloc(sizeof(ShoppingItem));
 
   tempSItem->name = malloc(strlen(name) + 1);
@@ -198,7 +213,7 @@ char * shoppingItemToString( void * data ){
 
   itemString = malloc(strlen(synsString) + strlen(sItem->name) + 50);
 
-  sprintf(itemString, "  Name: %s, Synonyms: %s", sItem->name, synsString);
+  sprintf(itemString, "  Name: |%s|, Synonyms: %s", sItem->name, synsString);
 
   free(synsString);
 
@@ -230,11 +245,12 @@ int compareShoppingItem( const void * first, const void * second ){
 
 
 ShoppingItem * parseShoppingItem( char * inputLine ){
-
+  // check input
   if( inputLine == NULL || inputLine[0] == '\0' || inputLine[0] == '\n' ){
     return NULL;
   }
-  printf("not null\n");
+
+
   // get the first string
   int i = 0;
   char * token;

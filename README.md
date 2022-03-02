@@ -11,6 +11,12 @@ Cooklang parser implemented in C
 
   
 
+steps to work it:
+
+
+
+
+
 ## Install:
 
  
