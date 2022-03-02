@@ -52,6 +52,8 @@ Mkfile.old
 dkms.conf
 
 
-test_file.cook
-test_output.txt
-tests2.txt
+# others
+*.txt
+*.cook
+build/*
+.vscode/

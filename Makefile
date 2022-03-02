@@ -26,6 +26,7 @@ library: Cooklang.tab.c $(OBJ)
 	gcc -fPIC -DLIB -c -g Cooklang.tab.c
 	gcc -shared -o Cooklang.so $(OBJ) Cooklang.tab.o
 
+
 # make executable parser
 parser: Cooklang.tab.c $(OBJ)
 	gcc -g $< $(OBJ) -o $@
