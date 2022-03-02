@@ -15,23 +15,25 @@ lex.yy.c: Cooklang.l
 
 flex: lex.yy.c
 
+# recompile bison file
 Cooklang.tab.c: Cooklang.y
 	bison -d  $< -v
 
 bison: Cooklang.tab.c
 
-# parser from lex file
+# make shared library parser file
 library: Cooklang.tab.c $(OBJ)
-	gcc -fPIC -DLIB -c -g Cooklang.tab.c -lfl
+	gcc -fPIC -DLIB -c -g Cooklang.tab.c
 	gcc -shared -o Cooklang.so $(OBJ) Cooklang.tab.o
 
+# make executable parser
 parser: Cooklang.tab.c $(OBJ)
-	gcc -g $< -lfl $(OBJ) -o $@
+	gcc -g $< $(OBJ) -o $@
 
-
+# clean binaries
 binary_clean:
-	rm -f bin/*.o *.o *.so *.out parser
+	rm -f bin/*.o *.o *.so *.out parser 
 
-# clean
+# clean everything
 full_clean: binary_clean
-	rm -f bin/*.d  test Cooklang.tab.c lex.yy.c
+	rm -f bin/*.d  test Cooklang.tab.c lex.yy.c Cooklang.tab.h Cooklang.output lex.yy.h
