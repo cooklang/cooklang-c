@@ -74,12 +74,13 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 
 
 
+
+  // add all the steps
+
   // the lists to store steps/ingredients/cookware
   stepListObject = PyList_New(0);
   ingredientListObject = PyList_New(0);
   cookwareListObject = PyList_New(0);
-
-  // add all the steps
   
   // loop through every step
   stepIter = createIterator(parsedRecipe->stepList);
@@ -250,13 +251,9 @@ static PyObject * methodParseShoppingList(PyObject *self, PyObject * args){
   // parse the shopping list
   shoppingLists = parseShoppingLists(fileName);
 
-  char * shopString = toString(shoppingLists);
-
-  printf("Shopping List String:\n%s", shopString);
 
   // convert to python object - a list of lists
   shopListList = PyList_New(0);
-
 
   // loop through each shopping list
   sListIter = createIterator(shoppingLists);
