@@ -18,7 +18,7 @@ git clone https://github.com/cooklang/cook-in-c.git
 ```
 
   
-## Usage
+## Setup
 It is easiest to use the parser with the python module. To do so, navigate to the directory containing the setup.py file. The module can be built using the command:
 ```
 python setup.py build
@@ -36,7 +36,7 @@ Then, the user may import the parser into their project using the following:
 import cooklangC
 ```
 
-## Functionality
+## Usage
 
 The module has two functions, parseRecipe() and parseShoppingList(). 
 
