@@ -20,7 +20,6 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   Metadata * curMeta;
 
   PyObject * metaListObject;
-  PyObject * metaObject;
   
   PyObject * stepListObject;
   PyObject * stepObject;
@@ -50,14 +49,11 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   metaIter = createIterator(parsedRecipe->metaData);
   curMeta = nextElement(&metaIter);
 
-  metaListObject = PyList_New(0);
+  metaListObject = PyDict_New();
 
   while( curMeta != NULL ){
-    // create the meta data python object
-    metaObject = Py_BuildValue("{s:s}", curMeta->identifier, curMeta->content);
-
     // add it to the list
-    check = PyList_Append(metaListObject, metaObject);
+    check = PyDict_SetItemString(metaListObject, curMeta->identifier, PyUnicode_FromString(curMeta->content));
     if( check == -1 ){
       printf("Error adding new meta data to list\n");
     }
@@ -66,6 +62,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
     curMeta = nextElement(&metaIter);
   }
 
+    
   // add the whole list to the final object
   check = PyDict_SetItemString(recipeObject, "metadata", metaListObject);
   if( check == -1 ){
@@ -135,13 +132,18 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
             if( curDir->quantity != -1 ){
               check = PyDict_SetItemString(directionObject, "quantity", PyFloat_FromDouble(curDir->quantity));
               if( check == - 1 ){
-                printf("Error adding quantity to new direction object\n");
+                printf("Error adding quantity double to new direction object\n");
+              }
+            } else {
+              check = PyDict_SetItemString(directionObject, "quantity", PyUnicode_FromString(""));
+              if( check == - 1 ){
+                printf("Error adding empty quantity to new direction object\n");
               }
             }
           } else {
             check = PyDict_SetItemString(directionObject, "quantity", PyUnicode_FromString(curDir->quantityString));
             if( check == - 1 ){
-              printf("Error adding quantity to new direction object\n");
+              printf("Error adding quantity string to new direction object\n");
             }
           }
 

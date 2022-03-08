@@ -1,29 +1,12 @@
+#!python3
+
 import ctypes
 from ctypes import *
 
 import json
 import yaml
+import cooklangC
 
-
-def format_number(num):
-    try:
-        dec = decimal.Decimal(num)
-    except:
-        return 'bad'
-    tup = dec.as_tuple()
-    delta = len(tup.digits) + tup.exponent
-    digits = ''.join(str(d) for d in tup.digits)
-    if delta <= 0:
-        zeros = abs(tup.exponent) - len(tup.digits)
-        val = '0.' + ('0'*zeros) + digits
-    else:
-        val = digits[:delta] + ('0'*tup.exponent) + '.' + digits[delta:]
-    val = val.rstrip('0')
-    if val[-1] == '.':
-        val = val[:-1]
-    if tup.sign:
-        return '-' + val
-    return val
 
 def prettyPrintResult(result):
   i = 0
@@ -80,22 +63,6 @@ def jsonPrintResult(result):
   return stepString
 
 
-def secondPrettyPrint(result):
-  for line in result.split('\n'):
-    if line.strip():
-      if line.strip() != "Empty step}":
-        print(line)
-
-
-
-def noneEmptyString(string):
-  if string.strip():
-    if string.strip() == "Empty step":
-      return False;
-    else: 
-      return True;
-  return False;
-
 
 def compareQuantities(inputExpectedQuantity, inputActualQuantity):
   # convert both to float
@@ -117,66 +84,55 @@ def compareQuantities(inputExpectedQuantity, inputActualQuantity):
 
 
 def compareTest(expectedInput, actualInput):
-  try:
-    expectedLines = expectedInput.split('}')
-    actualLines = actualInput.split('}')
+  print('')
 
-  except:
-    print('  Test failed. Input were not string type')
-    return 1;
-
-  expectedLines = filter(noneEmptyString, expectedLines)
-  actualLines = filter(noneEmptyString, actualLines)
-
-  for i in range(0, len(expectedLines)):
-    expectedLines[i] += '}'
-    expectedLines[i] = expectedLines[i].strip()
-  for i in range(0, len(actualLines)):
-    actualLines[i] += '}'
-    actualLines[i] = actualLines[i].strip()
-    
-  if(len(expectedLines) != len(actualLines)):
-    print('  Test failed. Inequal line count')
-    return
-
-  for i in range(0, len(expectedLines)):
-    try:
-      expected = json.loads(expectedLines[i])
-      actual = json.loads(actualLines[i])
-      for item in expected:
-        if( item not in actual ):
-          print('  Test failed. Could not find \"' + item + '\" in Actual Result' )
-          return 1
-
-        if( item == "quantity"):
-          if not compareQuantities( expected[item], actual[item]):
-            print('  Test failed. Quantities did not match')
-            return 1
+  # test steps
+  if expectedInput['steps'] and actualInput['steps']:
+    if expectedInput['steps'] != actualInput['steps']:
+      
+      # check each step
+      for step in range(0, len(expectedInput['steps'])):
+        for direc in range(0, len(expectedInput['steps'][step])):
           
-        else:
-          if( expected[item] != actual[item]):
-            print('  Test failed. \"' + item + '\" did not match' )
-            return 1
+          # if they're not identical check each item
+          if(expectedInput['steps'][step][direc] != actualInput['steps'][step][direc]):
 
-    except:
-      print('  Test failed. Input could not be converted to json')
+            for item in expectedInput['steps'][step][direc]:
+              # check if each item is found
+              if item not in actualInput['steps'][step][direc]:
+                print('Item: ' + item + ' could not be found in actual output.')
+                return 1
+              
+              # special compare function for quantities
+              elif item == 'quantity':
+                if not compareQuantities( expectedInput['steps'][step][direc][item], actualInput['steps'][step][direc][item]):
+                  print('  Test failed. Quantities did not match')
+                  return 1
+
+              # otherwise check which item is different
+              elif expectedInput['steps'][step][direc][item] != actualInput['steps'][step][direc][item]:
+                print('Item: ' + item + ' did not match in actual output:')
+                print('  Expected: ' + str(expectedInput['steps'][step][direc][item]) + '   Actual: ' + (actualInput['steps'][step][direc][item]))
+                return 1
+
+  # test meta data
+  if expectedInput['metadata'] and actualInput['metadata']:
+
+    if expectedInput['metadata'] != actualInput['metadata']:
+      print('  Test failed. Metadata did not match')
       return 1
 
   print('  Test Passed.')
   return 0
 
 
+
+
 # main
 
-so = '../Cooklang.so'
-cooklang = CDLL(so)
-
 #parse input test file and get each test
-tests_input_file = open('tests.yaml')
-tests_input = yaml.load(tests_input_file)
-
-testFunc = cooklang.testFile
-testFunc.restype = c_char_p
+tests_input_file = open('testing/tests.yaml')
+tests_input = yaml.safe_load(tests_input_file)
 
 
 passed = 0
@@ -187,19 +143,19 @@ unpassed = []
 for test in tests_input['tests']:
   # write test to file
   test_file = open('test_file.cook', 'w')
-  test_file.write(tests_input['tests'][test]['source'].encode('utf-8'))
+  test_file.write(str(tests_input['tests'][test]['source']))
   test_file.close()
 
   print("\n\n____  Test: " + test)
   print("____           Expected Output           ____")
-  expectedResult = jsonPrintResult( tests_input['tests'][test]['result'])
-  print(expectedResult)
+  expectedResult = tests_input['tests'][test]['result']
+  prettyPrintResult(expectedResult)
 
   print("____            Actual Output            ____")
   # parse the file
-  actualResult = testFunc('test_file.cook')
+  actualResult = cooklangC.parseRecipe('test_file.cook')
 
-  secondPrettyPrint(actualResult)
+  prettyPrintResult(actualResult)
   print("____           Compare Results           ____")
   
   final = compareTest(expectedResult, actualResult)
@@ -210,6 +166,6 @@ for test in tests_input['tests']:
     unpassed.append(test)
 
 
-print( 'Tests passed: ' + str(passed) + '/' + str(total))
+print( '\n\nTests passed: ' + str(passed) + '/' + str(total))
 print( 'Unpassed tests: ')
 print(unpassed)
