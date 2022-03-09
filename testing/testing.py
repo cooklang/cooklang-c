@@ -5,7 +5,7 @@ from ctypes import *
 
 import json
 import yaml
-import cooklangC
+import cooklang
 
 
 def prettyPrintResult(result):
