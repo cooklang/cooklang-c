@@ -153,7 +153,7 @@ for test in tests_input['tests']:
 
   print("____            Actual Output            ____")
   # parse the file
-  actualResult = cooklangC.parseRecipe('test_file.cook')
+  actualResult = cooklang.parseRecipe('test_file.cook')
 
   prettyPrintResult(actualResult)
   print("____           Compare Results           ____")
