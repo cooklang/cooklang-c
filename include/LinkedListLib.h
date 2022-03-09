@@ -166,7 +166,9 @@ returned string must be freed by the calling function.
  *@param list - a pointer to the List struct
  *@return on success: char * to string representation of list (must be freed after use).  on failure: NULL
  **/
-char* toString(List* list);
+char* toString(List * list);
+char* toStringDelim(List * list, char * delim);
+
 
 
 /** Function for creating an iterator for the linked list.  

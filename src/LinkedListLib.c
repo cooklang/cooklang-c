@@ -297,6 +297,32 @@ char* toString(List * list){
 	return str;
 }
 
+char* toStringDelim(List * list, char * delim){
+	ListIterator iter = createIterator(list);
+	char* str;
+	int i = 1;
+	str = (char*)malloc(sizeof(char));
+	strcpy(str, "");
+	
+	void* elem;
+	while((elem = nextElement(&iter)) != NULL){
+		char* newDelim = malloc(strlen(delim) + 50);
+		sprintf(newDelim, "%s %d:\n", delim, i);
+		char* currDescr = list->printData(elem);
+		int newLen = strlen(str)+50+strlen(currDescr)+strlen(delim);
+		str = (char*)realloc(str, newLen);
+		strcat(str, newDelim);
+		strcat(str, currDescr);
+		free(currDescr);
+		free(newDelim);
+		i++;
+	}
+	
+	return str;
+}
+
+
+
 ListIterator createIterator(List* list){
     ListIterator iter;
 

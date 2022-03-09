@@ -67,7 +67,7 @@ char * metadataToString( void * data ){
 
   char * returnString = malloc(sizeof(char) * length);
 
-  sprintf(returnString, "{ \"Identifier\": \"%s\", \"Content\": \"%s\" }", meta->identifier, meta->content);
+  sprintf(returnString, "  -\"%s\": \"%s\"", meta->identifier, meta->content);
 
   return returnString;
 }
@@ -274,35 +274,35 @@ char * directionToString( void * data ){
 
   // if its a text iten use value instead of name
   if( strcmp(dir->type, "text") == 0 ){
-    sprintf(tempString, "{ \"type\": \"%s\", \"value\": \"%s\" }", dir->type, dir->value);
+    sprintf(tempString, "      - type: text\n      - value: \"%s\"\n", dir->value);
 
   // timers, cookware, and ingredients
   } else {
     // name and value
     if( dir->value != NULL ){
-      sprintf(tempString, "{ \"type\": \"%s\", \"name\": \"%s\"", dir->type, dir->value);
+      sprintf(tempString, "      - type: %s\n      - name: \"%s\"\n", dir->type, dir->value);
     } else {
-      sprintf(tempString, "{ \"type\": \"%s\", \"name\": \"\"", dir->type);
+      sprintf(tempString, "      - type: %s\n      - name: \"\"\n", dir->type);
     }
 
     // quantity, string format
     if( dir->quantityString != NULL ){
-      char * tempQuanString = malloc(sizeof(char) * strlen(dir->quantityString) + 20);
-      sprintf(tempQuanString, ", \"quantity\": \"%s\"", dir->quantityString);
+      char * tempQuanString = malloc(sizeof(char) * strlen(dir->quantityString) + 30);
+      sprintf(tempQuanString, "      - quantity: \"%s\"\n", dir->quantityString);
 
       strcat(tempString, tempQuanString);
       free(tempQuanString);
     // quantity, double format
     } else if( dir->quantity != -1 ){
-      char * tempQuanString = malloc(sizeof(char) * 20);
-      sprintf(tempQuanString, ", \"quantity\": %.3f", dir->quantity);
+      char * tempQuanString = malloc(sizeof(char) * 30);
+      sprintf(tempQuanString, "      - quantity: %.3f\n", dir->quantity);
 
       strcat(tempString, tempQuanString);
       free(tempQuanString);
     // no quantity - end of string
     } else {
-      char * tempQuanString = malloc(sizeof(char) * 20);
-      sprintf(tempQuanString, ", \"quantity\": \"\"}");
+      char * tempQuanString = malloc(sizeof(char) * 30);
+      sprintf(tempQuanString, "      - quantity: \"\"\n");
 
       strcat(tempString, tempQuanString);
       free(tempQuanString);
@@ -314,20 +314,18 @@ char * directionToString( void * data ){
     if( strcmp(dir->type, "cookware") != 0 ){
       if( dir->unit != NULL ){
         char * unitString = malloc(sizeof(dir->unit) + 20);
-        sprintf(unitString, ", \"units\": \"%s\"", dir->unit);
+        sprintf(unitString, "      - units: \"%s\"\n", dir->unit);
 
         strcat(tempString, unitString);
         free(unitString);
       } else {
         char * unitString = malloc(sizeof(char) * 50);
-        strcpy(unitString, ", \"units\": \"\"");
+        strcpy(unitString, "      - units: \"\"\n");
 
         strcat(tempString, unitString);
         free(unitString);
       }
     }
-    
-    strcat(tempString, " }");
   }
 
   return tempString;
@@ -384,7 +382,7 @@ char * stepToString( void * data ){
 
   // get the directions string
   if( getLength(step->directions) != 0 ){
-    dirString = toString(step->directions);
+    dirString = toStringDelim(step->directions, "    - Direction");
   } else {
     stepString = malloc(sizeof(char) * 20);
     sprintf(stepString, "Empty step}\n");
@@ -416,7 +414,6 @@ char * stepToString( void * data ){
   // make the string
   stepString = malloc(sizeof(char) * length);
 
-  //sprintf(stepString, " Step: %s\n ingredients: %s \n equipment: %s", dirString, ingredientString, equipmentString);
   sprintf(stepString, "%s\n", dirString);
 
   free(dirString);

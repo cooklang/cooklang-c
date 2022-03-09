@@ -5,6 +5,218 @@
 
 // python wrapper methods
 
+static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
+
+  Py_ssize_t i;
+  Py_ssize_t j;
+  Py_ssize_t length;
+  Py_ssize_t stepLength;
+  Py_ssize_t pos = 0;
+  
+  const char * keyStr;
+  const char * valStr;
+  const char * nameStr;
+  const char * quanStr;
+  const char * unitStr;
+  const char * typeStr;
+
+  PyObject * key;
+  PyObject * value;
+  PyObject * str;
+  PyObject * attr;
+  PyObject * metas;
+  PyObject * ingredient;
+  PyObject * ingredients;
+  PyObject * cookware;
+  PyObject * cookwares;
+  PyObject * direction;
+  PyObject * step;
+  PyObject * steps;
+  PyObject * recipe;
+
+  if( !PyArg_ParseTuple(args, "O", &recipe ) ){
+    printf("Error printing recipe - argument could not be read\n");
+    return NULL;
+  }
+  
+  // print metadata
+  printf("Metadata:\n");
+
+  metas = PyDict_GetItemString(recipe, "metadata");
+  while(PyDict_Next(metas, &pos, &key, &value)){
+
+    str = PyUnicode_AsEncodedString(key, "utf-8", "~E~");
+    keyStr = PyBytes_AS_STRING(str);
+
+    str = PyUnicode_AsEncodedString(value, "utf-8", "~E~");
+    valStr = PyBytes_AS_STRING(str);
+
+    printf("  - %s: %s \n", keyStr, valStr);
+  }
+
+  
+
+  // print ingredients
+  printf("\nIngredients:\n");
+
+  ingredients = PyDict_GetItemString(recipe, "ingredients");
+  
+  length = PyList_Size(ingredients);
+  i = 0;
+  if( length != 0 ){
+  
+    while( i < length ){
+      ingredient = PyList_GetItem(ingredients, i);
+      
+      // name
+      attr = PyDict_GetItemString(ingredient, "name");
+      str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+      nameStr = PyBytes_AS_STRING(str);
+
+      // quanitty
+      attr = PyDict_GetItemString(ingredient, "quantity");
+      str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+      quanStr = PyBytes_AS_STRING(str);
+
+      // units
+      attr = PyDict_GetItemString(ingredient, "units");
+      str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+      unitStr = PyBytes_AS_STRING(str);
+
+      printf("  - %s, %s %s\n", nameStr, quanStr, unitStr);
+
+      i++;
+    }
+  
+  // if there are no ingredients
+  } else {
+    printf("  none\n");
+  }
+
+
+
+  // print cookware
+  printf("\nCookware\n");
+
+  cookwares = PyDict_GetItemString(recipe, "cookware");
+
+  length = PyList_Size(cookwares);
+  i = 0;
+
+  if( length != 0 ){
+
+    while( i < length ){
+      cookware = PyList_GetItem(cookwares, i);
+      
+      // name
+      attr = PyDict_GetItemString(cookware, "name");
+      str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+      nameStr = PyBytes_AS_STRING(str);
+
+      // quanitty
+      attr = PyDict_GetItemString(cookware, "quantity");
+      str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+      quanStr = PyBytes_AS_STRING(str);
+
+      printf("  - %s %s\n", quanStr, nameStr );
+
+      i++;
+    }
+  } else {
+    printf("  none\n");
+  }
+  
+
+
+  // print steps
+  printf("\nSteps\n");
+
+  steps = PyDict_GetItemString(recipe, "steps");
+
+  length = PyList_Size(steps);
+  i = 0;
+
+  // check that there are steps
+  if( length != 0 ){
+
+    // loop through each step
+    while( i < length ){
+
+      step = PyList_GetItem(steps, i);
+      
+      printf("  - %ld:\n", (i+1));
+      
+      stepLength = PyList_Size(step);
+      j = 0;
+
+      // loop through each step's directions
+      while( j < stepLength){
+        direction = PyList_GetItem(step, j);
+        
+        printf("    - Direction %ld:\n", (j+1));
+
+        // get type
+        attr = PyDict_GetItemString(direction, "type");
+        str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+        typeStr = PyBytes_AS_STRING(str);
+
+
+
+        if( strcmp(typeStr, "text") == 0 ){
+          printf("      - type: %s\n", typeStr);
+  
+          // get value
+          attr = PyDict_GetItemString(direction, "value");
+          str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+          valStr = PyBytes_AS_STRING(str);
+
+          printf("      - %s\n", valStr);
+
+        } else {
+          printf("      - type:     %s\n", typeStr);
+
+          // print value
+          attr = PyDict_GetItemString(direction, "name");
+          str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+          nameStr = PyBytes_AS_STRING(str);
+          
+          printf("      - name:     %s\n", nameStr);
+          
+
+
+          // print quan
+          attr = PyDict_GetItemString(direction, "quantity");
+          str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+          quanStr = PyBytes_AS_STRING(str);
+
+          printf("      - quantity: %s\n", quanStr);
+
+
+          // print units
+          if( strcmp(typeStr, "cookware") != 0 ){
+            attr = PyDict_GetItemString(direction, "units");
+            str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+            unitStr = PyBytes_AS_STRING(str);
+
+            printf("      - units:    %s\n", unitStr);
+          }
+
+        }
+
+        j++;
+      }
+
+      i++;
+    }
+  } else {
+    printf("  none\n");
+  }
+
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
 
 // parse a recipe 
 static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
@@ -342,23 +554,23 @@ static PyObject * methodParseShoppingList(PyObject *self, PyObject * args){
 
 
 // python module methods array
-static PyMethodDef cooklangCMethods[] = {
+static PyMethodDef cooklangMethods[] = {
   {"parseRecipe", methodParseRecipe, METH_VARARGS, "Python wrapper function that parses recipes written in the cooklang language specification."},
   {"parseShoppingList", methodParseShoppingList, METH_VARARGS, "Python wrapper function that parses shopping lists written in the cooklang language specification."},
-  // {"printRecipe", methodPrintRecipe, METH_VARARGS, "Python wrapper function for printing the contents of a recipe in C."},
+  {"printRecipe", methodPrintRecipe, METH_VARARGS, "Python wrapper function for printing the contents of a recipe."},
   {NULL, NULL, 0, NULL}
 };
 
 // define the module
-static PyModuleDef cooklangC = {
+static PyModuleDef cooklang = {
     PyModuleDef_HEAD_INIT,
-    .m_name = "cooklangC",
+    .m_name = "cooklang",
     .m_doc = "A python module that uses C to parse recipe files using cooklang.",
     .m_size = -1,
-    cooklangCMethods
+    cooklangMethods
 };
 
 // initialization function 
-PyMODINIT_FUNC PyInit_cooklangC(void){
-  return PyModule_Create(&cooklangC);
+PyMODINIT_FUNC PyInit_cooklang(void){
+  return PyModule_Create(&cooklang);
 }
