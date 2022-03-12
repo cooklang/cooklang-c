@@ -15,7 +15,7 @@ List * initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFun
     assert(compareFunction != NULL);
 
     List * tmpList = malloc(sizeof(List));
-	
+
 	tmpList->head = NULL;
 	tmpList->tail = NULL;
 
@@ -24,7 +24,7 @@ List * initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFun
 	tmpList->deleteData = deleteFunction;
 	tmpList->compare = compareFunction;
 	tmpList->printData = printFunction;
-	
+
 	return tmpList;
 }
 
@@ -35,13 +35,13 @@ List * initializeList(char* (*printFunction)(void* toBePrinted),void (*deleteFun
 *@param list pointer to the List-type dummy node
 *@return  on success: NULL, on failure: head of list
 **/
-void freeList(List* list){	
+void freeList(List* list){
 
     clearList(list);
 	free(list);
 }
 
-/** Clears the list: frees the contents of the list - Node structs and data stored in them - 
+/** Clears the list: frees the contents of the list - Node structs and data stored in them -
  * without deleting the List struct
  * uses the supplied function pointer to release allocated memory for the data
  * @pre 'List' type must exist and be used in order to keep track of the linked list.
@@ -49,30 +49,30 @@ void freeList(List* list){
  * @param list pointer to the List-type dummy node
  * @return  on success: NULL, on failure: head of list
 **/
-void clearList(List* list){	
+void clearList(List* list){
     if (list == NULL){
 		return;
 	}
-	
+
 	if (list->head == NULL && list->tail == NULL){
 		return;
 	}
-	
+
 	Node* tmp;
-	
+
 	while (list->head != NULL){
 		list->deleteData(list->head->data);
 		tmp = list->head;
 		list->head = list->head->next;
 		free(tmp);
 	}
-	
+
 	list->head = NULL;
 	list->tail = NULL;
 	list->length = 0;
 }
 
-/**Function for creating a node for the linked list. 
+/**Function for creating a node for the linked list.
 * This node contains abstracted (void *) data as well as previous and next
 * pointers to connect to other nodes in the list
 * @pre data should be of same size of void pointer on the users machine to avoid size conflicts. data must be valid.
@@ -83,15 +83,15 @@ void clearList(List* list){
 **/
 Node* initializeNode(void* data){
 	Node* tmpNode = (Node*)malloc(sizeof(Node));
-	
+
 	if (tmpNode == NULL){
 		return NULL;
 	}
-	
+
 	tmpNode->data = data;
 	tmpNode->previous = NULL;
 	tmpNode->next = NULL;
-	
+
 	return tmpNode;
 }
 
@@ -105,11 +105,11 @@ void insertBack(List* list, void* toBeAdded){
 	if (list == NULL || toBeAdded == NULL){
 		return;
 	}
-	
+
 	(list->length)++;
 
 	Node* newNode = initializeNode(toBeAdded);
-	
+
     if (list->head == NULL && list->tail == NULL){
         list->head = newNode;
         list->tail = list->head;
@@ -130,11 +130,11 @@ void insertFront(List* list, void* toBeAdded){
 	if (list == NULL || toBeAdded == NULL){
 		return;
 	}
-	
+
 	(list->length)++;
 
 	Node* newNode = initializeNode(toBeAdded);
-	
+
     if (list->head == NULL && list->tail == NULL){
         list->head = newNode;
         list->tail = list->head;
@@ -154,7 +154,7 @@ void* getFromFront(List * list){
 	if (list->head == NULL){
 		return NULL;
 	}
-	
+
 	return list->head->data;
 }
 
@@ -167,7 +167,7 @@ void* getFromBack(List * list){
 	if (list->tail == NULL){
 		return NULL;
 	}
-	
+
 	return list->tail->data;
 }
 
@@ -175,48 +175,48 @@ void* deleteDataFromList(List* list, void* toBeDeleted){
 	if (list == NULL || toBeDeleted == NULL){
 		return NULL;
 	}
-	
+
 	Node* tmp = list->head;
-	
+
 	while(tmp != NULL){
 		if (list->compare(toBeDeleted, tmp->data) == 0){
 			//Unlink the node
 			Node* delNode = tmp;
-			
+
 			if (tmp->previous != NULL){
 				tmp->previous->next = delNode->next;
 			}else{
 				list->head = delNode->next;
 			}
-			
+
 			if (tmp->next != NULL){
 				tmp->next->previous = delNode->previous;
 			}else{
 				list->tail = delNode->previous;
 			}
-			
+
 			void* data = delNode->data;
 			free(delNode);
-			
+
 			(list->length)--;
 
 			return data;
-			
+
 		}else{
 			tmp = tmp->next;
 		}
 	}
-	
+
 	return NULL;
 }
 
 
-/** Uses the comparison function pointer to place the element in the 
+/** Uses the comparison function pointer to place the element in the
 * appropriate position in the list.
-* should be used as the only insert function if a sorted list is required.  
+* should be used as the only insert function if a sorted list is required.
 *@pre List exists and has memory allocated to it. Node to be added is valid.
 *@post The node to be added will be placed immediately before or after the first occurrence of a related node
-*@param list a pointer to the dummy head of the list containing function pointers for delete and compare, as well 
+*@param list a pointer to the dummy head of the list containing function pointers for delete and compare, as well
 as a pointer to the first and last element of the list.
 *@param toBeAdded a pointer to data that is to be added to the linked list
 **/
@@ -229,30 +229,30 @@ void insertSorted(List *list, void *toBeAdded){
 		insertBack(list, toBeAdded);
 		return;
 	}
-	
+
 	if (list->compare(toBeAdded, list->head->data) <= 0){
 		insertFront(list, toBeAdded);
 		return;
 	}
-	
+
 	if (list->compare(toBeAdded, list->tail->data) > 0){
 		insertBack(list, toBeAdded);
 		return;
 	}
-	
+
 	Node* currNode = list->head;
-	
+
 	while (currNode != NULL){
 		if (list->compare(toBeAdded, currNode->data) <= 0){
-		
-			char* currDescr = list->printData(currNode->data); 
-			char* newDescr = list->printData(toBeAdded); 
-		
+
+			char* currDescr = list->printData(currNode->data);
+			char* newDescr = list->printData(toBeAdded);
+
 			//printf("Inserting %s before %s\n", newDescr, currDescr);
 
 			free(currDescr);
 			free(newDescr);
-		
+
 			Node* newNode = initializeNode(toBeAdded);
 			newNode->next = currNode;
 			newNode->previous = currNode->previous;
@@ -262,14 +262,14 @@ void insertSorted(List *list, void *toBeAdded){
 
 			return;
 		}
-	
+
 		currNode = currNode->next;
 	}
-	
+
 	return;
 }
 
-/**Returns a string that contains a string representation of the list traversed from  head to tail. 
+/**Returns a string that contains a string representation of the list traversed from  head to tail.
 Utilize an iterator and the list's printData function pointer to create the string.
 returned string must be freed by the calling function.
  *@pre List must exist, but does not have to have elements.
@@ -279,10 +279,10 @@ returned string must be freed by the calling function.
 char* toString(List * list){
 	ListIterator iter = createIterator(list);
 	char* str;
-		
+
 	str = (char*)malloc(sizeof(char));
 	strcpy(str, "");
-	
+
 	void* elem;
 	while((elem = nextElement(&iter)) != NULL){
 		char* currDescr = list->printData(elem);
@@ -290,10 +290,10 @@ char* toString(List * list){
 		str = (char*)realloc(str, newLen);
 		strcat(str, "\n");
 		strcat(str, currDescr);
-		
+
 		free(currDescr);
 	}
-	
+
 	return str;
 }
 
@@ -303,7 +303,7 @@ char* toStringDelim(List * list, char * delim){
 	int i = 1;
 	str = (char*)malloc(sizeof(char));
 	strcpy(str, "");
-	
+
 	void* elem;
 	while((elem = nextElement(&iter)) != NULL){
 		char* newDelim = malloc(strlen(delim) + 50);
@@ -317,7 +317,7 @@ char* toStringDelim(List * list, char * delim){
 		free(newDelim);
 		i++;
 	}
-	
+
 	return str;
 }
 
@@ -327,13 +327,13 @@ ListIterator createIterator(List* list){
     ListIterator iter;
 
     iter.current = list->head;
-    
+
     return iter;
 }
 
 void* nextElement(ListIterator* iter){
     Node* tmp = iter->current;
-    
+
     if (tmp != NULL){
         iter->current = iter->current->next;
         return tmp->data;

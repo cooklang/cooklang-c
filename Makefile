@@ -33,7 +33,7 @@ parser: Cooklang.tab.c $(OBJ)
 
 # clean binaries
 binary_clean:
-	rm -f bin/*.o *.o *.so *.out parser 
+	rm -f bin/*.o *.o *.so *.out parser
 
 # clean everything
 full_clean: binary_clean
