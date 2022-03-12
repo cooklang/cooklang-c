@@ -33,7 +33,7 @@ python setup.py install
 
 Then, the user may import the parser into their project using the following:
 ```
-import cooklangC
+import cooklang
 ```
 
 ## Usage
@@ -52,8 +52,8 @@ To make the sandwiches, warm a #large saut pan{} over medium heat. Add @bacon{2 
 
 with this sequence of commands:
 ```
-import cooklangC
-parsedRecipe = cooklangC.parseRecipe("testRecipe.cook")
+import cooklang
+parsedRecipe = cooklang.parseRecipe("testRecipe.cook")
 parsedRecipe
 ```
 
@@ -174,8 +174,8 @@ tuna|chicken of the sea
 
 with this sequence of commands:
 ```
-import cooklangC
-parsedShoppingList = cooklangC.parseShoppingList("testRecipe.cook")
+import cooklang
+parsedShoppingList = cooklang.parseShoppingList("testRecipe.cook")
 parsedShoppingList
 ```
 
