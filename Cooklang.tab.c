@@ -1433,7 +1433,7 @@ yyreduce:
 
   case 23:
 #line 154 "Cooklang.y" /* yacc.c:1652  */
-    { 
+    {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 15);
       sprintf((yyval.string), "%s %.3f", (yyvsp[-1].string), (yyvsp[0].number));
       free((yyvsp[-1].string));
@@ -1471,7 +1471,7 @@ yyreduce:
 
   case 27:
 #line 179 "Cooklang.y" /* yacc.c:1652  */
-    { 
+    {
       // get string for amount
       (yyval.string) = malloc(100);
       sprintf((yyval.string), "%.3lf", (yyvsp[-1].number));
@@ -1481,7 +1481,7 @@ yyreduce:
 
   case 28:
 #line 185 "Cooklang.y" /* yacc.c:1652  */
-    { 
+    {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 20);
       sprintf((yyval.string), "%.3f %s", (yyvsp[-2].number), (yyvsp[-1].string));
       free((yyvsp[-1].string));
@@ -1580,7 +1580,7 @@ yyreduce:
 
   case 39:
 #line 245 "Cooklang.y" /* yacc.c:1652  */
-    { 
+    {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
@@ -1688,7 +1688,7 @@ yyreduce:
 
   case 48:
 #line 322 "Cooklang.y" /* yacc.c:1652  */
-    { 
+    {
         (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[-1].string), (yyvsp[0].string));
         free((yyvsp[-1].string));
@@ -1699,7 +1699,7 @@ yyreduce:
 
   case 49:
 #line 329 "Cooklang.y" /* yacc.c:1652  */
-    { 
+    {
         (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[-1].string), (yyvsp[0].string));
         free((yyvsp[-1].string));

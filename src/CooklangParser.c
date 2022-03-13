@@ -11,7 +11,7 @@ extern FILE * yyin;
 
 // wrapper functions
 Recipe * parseRecipe( char * fileName ){
-  
+
   FILE * file;
 
   if( fileName != NULL ){
@@ -24,7 +24,7 @@ Recipe * parseRecipe( char * fileName ){
   } else {
     return NULL;
   }
-  
+
 
   // setup the recipe
   Recipe * finalRecipe = createRecipe();
@@ -78,7 +78,7 @@ char * addTwoStrings(char * first, char * second){
   length += 5;
 
   result = malloc(sizeof(char) * length);
-  
+
   if( result == NULL ){
     printf("Error, malloc failed");
     return NULL;
@@ -105,7 +105,7 @@ char * addThreeStrings(char * first, char * second, char * third){
   length += 5;
 
   result = malloc(sizeof(char) * length);
-  
+
   if( result == NULL ){
     printf("Error, malloc failed");
     return NULL;
@@ -146,7 +146,7 @@ void addMetaData( Recipe * recipe, char * metaDataString ){
 
   // create a new metadata and add it to the list at the back
   Metadata * tempMeta = createMetadata(metaDataString);
-  
+
   if( tempMeta != NULL ){
     insertBack(recipe->metaData, tempMeta);
   }

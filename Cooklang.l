@@ -321,7 +321,7 @@ COMMENT               "-""-".*
                         return HWORD;
                       }
 
-                      
+
 {UNIT}                { yylval.string = strdup(yytext);
                         return UNIT;}
 
@@ -360,7 +360,7 @@ COMMENT               "-""-".*
                         return METADATA;
                       }
 
-{COMMENT}              
+{COMMENT}
 
 {WHITE_SPACE}         { yylval.string = strdup(yytext);
                         return WHTS;
@@ -397,7 +397,7 @@ char * testFile( char * fileName ){
     // create the first step and insert into back of list
     Step * currentStep = createStep();
     insertBack(finalRecipe->stepList, currentStep);
-    
+
     // run the parser on input file
     yyparse(finalRecipe);
 
@@ -463,7 +463,7 @@ int runFile( char * fileName ){
   free(metaDataString);
 
 
-  // printf out the step steps 
+  // printf out the step steps
   char * stepListString = toString(finalRecipe->stepList);
 
   printf("%s\n", stepListString);
@@ -518,7 +518,7 @@ int main( int argc, char ** argv ){
   free(metaDataString);
 
 
-  // printf out the step steps 
+  // printf out the step steps
   char * stepListString = toString(finalRecipe->stepList);
 
   printf("%s\n", stepListString);

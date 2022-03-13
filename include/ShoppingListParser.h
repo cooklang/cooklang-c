@@ -9,7 +9,7 @@ typedef struct {
 } ShoppingList;
 
 typedef struct {
-  
+
   // required, the first name
   char * name;
 
