@@ -58,3 +58,4 @@ dkms.conf
 build/*
 .vscode/
 parser
+__pycache__
