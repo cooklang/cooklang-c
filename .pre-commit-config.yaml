@@ -42,3 +42,8 @@ repos:
       # -ANN003 "Missing type annotation for *kwargs"
       # -W503 "Line break occurred before a binary operator" See https://www.flake8rules.com/rules/W503.html
       # -E203:  whitespace before ':' because pep8 is wrong here. See https://github.com/psf/black/issues/315
+- repo: https://github.com/pre-commit/mirrors-clang-format
+  rev: 'v13.0.1'
+  hooks:
+    - id: clang-format
+      args: [--style=Google, -i]
