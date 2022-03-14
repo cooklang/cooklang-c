@@ -1,4 +1,7 @@
+#ifndef _SHOPPINGLISTPARSER_H__
+#define _SHOPPINGLISTPARSER_H__
 
+#include "LinkedListLib.h"
 
 // shopping list
 typedef struct {
@@ -35,3 +38,5 @@ char * shoppingItemToString( void * data );
 void deleteShoppingItem( void * data );
 int compareShoppingItem( const void * first, const void * second );
 ShoppingItem * parseShoppingItem( char * inputLine );
+
+#endif
