@@ -1,0 +1,3 @@
+[submodule "cooklang-py"]
+	path = cooklang-py
+	url = https://github.com/cooklang/cooklang-py
