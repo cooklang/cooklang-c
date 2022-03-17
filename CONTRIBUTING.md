@@ -1,4 +1,5 @@
 
+
 # Contributing
 If you are using the library, and find any problems, or even have any suggestions, please open an issue on the github and we can work towards a solution.
 
@@ -12,15 +13,13 @@ Download the code as a zip file and extract, or use the git clone command to dow
 git clone https://github.com/cooklang/cook-in-c.git
 
 ```
-If you would like to work with the library you will need the following packages installed: flex, bison, and make and gcc for the compilation. These can all be installed via:
+If you would like to work with the library you will need the following packages installed: make and gcc for the compilation. These can all be installed via:
 ```
-sudo apt-get install flex bison make gcc
+sudo apt-get install make gcc
 ```
 
 The library is built using these versions:
 ```
-flex 2.6.4
-bison (GNU Bison) 3.3.2
 GNU Make 4.2.1
 gcc (Debian 8.3.0-6) 8.3.0
 ```
@@ -109,7 +108,7 @@ If you would like to make your own changes to the parser itself, the parser is w
 Flex manual can be found here: http://dinosaur.compilertools.net/flex/index.html
 Bison manual can be found here: https://www.gnu.org/software/bison/manual/html_node/index.html
 
-If you make any changes to the flex file, you will have to rebuild it. Use the command:
+If you make any changes to the flex file, you will have to rebuild it. You will need to first install flex before doing so. Use the command:
 ```
 flex -Ca --align Cooklang.l
 ```
