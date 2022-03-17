@@ -1,23 +1,23 @@
 
-  
+
 
 # [WIP] cook-in-c
 
-  
+
 
 Cook-in-c is a Cooklang language parser written in C. It features a Python3 C extension module to make interacting with it easier.
 
 
 ## Install:
 
- 
+
 Download the code as a zip file and extract, or use the git clone command to download:
 
 ```
 git clone https://github.com/cooklang/cook-in-c.git
 ```
 
-  
+
 ## Setup
 It is easiest to use the parser with the python module. To do so, navigate to the directory containing the setup.py file. The module can be built using the command:
 ```
@@ -33,12 +33,12 @@ python setup.py install
 
 Then, the user may import the parser into their project using the following:
 ```
-import cooklangC
+import cooklang
 ```
 
 ## Usage
 
-The module has two functions, parseRecipe() and parseShoppingList(). 
+The module has two functions, parseRecipe() and parseShoppingList().
 
 ### parseRecipe()
 The parseRecipe function takes one argument, a string that represents the path to a recipe file that the user desires to parse using the Cooklang Language specification. The output is a python dictionary representing the parsed recipe. As an example the following file, named testRecipe.cook :
@@ -52,8 +52,8 @@ To make the sandwiches, warm a #large saut pan{} over medium heat. Add @bacon{2 
 
 with this sequence of commands:
 ```
-import cooklangC
-parsedRecipe = cooklangC.parseRecipe("testRecipe.cook")
+import cooklang
+parsedRecipe = cooklang.parseRecipe("testRecipe.cook")
 parsedRecipe
 ```
 
@@ -92,7 +92,7 @@ would produce the following output:
       }
    ],
    "cookware":[
-      
+
    ],
    "steps":[
       [
@@ -174,8 +174,8 @@ tuna|chicken of the sea
 
 with this sequence of commands:
 ```
-import cooklangC
-parsedShoppingList = cooklangC.parseShoppingList("testRecipe.cook")
+import cooklang
+parsedShoppingList = cooklang.parseShoppingList("testRecipe.cook")
 parsedShoppingList
 ```
 
@@ -188,19 +188,19 @@ would produce the following output:
          {
             "name":"potatoes",
             "synonyms":[
-               
+
             ]
          },
          {
             "name":"milk",
             "synonyms":[
-               
+
             ]
          },
          {
             "name":"butter",
             "synonyms":[
-               
+
             ]
          }
       ]
@@ -211,13 +211,13 @@ would produce the following output:
          {
             "name":"bread",
             "synonyms":[
-               
+
             ]
          },
          {
             "name":"salt",
             "synonyms":[
-               
+
             ]
          }
       ]
@@ -228,7 +228,7 @@ would produce the following output:
          {
             "name":"chicken",
             "synonyms":[
-               
+
             ]
          }
       ]

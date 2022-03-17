@@ -36,7 +36,7 @@ typedef struct {
 typedef struct {
   // a NULL value means that there is none of the given argument in the direction
   // except for double, where -1 means none given
-  
+
   // the type of direction, either textitem, ingredient, cookware, timer
   // required
   char * type;
@@ -69,7 +69,7 @@ typedef struct {
   List * directions;
 
   List * ingredientList;
-  
+
   List * equipmentList;
 
 } Step;
@@ -83,7 +83,7 @@ typedef struct {
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // ******** Function Definitions *********
 // * * * * * * * * * * * * * * * * * * * *
 

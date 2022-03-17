@@ -12,7 +12,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
   Py_ssize_t length;
   Py_ssize_t stepLength;
   Py_ssize_t pos = 0;
-  
+
   const char * keyStr;
   const char * valStr;
   const char * nameStr;
@@ -38,7 +38,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
     printf("Error printing recipe - argument could not be read\n");
     return NULL;
   }
-  
+
   // print metadata
   printf("Metadata:\n");
 
@@ -54,20 +54,20 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
     printf("  - %s: %s \n", keyStr, valStr);
   }
 
-  
+
 
   // print ingredients
   printf("\nIngredients:\n");
 
   ingredients = PyDict_GetItemString(recipe, "ingredients");
-  
+
   length = PyList_Size(ingredients);
   i = 0;
   if( length != 0 ){
-  
+
     while( i < length ){
       ingredient = PyList_GetItem(ingredients, i);
-      
+
       // name
       attr = PyDict_GetItemString(ingredient, "name");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
@@ -87,7 +87,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 
       i++;
     }
-  
+
   // if there are no ingredients
   } else {
     printf("  none\n");
@@ -107,7 +107,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 
     while( i < length ){
       cookware = PyList_GetItem(cookwares, i);
-      
+
       // name
       attr = PyDict_GetItemString(cookware, "name");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
@@ -125,7 +125,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
   } else {
     printf("  none\n");
   }
-  
+
 
 
   // print steps
@@ -143,16 +143,16 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
     while( i < length ){
 
       step = PyList_GetItem(steps, i);
-      
+
       printf("  - %ld:\n", (i+1));
-      
+
       stepLength = PyList_Size(step);
       j = 0;
 
       // loop through each step's directions
       while( j < stepLength){
         direction = PyList_GetItem(step, j);
-        
+
         printf("    - Direction %ld:\n", (j+1));
 
         // get type
@@ -164,7 +164,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 
         if( strcmp(typeStr, "text") == 0 ){
           printf("      - type: %s\n", typeStr);
-  
+
           // get value
           attr = PyDict_GetItemString(direction, "value");
           str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
@@ -179,9 +179,9 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
           attr = PyDict_GetItemString(direction, "name");
           str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
           nameStr = PyBytes_AS_STRING(str);
-          
+
           printf("      - name:     %s\n", nameStr);
-          
+
 
 
           // print quan
@@ -218,7 +218,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 }
 
 
-// parse a recipe 
+// parse a recipe
 static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   int check;
   int dirLength;
@@ -232,14 +232,14 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   Metadata * curMeta;
 
   PyObject * metaListObject;
-  
+
   PyObject * stepListObject;
   PyObject * stepObject;
   PyObject * directionObject;
 
   PyObject * ingredientListObject;
   PyObject * cookwareListObject;
-  
+
 
   // get args - no embedded null code points
   if(!PyArg_ParseTuple(args, "s", &fileName)){
@@ -248,7 +248,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 
   // parse the recipe recipe
   Recipe * parsedRecipe = parseRecipe(fileName);
-  
+
   // build a python object to represent the recipe
   PyObject * recipeObject = PyDict_New();
 
@@ -274,7 +274,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
     curMeta = nextElement(&metaIter);
   }
 
-    
+
   // add the whole list to the final object
   check = PyDict_SetItemString(recipeObject, "metadata", metaListObject);
   if( check == -1 ){
@@ -290,7 +290,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   stepListObject = PyList_New(0);
   ingredientListObject = PyList_New(0);
   cookwareListObject = PyList_New(0);
-  
+
   // loop through every step
   stepIter = createIterator(parsedRecipe->stepList);
   curStep = nextElement(&stepIter);
@@ -314,7 +314,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
         // if its a text direction
         if( strcmp(curDir->type, "text") == 0 ){
           directionObject = Py_BuildValue("{s:s, s:s}", "type", "text", "value", curDir->value);
-        
+
         // other kinds
         } else {
           directionObject = PyDict_New();
@@ -331,7 +331,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
             check = PyDict_SetItemString(directionObject, "name", PyUnicode_FromString(curDir->value));
             if( check == - 1 ){
               printf("Error adding name to new direction object\n");
-            } 
+            }
           } else {
             check = PyDict_SetItemString(directionObject, "name", PyUnicode_FromString(""));
             if( check == - 1 ){
@@ -339,7 +339,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
             }
           }
 
-          // quantity 
+          // quantity
           if( curDir->quantityString == NULL ){
             if( curDir->quantity != -1 ){
               check = PyDict_SetItemString(directionObject, "quantity", PyFloat_FromDouble(curDir->quantity));
@@ -387,7 +387,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 
           if(check == -1){
             printf("Error adding new direction to direction list\n");
-          } 
+          }
         }
 
         // if its a cookware add it to the cookware list
@@ -396,7 +396,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 
           if(check == -1){
             printf("Error adding new direction to direction list\n");
-          } 
+          }
         }
 
         // get the next direction
@@ -534,8 +534,8 @@ static PyObject * methodParseShoppingList(PyObject *self, PyObject * args){
     if( check == - 1 ){
       printf("Error adding list of items to shopping list\n");
     }
-    
-    
+
+
     // add the shopping list to the list of lists
     check = PyList_Append(shopListList, shopListObject);
     if( check == - 1 ){
@@ -545,7 +545,7 @@ static PyObject * methodParseShoppingList(PyObject *self, PyObject * args){
     curList = nextElement(&sListIter);
   }
 
-  
+
   return (PyObject *) shopListList;
 }
 
@@ -570,7 +570,7 @@ static PyModuleDef cooklang = {
     cooklangMethods
 };
 
-// initialization function 
+// initialization function
 PyMODINIT_FUNC PyInit_cooklang(void){
   return PyModule_Create(&cooklang);
 }

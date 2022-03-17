@@ -1,7 +1,7 @@
 #include "../include/LinkedListLib.h"
 #include "../include/ShoppingListParser.h"
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // ******  Functions Definitions  ********
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -11,7 +11,7 @@
 // parse a shopping list file
 // does not use flex/bison just simple string manipulation techniques in C
 List * parseShoppingLists( char * fileName ){
-  
+
   int maxLineLength = 1024;
 
   char * inputLine;
@@ -36,7 +36,7 @@ List * parseShoppingLists( char * fileName ){
   while( fgets(inputLine, maxLineLength, file) != NULL ){
     // remove empty lines
     if( inputLine[0] != 10 && inputLine[0] != 13 ){
-      // look for [ and 
+      // look for [ and
       if( inputLine[0] == '['){
         // create a list from it
         ShoppingList * tempSList = parseShoppingList(inputLine);
@@ -55,7 +55,7 @@ List * parseShoppingLists( char * fileName ){
 
   fclose(file);
   free(inputLine);
-  
+
   return shoppingLists;
 }
 
@@ -64,7 +64,7 @@ List * parseShoppingLists( char * fileName ){
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // *****  Shopping List Functions  *******
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -93,14 +93,14 @@ char * shoppingListToString( void * data ){
   if( data == NULL ){
     return NULL;
   }
-  
+
   ShoppingList * sList = data;
-  
+
   char * itemsString = NULL;
   char * listString = NULL;
 
   itemsString = toString(sList->shoppingItems);
-  
+
   listString = malloc(strlen(itemsString) + strlen(sList->category) + 50);
 
   sprintf(listString, "List:\n Category: %s\n Items:\n%s\n", sList->category, itemsString);
@@ -149,7 +149,7 @@ ShoppingList * parseShoppingList(char * inputLine){
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // *****  Shopping Item Functions  *******
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -224,7 +224,7 @@ char * shoppingItemToString( void * data ){
 void deleteShoppingItem( void * data ){
   ShoppingItem * sItem = data;
   free(sItem->name);
-  
+
   int i = 0;
 
   if(sItem->synonyms != NULL ){
@@ -289,7 +289,7 @@ ShoppingItem * parseShoppingItem( char * inputLine ){
     tempSItem->synonyms = realloc(tempSItem->synonyms, sizeof(char *) * (i + 1));
 
     // add the new token
-    tempSItem->synonyms[i - 1] = malloc(sizeof(char) * strlen(token) + 1); 
+    tempSItem->synonyms[i - 1] = malloc(sizeof(char) * strlen(token) + 1);
     strcpy(tempSItem->synonyms[i - 1], token);
 
     // null terminate

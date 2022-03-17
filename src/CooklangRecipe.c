@@ -11,7 +11,7 @@ void test2(){
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // ******** Metadata Functions ***********
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -58,7 +58,7 @@ void deleteMetadata( void * data ){
   free(meta->content);
   free(meta->identifier);
   free(meta);
-} 
+}
 
 char * metadataToString( void * data ){
   Metadata * meta = data;
@@ -175,7 +175,7 @@ Direction * createDirection( char * type, char * value, char * amountString ){
       free(amountResults[1]);
       free(amountResults);
     }
-    
+
     if( defaultAmountString != NULL ){
       free(defaultAmountString);
     }
@@ -250,7 +250,7 @@ char * directionToString( void * data ){
   if( dir->quantityString != NULL ){
     length += strlen(dir->quantityString);
   }
-  
+
   if( dir->unit != NULL ){
     length += strlen(dir->unit);
   } else {
@@ -339,7 +339,7 @@ int compareDirections( const void * first, const void * second ){
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // *********  Step Functions  ************
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -431,17 +431,17 @@ int compareSteps( const void * first, const void * second){
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // ********  Recipe Functions  ***********
 // * * * * * * * * * * * * * * * * * * * *
 
 // creation functions
 
 Recipe * createRecipe(){
-  
+
   // make a new recipe
   Recipe * tempRec = malloc(sizeof(Recipe));
-  
+
   // steps
   List * stepList = initializeList(stepToString, deleteStep, compareSteps);
   tempRec->stepList = stepList;
@@ -464,7 +464,7 @@ char * recipeToString( void * data ){
 
 
 
-// * * * * * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * *
 // ********   Other Functions  ***********
 // * * * * * * * * * * * * * * * * * * * *
 
@@ -570,7 +570,7 @@ char ** parseAmountString( char * amountString ){
   char ** results = malloc(sizeof(char *) * 2);
   char * quantityDest = NULL;
   char * unitDest = NULL;
-  
+
   // check if empty - an empty amount - if so set null results and return
   if( amountString[0] == '\0' ){
     results[0] = NULL;
@@ -599,7 +599,7 @@ char ** parseAmountString( char * amountString ){
   } else {
     unitDest = NULL;
   }
-  
+
   // remove white space
   char * trimmedQuan = trimWhiteSpace(quantityDest);
   results[0] = strdup(trimmedQuan);
@@ -625,29 +625,29 @@ char ** parseMetaString( char * metaString ){
   char * beginning;
   char ** results;
   int i = 0;
-  
+
   if( metaString == NULL ){
     return NULL;
   }
-  
+
   // remove first two '>'
   if( metaString[0] == '>' && metaString[1] == '>' ){
     metaString++;
     metaString++;
   }
   beginning = metaString;
-  
+
   results = malloc(sizeof(char *) * 2);
   if( results == NULL) {
     printf("error, malloc failed - parseMetaString1");
   }
-  
+
   // loop through to find the first ':' then set to end of string
   while( metaString[i] != ':' && metaString[i] != '\0'){
     metaString++;
   }
   metaString[i] = '\0';
-  
+
   // copy the into the identifier
   char * trimmed = trimWhiteSpace(beginning);
   results[0] = strdup(trimmed);

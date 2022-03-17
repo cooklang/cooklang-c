@@ -104,9 +104,9 @@ direction:
       addDirection(recipe, "text", $1, NULL);
       free($1);
     }
-  | timer             
-  | cookware          
-  | ingredient        
+  | timer
+  | cookware
+  | ingredient
   | HWORD text_item   {
       $$ = addTwoStrings($1, $2);
       addDirection(recipe, "cookware", $1, NULL);
@@ -144,14 +144,14 @@ text_item:
       free($1);
       free($2);
     }
-    
+
   | text_item MULTIWORD  {
       $$ = addTwoStrings($1, $2);
       free($1);
       free($2);
     }
 
-  | text_item NUMBER  { 
+  | text_item NUMBER  {
       $$ = malloc(strlen($1) + 15);
       sprintf($$, "%s %.3f", $1, $2);
       free($1);
@@ -176,13 +176,13 @@ amount:
     strcpy($$, "\0");
   }
 
-  | LCURL NUMBER RCURL  { 
+  | LCURL NUMBER RCURL  {
       // get string for amount
       $$ = malloc(100);
       sprintf($$, "%.3lf", $2);
     }
 
-  | LCURL NUMBER UNIT RCURL { 
+  | LCURL NUMBER UNIT RCURL {
       $$ = malloc(strlen($3) + 20);
       sprintf($$, "%.3f %s", $2, $3);
       free($3);
@@ -232,7 +232,7 @@ cookware_amount:
 
   | LCURL MULTIWORD RCURL {
         $$ = $2;
-      } 
+      }
   ;
 
 cookware:
@@ -242,13 +242,13 @@ cookware:
       free($1);
     }
 
-  | HWORD cookware_amount  { 
+  | HWORD cookware_amount  {
       $$ = addTwoStrings($1, $2);
       addDirection(recipe, "cookware", $1, $2);
       free($1);
       free($2);
     }
-  
+
   | HWORD WORD cookware_amount {
       $$ = addThreeStrings($1, $2, $3);
       char * valueString = addTwoStrings($1, $2);
@@ -258,7 +258,7 @@ cookware:
       free($2);
       free($3);
     }
-  
+
   | HWORD MULTIWORD cookware_amount {
       $$ = addThreeStrings($1, $2, $3);
       char * valueString = addTwoStrings($1, $2);
@@ -319,14 +319,14 @@ timer:
         addDirection(recipe, "timer", $2, NULL);
         free($2);
       }
-  | TILDE WORD amount { 
+  | TILDE WORD amount {
         $$ = addTwoStrings($2, $3);
         addDirection(recipe, "timer", $2, $3);
         free($2);
         free($3);
       }
 
-  | TILDE MULTIWORD amount  { 
+  | TILDE MULTIWORD amount  {
         $$ = addTwoStrings($2, $3);
         addDirection(recipe, "timer", $2, $3);
         free($2);
