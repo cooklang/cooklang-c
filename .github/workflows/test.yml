@@ -19,4 +19,4 @@ jobs:
           pyyaml
     - run: python setup.py build
     - run: python setup.py install
-    - run: python testing/testing.py
+    - run: python -m unittest testing.testing
