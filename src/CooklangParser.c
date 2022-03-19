@@ -7,9 +7,39 @@
 
 
 extern FILE * yyin;
-
+typedef struct yy_buffer_state * YY_BUFFER_STATE;
+extern YY_BUFFER_STATE yy_scan_string(char * str);
+extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
 // wrapper functions
+// this function will parse the recipe from a string
+Recipe * parseRecipeString( char * inputRecipeString ){
+
+  // setup the recipe
+  Recipe * finalRecipe = createRecipe();
+
+  // create the first step
+  Step * currentStep = createStep();
+  insertBack(finalRecipe->stepList, currentStep);
+  printf("here2\n");
+
+  // add a newline at the end of the string to prevent errors in the parser
+  char * newInputString = malloc(sizeof(char) * (strlen(inputRecipeString) + 20));
+  sprintf(newInputString, "%s\n", inputRecipeString);
+
+  // feed input to lexer
+  YY_BUFFER_STATE buffer = yy_scan_string(newInputString);
+  // parser
+  yyparse(finalRecipe);
+  yy_delete_buffer(buffer);
+
+  printf("here3\n");
+
+
+  return finalRecipe;
+}
+
+
 Recipe * parseRecipe( char * fileName ){
 
   FILE * file;
