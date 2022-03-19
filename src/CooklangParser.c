@@ -21,7 +21,6 @@ Recipe * parseRecipeString( char * inputRecipeString ){
   // create the first step
   Step * currentStep = createStep();
   insertBack(finalRecipe->stepList, currentStep);
-  printf("here2\n");
 
   // add a newline at the end of the string to prevent errors in the parser
   char * newInputString = malloc(sizeof(char) * (strlen(inputRecipeString) + 20));
@@ -32,9 +31,6 @@ Recipe * parseRecipeString( char * inputRecipeString ){
   // parser
   yyparse(finalRecipe);
   yy_delete_buffer(buffer);
-
-  printf("here3\n");
-
 
   return finalRecipe;
 }

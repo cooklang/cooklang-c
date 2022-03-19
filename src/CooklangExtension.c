@@ -222,7 +222,7 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   int check;
   int dirLength;
-  char * fileName = NULL;
+  char * recipeString;
 
   ListIterator stepIter;
   Step * curStep;
@@ -242,12 +242,12 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 
 
   // get args - no embedded null code points
-  if(!PyArg_ParseTuple(args, "s", &fileName)){
+  if(!PyArg_ParseTuple(args, "s", &recipeString)){
     return NULL;
   }
 
   // parse the recipe recipe
-  Recipe * parsedRecipe = parseRecipe(fileName);
+  Recipe * parsedRecipe = parseRecipeString(recipeString);
 
   // build a python object to represent the recipe
   PyObject * recipeObject = PyDict_New();
@@ -284,7 +284,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 
 
 
-  // add all the steps
+  // add all the steps/ingredients/cookware
 
   // the lists to store steps/ingredients/cookware
   stepListObject = PyList_New(0);
