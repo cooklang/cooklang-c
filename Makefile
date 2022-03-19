@@ -1,5 +1,5 @@
 # flags for compiling a .o file
-OFLAGS = -Wall -pedantic -I include/ -g -fPIC -c
+OFLAGS = -Wall -pedantic -I include/ -I parserFiles/ -g -fPIC -c
 OBJ=bin/CooklangParser.o bin/CooklangRecipe.o bin/LinkedListLib.o
 
 all: parser
@@ -10,14 +10,14 @@ bin/%.o: src/%.c
 	gcc $(OFLAGS) -MMD -o $@ $<
 
 # recompile lex file
-lex.yy.c: Cooklang.l
-	flex -Ca $<
+lex.yy.c: parserFiles/Cooklang.l
+	flex -Ca $< -o parserFiles
 
 flex: lex.yy.c
 
 # recompile bison file
 Cooklang.tab.c: Cooklang.y
-	bison -d  $< -v
+	bison $< -d -v -o parserFiles/Cooklang.tab.c
 
 bison: Cooklang.tab.c
 
@@ -29,7 +29,7 @@ library: Cooklang.tab.c $(OBJ)
 
 # make executable parser
 parser: Cooklang.tab.c $(OBJ)
-	gcc -g $< $(OBJ) -o $@
+	gcc -g parserFiles/$< $(OBJ) -o $@
 
 # clean binaries
 binary_clean:
@@ -37,4 +37,4 @@ binary_clean:
 
 # clean everything
 full_clean: binary_clean
-	rm -f bin/*.d  test Cooklang.tab.c lex.yy.c Cooklang.tab.h Cooklang.output lex.yy.h
+	rm -f bin/*.d  test parserFiles/Cooklang.tab.c parserFiles/Cooklang.tab.h parserFiles/Cooklang.output

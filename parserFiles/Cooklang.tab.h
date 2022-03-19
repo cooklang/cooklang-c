@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_COOKLANG_TAB_H_INCLUDED
-# define YY_YY_COOKLANG_TAB_H_INCLUDED
+#ifndef YY_YY_PARSERFILES_COOKLANG_TAB_H_INCLUDED
+# define YY_YY_PARSERFILES_COOKLANG_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -77,7 +77,7 @@ union YYSTYPE
   char character;
   double number;
 
-#line 81 "Cooklang.tab.h" /* yacc.c:1921  */
+#line 81 "parserFiles/Cooklang.tab.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -90,4 +90,4 @@ extern YYSTYPE yylval;
 
 int yyparse (Recipe * recipe);
 
-#endif /* !YY_YY_COOKLANG_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSERFILES_COOKLANG_TAB_H_INCLUDED  */

@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "../include/CooklangParser.h"
-#include "../Cooklang.tab.h"
+#include "../parserFiles/Cooklang.tab.h"
 
 
 extern FILE * yyin;

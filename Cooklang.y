@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "include/CooklangParser.h"
+#include "../include/CooklangParser.h"
 
 #define YYDEBUG 1
 
