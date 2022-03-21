@@ -10,13 +10,13 @@ bin/%.o: src/%.c
 	gcc $(OFLAGS) -MMD -o $@ $<
 
 # recompile lex file
-lex.yy.c: parserFiles/Cooklang.l
-	flex -Ca $< -o parserFiles
+lex.yy.c: src/Cooklang.l
+	flex -Ca $< -o parserFiles/lex.yy.c
 
 flex: lex.yy.c
 
 # recompile bison file
-Cooklang.tab.c: Cooklang.y
+Cooklang.tab.c: src/Cooklang.y
 	bison $< -d -v -o parserFiles/Cooklang.tab.c
 
 bison: Cooklang.tab.c
@@ -37,4 +37,4 @@ binary_clean:
 
 # clean everything
 full_clean: binary_clean
-	rm -f bin/*.d  test parserFiles/Cooklang.tab.c parserFiles/Cooklang.tab.h parserFiles/Cooklang.output
+	rm -f bin/*.d  test parserFiles/Cooklang.tab.c parserFiles/Cooklang.tab.h parserFiles/Cooklang.output parserFiles/lex.yy.c

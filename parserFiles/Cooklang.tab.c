@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 2 "Cooklang.y" /* yacc.c:337  */
+#line 2 "src/Cooklang.y" /* yacc.c:337  */
 
 
 #include <stdlib.h>
@@ -150,7 +150,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 34 "Cooklang.y" /* yacc.c:352  */
+#line 34 "src/Cooklang.y" /* yacc.c:352  */
 
   char * string;
   char character;
@@ -1293,13 +1293,13 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 61 "Cooklang.y" /* yacc.c:1652  */
+#line 61 "src/Cooklang.y" /* yacc.c:1652  */
     {}
 #line 1299 "parserFiles/Cooklang.tab.c" /* yacc.c:1652  */
     break;
 
   case 5:
-#line 62 "Cooklang.y" /* yacc.c:1652  */
+#line 62 "src/Cooklang.y" /* yacc.c:1652  */
     {
       // after a step has been finished by a new line, have to add the step to the steplist
       // and make a new step to accept directions
@@ -1312,7 +1312,7 @@ yyreduce:
     break;
 
   case 6:
-#line 70 "Cooklang.y" /* yacc.c:1652  */
+#line 70 "src/Cooklang.y" /* yacc.c:1652  */
     {
       // add metadata to the recipe
       addMetaData(recipe, (yyvsp[-1].string));
@@ -1322,7 +1322,7 @@ yyreduce:
     break;
 
   case 7:
-#line 79 "Cooklang.y" /* yacc.c:1652  */
+#line 79 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = strdup((yyvsp[0].string));
         free((yyvsp[0].string));
@@ -1331,7 +1331,7 @@ yyreduce:
     break;
 
   case 8:
-#line 83 "Cooklang.y" /* yacc.c:1652  */
+#line 83 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + strlen((yyvsp[0].string)) + 5);
       sprintf((yyval.string), "%s %s", (yyvsp[-1].string), (yyvsp[0].string));
@@ -1342,7 +1342,7 @@ yyreduce:
     break;
 
   case 9:
-#line 89 "Cooklang.y" /* yacc.c:1652  */
+#line 89 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + strlen((yyvsp[0].string)) + 5);
       sprintf((yyval.string), "%s %s", (yyvsp[-1].string), (yyvsp[0].string));
@@ -1356,7 +1356,7 @@ yyreduce:
     break;
 
   case 10:
-#line 102 "Cooklang.y" /* yacc.c:1652  */
+#line 102 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = strdup((yyvsp[0].string));
       addDirection(recipe, "text", (yyvsp[0].string), NULL);
@@ -1366,7 +1366,7 @@ yyreduce:
     break;
 
   case 14:
-#line 110 "Cooklang.y" /* yacc.c:1652  */
+#line 110 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[-1].string), NULL);
@@ -1378,7 +1378,7 @@ yyreduce:
     break;
 
   case 15:
-#line 117 "Cooklang.y" /* yacc.c:1652  */
+#line 117 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "ingredient", (yyvsp[-1].string), NULL);
@@ -1390,7 +1390,7 @@ yyreduce:
     break;
 
   case 16:
-#line 124 "Cooklang.y" /* yacc.c:1652  */
+#line 124 "src/Cooklang.y" /* yacc.c:1652  */
     {
     (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
     char * tempString = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
@@ -1403,7 +1403,7 @@ yyreduce:
     break;
 
   case 19:
-#line 137 "Cooklang.y" /* yacc.c:1652  */
+#line 137 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(10);
       sprintf((yyval.string), "%.3f", (yyvsp[0].number));
@@ -1412,7 +1412,7 @@ yyreduce:
     break;
 
   case 21:
-#line 142 "Cooklang.y" /* yacc.c:1652  */
+#line 142 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
@@ -1422,7 +1422,7 @@ yyreduce:
     break;
 
   case 22:
-#line 148 "Cooklang.y" /* yacc.c:1652  */
+#line 148 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
@@ -1432,7 +1432,7 @@ yyreduce:
     break;
 
   case 23:
-#line 154 "Cooklang.y" /* yacc.c:1652  */
+#line 154 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 15);
       sprintf((yyval.string), "%s %.3f", (yyvsp[-1].string), (yyvsp[0].number));
@@ -1442,7 +1442,7 @@ yyreduce:
     break;
 
   case 24:
-#line 160 "Cooklang.y" /* yacc.c:1652  */
+#line 160 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       free((yyvsp[-1].string));
@@ -1452,7 +1452,7 @@ yyreduce:
     break;
 
   case 25:
-#line 170 "Cooklang.y" /* yacc.c:1652  */
+#line 170 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(5);
       strcpy((yyval.string), "\0");
@@ -1461,7 +1461,7 @@ yyreduce:
     break;
 
   case 26:
-#line 174 "Cooklang.y" /* yacc.c:1652  */
+#line 174 "src/Cooklang.y" /* yacc.c:1652  */
     {
     (yyval.string) = malloc(5);
     strcpy((yyval.string), "\0");
@@ -1470,7 +1470,7 @@ yyreduce:
     break;
 
   case 27:
-#line 179 "Cooklang.y" /* yacc.c:1652  */
+#line 179 "src/Cooklang.y" /* yacc.c:1652  */
     {
       // get string for amount
       (yyval.string) = malloc(100);
@@ -1480,7 +1480,7 @@ yyreduce:
     break;
 
   case 28:
-#line 185 "Cooklang.y" /* yacc.c:1652  */
+#line 185 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = malloc(strlen((yyvsp[-1].string)) + 20);
       sprintf((yyval.string), "%.3f %s", (yyvsp[-2].number), (yyvsp[-1].string));
@@ -1490,7 +1490,7 @@ yyreduce:
     break;
 
   case 29:
-#line 191 "Cooklang.y" /* yacc.c:1652  */
+#line 191 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = (yyvsp[-1].string);
     }
@@ -1498,7 +1498,7 @@ yyreduce:
     break;
 
   case 30:
-#line 195 "Cooklang.y" /* yacc.c:1652  */
+#line 195 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
       free((yyvsp[-2].string));
@@ -1508,7 +1508,7 @@ yyreduce:
     break;
 
   case 31:
-#line 201 "Cooklang.y" /* yacc.c:1652  */
+#line 201 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = (yyvsp[-1].string);
     }
@@ -1516,7 +1516,7 @@ yyreduce:
     break;
 
   case 32:
-#line 205 "Cooklang.y" /* yacc.c:1652  */
+#line 205 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
       free((yyvsp[-2].string));
@@ -1526,7 +1526,7 @@ yyreduce:
     break;
 
   case 33:
-#line 214 "Cooklang.y" /* yacc.c:1652  */
+#line 214 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = malloc(5);
         strcpy((yyval.string), "\0");
@@ -1535,7 +1535,7 @@ yyreduce:
     break;
 
   case 34:
-#line 219 "Cooklang.y" /* yacc.c:1652  */
+#line 219 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = malloc(5);
         strcpy((yyval.string), "\0");
@@ -1544,7 +1544,7 @@ yyreduce:
     break;
 
   case 35:
-#line 224 "Cooklang.y" /* yacc.c:1652  */
+#line 224 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = malloc(100);
         sprintf((yyval.string), "%.3f", (yyvsp[-1].number));
@@ -1553,7 +1553,7 @@ yyreduce:
     break;
 
   case 36:
-#line 229 "Cooklang.y" /* yacc.c:1652  */
+#line 229 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = (yyvsp[-1].string);
       }
@@ -1561,7 +1561,7 @@ yyreduce:
     break;
 
   case 37:
-#line 233 "Cooklang.y" /* yacc.c:1652  */
+#line 233 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = (yyvsp[-1].string);
       }
@@ -1569,7 +1569,7 @@ yyreduce:
     break;
 
   case 38:
-#line 239 "Cooklang.y" /* yacc.c:1652  */
+#line 239 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = strdup((yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[0].string), NULL);
@@ -1579,7 +1579,7 @@ yyreduce:
     break;
 
   case 39:
-#line 245 "Cooklang.y" /* yacc.c:1652  */
+#line 245 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "cookware", (yyvsp[-1].string), (yyvsp[0].string));
@@ -1590,7 +1590,7 @@ yyreduce:
     break;
 
   case 40:
-#line 252 "Cooklang.y" /* yacc.c:1652  */
+#line 252 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
       char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
@@ -1604,7 +1604,7 @@ yyreduce:
     break;
 
   case 41:
-#line 262 "Cooklang.y" /* yacc.c:1652  */
+#line 262 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
       char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
@@ -1618,7 +1618,7 @@ yyreduce:
     break;
 
   case 42:
-#line 276 "Cooklang.y" /* yacc.c:1652  */
+#line 276 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = strdup((yyvsp[0].string));
       addDirection(recipe, "ingredient", (yyvsp[0].string), NULL);
@@ -1628,7 +1628,7 @@ yyreduce:
     break;
 
   case 43:
-#line 282 "Cooklang.y" /* yacc.c:1652  */
+#line 282 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
       addDirection(recipe, "ingredient", (yyvsp[-1].string), (yyvsp[0].string));
@@ -1639,7 +1639,7 @@ yyreduce:
     break;
 
   case 44:
-#line 289 "Cooklang.y" /* yacc.c:1652  */
+#line 289 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
       char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
@@ -1653,7 +1653,7 @@ yyreduce:
     break;
 
   case 45:
-#line 299 "Cooklang.y" /* yacc.c:1652  */
+#line 299 "src/Cooklang.y" /* yacc.c:1652  */
     {
       (yyval.string) = addThreeStrings((yyvsp[-2].string), (yyvsp[-1].string), (yyvsp[0].string));
       char * valueString = addTwoStrings((yyvsp[-2].string), (yyvsp[-1].string));
@@ -1667,7 +1667,7 @@ yyreduce:
     break;
 
   case 46:
-#line 312 "Cooklang.y" /* yacc.c:1652  */
+#line 312 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = strdup((yyvsp[0].string));
         addDirection(recipe, "timer", NULL, (yyvsp[0].string));
@@ -1677,7 +1677,7 @@ yyreduce:
     break;
 
   case 47:
-#line 317 "Cooklang.y" /* yacc.c:1652  */
+#line 317 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = strdup((yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[0].string), NULL);
@@ -1687,7 +1687,7 @@ yyreduce:
     break;
 
   case 48:
-#line 322 "Cooklang.y" /* yacc.c:1652  */
+#line 322 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[-1].string), (yyvsp[0].string));
@@ -1698,7 +1698,7 @@ yyreduce:
     break;
 
   case 49:
-#line 329 "Cooklang.y" /* yacc.c:1652  */
+#line 329 "src/Cooklang.y" /* yacc.c:1652  */
     {
         (yyval.string) = addTwoStrings((yyvsp[-1].string), (yyvsp[0].string));
         addDirection(recipe, "timer", (yyvsp[-1].string), (yyvsp[0].string));
@@ -1940,7 +1940,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 338 "Cooklang.y" /* yacc.c:1918  */
+#line 338 "src/Cooklang.y" /* yacc.c:1918  */
 
 
 
