@@ -10,6 +10,7 @@
 
 // wrappers
 Recipe * parseRecipe( char * fileName );
+Recipe * parseRecipeString( char * inputRecipeString );
 
 
 // others
