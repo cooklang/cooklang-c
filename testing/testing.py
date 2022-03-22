@@ -122,10 +122,7 @@ def equal_inputs(expected_input: Dict, actual_input: Dict) -> bool:
 
 
 def test_parsing(file_content: str, expected_result: Dict) -> Tuple[bool, Dict]:
-    with tempfile.NamedTemporaryFile() as test_file:
-        test_file.write(file_content.encode())
-        test_file.seek(0)
-        actual_result = cooklang.parseRecipe(test_file.name)
+    actual_result = cooklang.parseRecipe(file_content)
     return equal_inputs(expected_result, actual_result), actual_result
 
 
@@ -204,6 +201,7 @@ class TestCanonical(unittest.TestCase):
         for test in tests_input["tests"]:
             expected_result = tests_input["tests"][test]["result"]
             r, actual_result = test_parsing(tests_input["tests"][test]["source"], expected_result)
+
             if r:
                 passed += 1
             else:
@@ -216,7 +214,7 @@ class TestCanonical(unittest.TestCase):
                 print("____           Compare Results           ____")
                 unpassed.append(test)
             total += 1
-
+        
         print("\n\nTests passed: " + str(passed) + "/" + str(total))
         self.assertEqual(unpassed, [])
 
