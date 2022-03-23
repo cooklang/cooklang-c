@@ -9,7 +9,7 @@ setup(
             [
                 "src/CooklangExtension.c",
                 "src/CooklangParser.c",
-                "Cooklang.tab.c",
+                "parserFiles/Cooklang.tab.c",
                 "src/LinkedListLib.c",
                 "src/CooklangRecipe.c",
                 "src/ShoppingListParser.c",
