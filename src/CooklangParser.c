@@ -16,7 +16,7 @@ extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 // wrapper functions
 // this function will parse the recipe from a string
 Recipe * parseRecipeString( char * inputRecipeString ){
-
+  int error;
   // setup the recipe
   Recipe * finalRecipe = createRecipe();
 
@@ -32,8 +32,12 @@ Recipe * parseRecipeString( char * inputRecipeString ){
   YY_BUFFER_STATE buffer = yy_scan_string(newInputString);
   
   // parser
-  yyparse(finalRecipe);
+  error = yyparse(finalRecipe);
   yy_delete_buffer(buffer);
+
+  if( error != 0 ){
+    return NULL;
+  }
 
   return finalRecipe;
 }
@@ -41,6 +45,7 @@ Recipe * parseRecipeString( char * inputRecipeString ){
 
 // this function parses a string that is made up of seperate lines
 Recipe * parseMultipleRecipeStrings( char * inputRecipeString ){
+  int lineCounter;
   char * token;
   char * savePtr;
   Recipe * newRecipe;
@@ -48,17 +53,27 @@ Recipe * parseMultipleRecipeStrings( char * inputRecipeString ){
 
   totalRecipe = createRecipe();
 
-  token = strtok_r(inputRecipeString, "\n", &savePtr);
+  char delimns[] = "\n\r\xc2\x85\xe2\x80\xa8\xe2\x80\xa9";
+
+  token = strtok_r(inputRecipeString, delimns, &savePtr);
+
+  lineCounter = 0;
 
   // split each line up and parse each one
   while( token != NULL ){
+    lineCounter++;
+
     // get recipe for current string
     newRecipe = parseRecipeString(token);
 
-    // add new recipe to total recipe
-    combineRecipes(newRecipe, &totalRecipe);
+    if( newRecipe == NULL ){
+      printf(" %d\n", lineCounter);
+    } else {
+      // add new recipe to total recipe
+      combineRecipes(newRecipe, &totalRecipe);
+    }
 
-    token = strtok_r(savePtr, "\n", &savePtr);
+    token = strtok_r(savePtr, delimns, &savePtr);
   }
 
   return totalRecipe;
@@ -185,7 +200,6 @@ char * addThreeStrings(char * first, char * second, char * third){
   }
 
   sprintf(result, "%s%s%s", first, second, third);
-
 
   return result;
 }

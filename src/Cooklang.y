@@ -37,10 +37,10 @@ int yylex();
   double number;
 }
 
-%token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NL TILDE HWORD ATWORD METADATA COMMENT WHTS
+%token WORD MULTIWORD UNIT NUMBER LCURL RCURL PUNC_CHAR NEWLINE TILDE HWORD ATWORD METADATA COMMENT WHITESPACE
 
-%type <character> LCURL RCURL NL
-%type <string> WORD MULTIWORD UNIT HWORD ATWORD METADATA PUNC_CHAR WHTS
+%type <character> LCURL RCURL NEWLINE
+%type <string> WORD MULTIWORD UNIT HWORD ATWORD METADATA PUNC_CHAR WHITESPACE
 %type <number> NUMBER
 
 %type <string> text_item ingredient cookware timer amount
@@ -58,8 +58,8 @@ input:
 
 
 line:
-    NL      {}
-  | step NL {
+    NEWLINE      {}
+  | step NEWLINE {
       // after a step has been finished by a new line, have to add the step to the steplist
       // and make a new step to accept directions
       Step * newStep = createStep();
@@ -67,7 +67,7 @@ line:
       insertBack(recipe->stepList, newStep);
       free($1);
     }
-  | METADATA NL {
+  | METADATA NEWLINE {
       // add metadata to the recipe
       addMetaData(recipe, $1);
       free($1);
@@ -86,7 +86,7 @@ step:
       free($1);
       free($2);
     }
-  | step WHTS {
+  | step WHITESPACE {
       $$ = malloc(strlen($1) + strlen($2) + 5);
       sprintf($$, "%s %s", $1, $2);
 
@@ -121,7 +121,7 @@ direction:
       free($1);
       free($2);
     }
-  | text_item WHTS {
+  | text_item WHITESPACE {
     $$ = addTwoStrings($1, $2);
     char * tempString = addTwoStrings($1, $2);
     addDirection(recipe, "text", tempString, NULL);
@@ -171,7 +171,7 @@ amount:
       $$ = malloc(5);
       strcpy($$, "\0");
     }
-  | LCURL WHTS RCURL {
+  | LCURL WHITESPACE RCURL {
     $$ = malloc(5);
     strcpy($$, "\0");
   }
@@ -216,7 +216,7 @@ cookware_amount:
         strcpy($$, "\0");
       }
 
-  | LCURL WHTS RCURL {
+  | LCURL WHITESPACE RCURL {
         $$ = malloc(5);
         strcpy($$, "\0");
       }
@@ -345,7 +345,7 @@ timer:
 
 
 int yyerror( Recipe * recipe, const char * s){
-  printf("\nError on line %d at col %d\n", yylineno, column);
-  printf("Error: %s\n", s);
+  printf("\nError: %s\n", s);
+  printf("\nError at col %d on line", column);
   return 1;
 }

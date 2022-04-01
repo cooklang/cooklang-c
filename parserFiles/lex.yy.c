@@ -5480,58 +5480,65 @@ int runFile( char * fileName ){
 
 
 #ifndef LIB
-// int main( int argc, char ** argv ){
-//   // yydebug = 1;
-//   ++argv;
-//   --argc;
+int main( int argc, char ** argv ){
+  // yydebug = 1;
+  ++argv;
+  --argc;
 
-//   FILE * file = NULL;
+  FILE * file = NULL;
 
-//   if( argc > 0 ){
-//     file = fopen(argv[0], "r");
-//     yyin = file;
-//   } else {
-//     yyin  = stdin;
-//   }
+  if( argc > 0 ){
+    file = fopen(argv[0], "r");
+    yyin = file;
+  } else {
+    yyin  = stdin;
+  }
 
-//   // setup the recipe
-//   Recipe * finalRecipe = createRecipe();
+  // setup the recipe
+  Recipe * finalRecipe = createRecipe();
 
-//   // create the first step
-//   Step * currentStep = createStep();
+  // create the first step
+  Step * currentStep = createStep();
 
-//   insertBack(finalRecipe->stepList, currentStep);
+  insertBack(finalRecipe->stepList, currentStep);
 
-//   yyparse(finalRecipe);
+  yyparse(finalRecipe);
 
-//   char * metaDataString = toString(finalRecipe->metaData);
+  char * metaDataString = toString(finalRecipe->metaData);
 
-//   printf("%s\n", metaDataString);
+  printf("%s\n", metaDataString);
 
-//   free(metaDataString);
-
-
-//   // printf out the step steps
-//   char * stepListString = toString(finalRecipe->stepList);
-
-//   printf("%s\n", stepListString);
-
-//   free(stepListString);
+  free(metaDataString);
 
 
-//   freeList(finalRecipe->metaData);
-//   freeList(finalRecipe->stepList);
-//   free(finalRecipe);
+  // printf out the step steps
+  char * stepListString = toString(finalRecipe->stepList);
 
-//   if( file != NULL ){
-//     fclose(file);
-//   }
+  printf("%s\n", stepListString);
 
-
-//   return 0;
-// }
+  free(stepListString);
 
 
+  freeList(finalRecipe->metaData);
+  freeList(finalRecipe->stepList);
+  free(finalRecipe);
+
+  if( file != NULL ){
+    fclose(file);
+  }
+
+
+  return 0;
+}
+
+
+
+
+#endif
+
+
+
+#ifdef TEST
 // main for testing
 int main( int argc, char ** argv ){
   // yydebug = 1;

@@ -1951,7 +1951,7 @@ yyreturn:
 
 
 int yyerror( Recipe * recipe, const char * s){
-  printf("\nError on line %d at col %d\n", yylineno, column);
   printf("Error: %s\n", s);
+  printf("\nError at col %d on line ", column);
   return 1;
 }

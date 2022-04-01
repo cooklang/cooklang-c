@@ -64,16 +64,13 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
   length = PyList_Size(ingredients);
   i = 0;
   if( length != 0 ){
-    printf("i: %ld\n", i);
     while( i < length ){
       ingredient = PyList_GetItem(ingredients, i);
-      printf("Got ing\n");
 
       // name
       attr = PyDict_GetItemString(ingredient, "name");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
       nameStr = PyBytes_AS_STRING(str);
-      printf("Got name: %s\n", nameStr);
 
       // quanitty - check if string or float
       attr = PyDict_GetItemString(ingredient, "quantity");
@@ -90,13 +87,10 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
         quanStr = PyBytes_AS_STRING(str);
       }
 
-      printf("Got quantity: %s\n", quanStr);
-
       // units
       attr = PyDict_GetItemString(ingredient, "units");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
       unitStr = PyBytes_AS_STRING(str);
-      printf("Got units: %s\n", unitStr);
 
       printf("  - %s, %s %s\n", nameStr, quanStr, unitStr);
 
