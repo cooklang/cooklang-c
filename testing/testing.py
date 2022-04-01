@@ -214,7 +214,7 @@ class TestCanonical(unittest.TestCase):
                 print("____           Compare Results           ____")
                 unpassed.append(test)
             total += 1
-        
+
         print("\n\nTests passed: " + str(passed) + "/" + str(total))
         self.assertEqual(unpassed, [])
 

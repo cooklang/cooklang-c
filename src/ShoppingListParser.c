@@ -1,52 +1,51 @@
-#include "../include/LinkedListLib.h"
 #include "../include/ShoppingListParser.h"
+
+#include "../include/LinkedListLib.h"
 
 // * * * * * * * * * * * * * * * * * * * *
 // ******  Functions Definitions  ********
 // * * * * * * * * * * * * * * * * * * * *
 
-
-
-
 // parse a shopping list file
 // does not use flex/bison just simple string manipulation techniques in C
-List * parseShoppingLists( char * fileName ){
-
+List *parseShoppingLists(char *fileName) {
   int maxLineLength = 1024;
 
-  char * inputLine;
+  char *inputLine;
 
-  if( fileName == NULL ){
+  if (fileName == NULL) {
     return NULL;
   }
 
-  FILE * file = fopen(fileName, "r");
+  FILE *file = fopen(fileName, "r");
 
-  if( file == NULL ){
+  if (file == NULL) {
     printf("problem openning file\n");
     return NULL;
   }
 
   // initialize a list of shopping lists
-  List * shoppingLists = initializeList(shoppingListToString, deleteShoppingList, compareShoppingList);
+  List *shoppingLists = initializeList(shoppingListToString, deleteShoppingList,
+                                       compareShoppingList);
 
   // start taking in lines lines of file
   inputLine = malloc(sizeof(char) * maxLineLength);
 
-  while( fgets(inputLine, maxLineLength, file) != NULL ){
+  while (fgets(inputLine, maxLineLength, file) != NULL) {
     // remove empty lines
-    if( inputLine[0] != 10 && inputLine[0] != 13 ){
+    if (inputLine[0] != 10 && inputLine[0] != 13) {
       // look for [ and
-      if( inputLine[0] == '['){
+      if (inputLine[0] == '[') {
         // create a list from it
-        ShoppingList * tempSList = parseShoppingList(inputLine);
+        ShoppingList *tempSList = parseShoppingList(inputLine);
         insertBack(shoppingLists, tempSList);
       } else {
-        // get each input and add it to the list after that until found another [ and ]
-        ShoppingItem * tempSItem = parseShoppingItem(inputLine);
+        // get each input and add it to the list after that until found another
+        // [ and ]
+        ShoppingItem *tempSItem = parseShoppingItem(inputLine);
 
-        if( tempSItem != NULL ){
-          ShoppingList * currentSList = getFromBack(shoppingLists);
+        if (tempSItem != NULL) {
+          ShoppingList *currentSList = getFromBack(shoppingLists);
           insertBack(currentSList->shoppingItems, tempSItem);
         }
       }
@@ -59,121 +58,93 @@ List * parseShoppingLists( char * fileName ){
   return shoppingLists;
 }
 
-
-
-
-
-
 // * * * * * * * * * * * * * * * * * * * *
 // *****  Shopping List Functions  *******
 // * * * * * * * * * * * * * * * * * * * *
 
-
-
-
-
-ShoppingList * createShoppingList( char * category ){
-
-  if( category == NULL ){
+ShoppingList *createShoppingList(char *category) {
+  if (category == NULL) {
     return NULL;
   }
 
-  ShoppingList * sList = malloc(sizeof(ShoppingList));
+  ShoppingList *sList = malloc(sizeof(ShoppingList));
 
   sList->category = malloc(strlen(category) + 1);
   strcpy(sList->category, category);
 
-  sList->shoppingItems = initializeList(shoppingItemToString, deleteShoppingItem, compareShoppingItem);
+  sList->shoppingItems = initializeList(
+      shoppingItemToString, deleteShoppingItem, compareShoppingItem);
 
   return sList;
 }
 
-
-char * shoppingListToString( void * data ){
-  if( data == NULL ){
+char *shoppingListToString(void *data) {
+  if (data == NULL) {
     return NULL;
   }
 
-  ShoppingList * sList = data;
+  ShoppingList *sList = data;
 
-  char * itemsString = NULL;
-  char * listString = NULL;
+  char *itemsString = NULL;
+  char *listString = NULL;
 
   itemsString = toString(sList->shoppingItems);
 
   listString = malloc(strlen(itemsString) + strlen(sList->category) + 50);
 
-  sprintf(listString, "List:\n Category: %s\n Items:\n%s\n", sList->category, itemsString);
+  sprintf(listString, "List:\n Category: %s\n Items:\n%s\n", sList->category,
+          itemsString);
 
   free(itemsString);
 
   return listString;
 }
 
-
-void deleteShoppingList( void * data ){
-  ShoppingList * sList = data;
+void deleteShoppingList(void *data) {
+  ShoppingList *sList = data;
   free(sList->category);
   freeList(sList->shoppingItems);
   free(sList);
 }
 
-int compareShoppingList( const void * first, const void * second ){
-   return 0;
-}
+int compareShoppingList(const void *first, const void *second) { return 0; }
 
-
-
-
-ShoppingList * parseShoppingList(char * inputLine){
+ShoppingList *parseShoppingList(char *inputLine) {
   int i = 0;
 
   // remove the [
   inputLine++;
 
   // remove the ]
-  while( inputLine[i] != ']'){
+  while (inputLine[i] != ']') {
     i++;
   }
 
   inputLine[i] = '\0';
 
-  ShoppingList * tempSList = createShoppingList(inputLine);
+  ShoppingList *tempSList = createShoppingList(inputLine);
 
   return tempSList;
 }
-
-
-
-
-
-
 
 // * * * * * * * * * * * * * * * * * * * *
 // *****  Shopping Item Functions  *******
 // * * * * * * * * * * * * * * * * * * * *
 
-
-
-
-
-ShoppingItem * createShoppingItem( char * name ){
-
+ShoppingItem *createShoppingItem(char *name) {
   int loc = strcspn(name, "\r");
 
-  if(loc != strlen(name)){
+  if (loc != strlen(name)) {
     name[loc] = 0;
   }
 
   loc = strcspn(name, "\n");
 
-  if(loc != strlen(name)){
+  if (loc != strlen(name)) {
     name[loc] = 0;
   }
 
-
-
-  ShoppingItem * tempSItem = malloc(sizeof(ShoppingItem));
+  ShoppingItem *tempSItem = malloc(sizeof(ShoppingItem));
 
   tempSItem->name = malloc(strlen(name) + 1);
   strcpy(tempSItem->name, name);
@@ -183,28 +154,27 @@ ShoppingItem * createShoppingItem( char * name ){
   return tempSItem;
 }
 
+char *shoppingItemToString(void *data) {
+  ShoppingItem *sItem = data;
 
-char * shoppingItemToString( void * data ){
-
-  ShoppingItem * sItem = data;
-
-  if( sItem == NULL ){
+  if (sItem == NULL) {
     return NULL;
   }
 
   int i = 0;
-  char * synsString = NULL;
-  char * itemString = NULL;
+  char *synsString = NULL;
+  char *itemString = NULL;
 
   // get all the synonyms
-  char ** syns = sItem->synonyms;
+  char **syns = sItem->synonyms;
 
   synsString = malloc(10);
   sprintf(synsString, " ");
 
-  if( syns != NULL ){
-    while( syns[i] != NULL ){
-      synsString = realloc(synsString, strlen(synsString) + strlen(syns[i]) + 5);
+  if (syns != NULL) {
+    while (syns[i] != NULL) {
+      synsString =
+          realloc(synsString, strlen(synsString) + strlen(syns[i]) + 5);
 
       strcat(synsString, syns[i]);
       i++;
@@ -220,15 +190,14 @@ char * shoppingItemToString( void * data ){
   return itemString;
 }
 
-
-void deleteShoppingItem( void * data ){
-  ShoppingItem * sItem = data;
+void deleteShoppingItem(void *data) {
+  ShoppingItem *sItem = data;
   free(sItem->name);
 
   int i = 0;
 
-  if(sItem->synonyms != NULL ){
-    while(sItem->synonyms[i] != NULL){
+  if (sItem->synonyms != NULL) {
+    while (sItem->synonyms[i] != NULL) {
       free(sItem->synonyms[i]);
       i++;
     }
@@ -238,37 +207,32 @@ void deleteShoppingItem( void * data ){
   free(sItem);
 }
 
-int compareShoppingItem( const void * first, const void * second ){
-  return 0;
-}
+int compareShoppingItem(const void *first, const void *second) { return 0; }
 
-
-
-ShoppingItem * parseShoppingItem( char * inputLine ){
+ShoppingItem *parseShoppingItem(char *inputLine) {
   // check input
-  if( inputLine == NULL || inputLine[0] == '\0' || inputLine[0] == '\n' ){
+  if (inputLine == NULL || inputLine[0] == '\0' || inputLine[0] == '\n') {
     return NULL;
   }
 
-
   // get the first string
   int i = 0;
-  char * token;
+  char *token;
 
   token = strtok(inputLine, "|");
 
-  if( token == NULL ){
+  if (token == NULL) {
     return NULL;
   }
 
   // create the item
-  ShoppingItem * tempSItem = createShoppingItem(token);
+  ShoppingItem *tempSItem = createShoppingItem(token);
 
   // get the first next synonym if there is any
   token = strtok(NULL, "|");
 
   // if there is none return the item as is
-  if(token == NULL){
+  if (token == NULL) {
     return tempSItem;
   }
 
@@ -284,9 +248,10 @@ ShoppingItem * parseShoppingItem( char * inputLine ){
   // add the other synonyms, terminate with NULL
   token = strtok(NULL, "|");
 
-  while( token != NULL ){
+  while (token != NULL) {
     // reallocate to hold enough
-    tempSItem->synonyms = realloc(tempSItem->synonyms, sizeof(char *) * (i + 1));
+    tempSItem->synonyms =
+        realloc(tempSItem->synonyms, sizeof(char *) * (i + 1));
 
     // add the new token
     tempSItem->synonyms[i - 1] = malloc(sizeof(char) * strlen(token) + 1);

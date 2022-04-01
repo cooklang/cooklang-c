@@ -1,38 +1,31 @@
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-
 #include "../include/CooklangRecipe.h"
 
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void test2(){
-  printf("Test working\n");
-}
-
+void test2() { printf("Test working\n"); }
 
 // * * * * * * * * * * * * * * * * * * * *
 // ******** Metadata Functions ***********
 // * * * * * * * * * * * * * * * * * * * *
 
-
-
-Metadata * createMetadata( char * metaString ){
-
+Metadata *createMetadata(char *metaString) {
   // parse the metadata first
-  char ** results = parseMetaString(metaString);
+  char **results = parseMetaString(metaString);
 
-  char * identifier = results[0];
-  char * content = results[1];
+  char *identifier = results[0];
+  char *content = results[1];
 
   // check valid input
-  if( identifier == NULL || content == NULL ){
+  if (identifier == NULL || content == NULL) {
     return NULL;
   }
 
-  Metadata * tempMeta = malloc(sizeof(Metadata));
+  Metadata *tempMeta = malloc(sizeof(Metadata));
 
-  if( tempMeta == NULL ){
+  if (tempMeta == NULL) {
     printf("error, malloc failed - createMetadata1\n");
     return NULL;
   }
@@ -50,69 +43,55 @@ Metadata * createMetadata( char * metaString ){
 
 // parse meta data function
 
-
-
-void deleteMetadata( void * data ){
-  Metadata * meta = data;
+void deleteMetadata(void *data) {
+  Metadata *meta = data;
 
   free(meta->content);
   free(meta->identifier);
   free(meta);
 }
 
-char * metadataToString( void * data ){
-  Metadata * meta = data;
+char *metadataToString(void *data) {
+  Metadata *meta = data;
 
   int length = strlen(meta->identifier) + strlen(meta->content) + 50;
 
-  char * returnString = malloc(sizeof(char) * length);
+  char *returnString = malloc(sizeof(char) * length);
 
   sprintf(returnString, "  -\"%s\": \"%s\"", meta->identifier, meta->content);
 
   return returnString;
 }
 
-int compareMetadata( const void * first, const void * second ){
-  return 0;
-}
-
-
-
-
-
-
-
+int compareMetadata(const void *first, const void *second) { return 0; }
 
 // * * * * * * * * * * * * * * * * * * * *
 // ******** Direction Functions **********
 // * * * * * * * * * * * * * * * * * * * *
 
-
-
-
-
-Direction * createDirection( char * type, char * value, char * amountString ){
-  char ** amountResults = NULL;
-  char * quantityString;
-  char * unit;
+Direction *createDirection(char *type, char *value, char *amountString) {
+  char **amountResults = NULL;
+  char *quantityString;
+  char *unit;
   double quantity;
 
   // default amount value if there is none given
-  char * defaultAmountString = malloc(20);
+  char *defaultAmountString = malloc(20);
   sprintf(defaultAmountString, "some");
 
   // check input - must be a type
-  if( type == NULL ){
+  if (type == NULL) {
     return NULL;
   }
 
-  // value can only be null if the type is a timer, this case comes from a no name timer
-  if( strcmp(type, "timer") != 0 && value == NULL ){
+  // value can only be null if the type is a timer, this case comes from a no
+  // name timer
+  if (strcmp(type, "timer") != 0 && value == NULL) {
     return NULL;
   }
 
   // parse amountString
-  if( amountString == NULL ){
+  if (amountString == NULL) {
     quantityString = NULL;
     quantity = -1;
     unit = NULL;
@@ -124,12 +103,12 @@ Direction * createDirection( char * type, char * value, char * amountString ){
     unit = amountResults[1];
 
     // check if quantity string can be a double
-    if( quantityString == NULL ){
+    if (quantityString == NULL) {
       quantity = -1;
     } else {
       // check if string is all numbers
       int check = checkIsNumber(quantityString);
-      if( check == 1 ){
+      if (check == 1) {
         quantity = strtod(quantityString, NULL);
       } else {
         quantity = -1;
@@ -137,32 +116,33 @@ Direction * createDirection( char * type, char * value, char * amountString ){
     }
   }
 
-  // if quantity is a double, that means the quantity string can be represented as a double, so it should be saved as one
-  // so convert it to a double if it can be else make it negative one and keep quantityString as is
-  if( quantity > 0 ){
+  // if quantity is a double, that means the quantity string can be represented
+  // as a double, so it should be saved as one so convert it to a double if it
+  // can be else make it negative one and keep quantityString as is
+  if (quantity > 0) {
     quantityString = NULL;
   } else {
     quantity = -1;
   }
 
-  Direction * tempDir = malloc(sizeof(Direction));
+  Direction *tempDir = malloc(sizeof(Direction));
 
-  if( tempDir == NULL ){
+  if (tempDir == NULL) {
     printf("error, malloc failed - createDirection 1\n");
     return NULL;
   }
 
   tempDir->type = strdup(type);
 
-  if( value != NULL ){
+  if (value != NULL) {
     tempDir->value = strdup(value);
   } else {
     tempDir->value = NULL;
   }
 
   // there is no quantity and the direction is done
-  if( quantity == -1 && quantityString == NULL ){
-    if( strcmp(type, "ingredient") == 0 ){
+  if (quantity == -1 && quantityString == NULL) {
+    if (strcmp(type, "ingredient") == 0) {
       tempDir->quantityString = strdup(defaultAmountString);
     } else {
       tempDir->quantityString = NULL;
@@ -170,20 +150,20 @@ Direction * createDirection( char * type, char * value, char * amountString ){
     tempDir->quantity = -1;
     tempDir->unit = NULL;
 
-    if( amountResults != NULL){
+    if (amountResults != NULL) {
       free(amountResults[0]);
       free(amountResults[1]);
       free(amountResults);
     }
 
-    if( defaultAmountString != NULL ){
+    if (defaultAmountString != NULL) {
       free(defaultAmountString);
     }
 
     return tempDir;
   }
 
-  if( quantity == -1 ){
+  if (quantity == -1) {
     // quantity must be a string
     tempDir->quantityString = strdup(quantityString);
     tempDir->quantity = -1;
@@ -194,28 +174,27 @@ Direction * createDirection( char * type, char * value, char * amountString ){
   }
 
   // if unit input, set, else, set null
-  if( unit != NULL ){
+  if (unit != NULL) {
     tempDir->unit = strdup(unit);
   } else {
     tempDir->unit = NULL;
   }
 
-  if( amountResults != NULL){
+  if (amountResults != NULL) {
     free(amountResults[0]);
     free(amountResults[1]);
     free(amountResults);
   }
 
-  if( defaultAmountString != NULL ){
+  if (defaultAmountString != NULL) {
     free(defaultAmountString);
   }
 
   return tempDir;
 }
 
-
-void deleteDirection( void * data ){
-  Direction * dir = data;
+void deleteDirection(void *data) {
+  Direction *dir = data;
 
   // free all the strings
   free(dir->type);
@@ -226,32 +205,32 @@ void deleteDirection( void * data ){
   free(dir);
 }
 
-void dummyDeleteDirection( void * data){
+void dummyDeleteDirection(void *data) {
   // does nothing
 }
 
-char * directionToString( void * data ){
-  Direction * dir = data;
+char *directionToString(void *data) {
+  Direction *dir = data;
 
-  char * tempString = NULL;
+  char *tempString = NULL;
 
   int length = 0;
 
-  if( dir->type != NULL ){
+  if (dir->type != NULL) {
     length += strlen(dir->type);
   }
 
-  if( dir->value != NULL ){
+  if (dir->value != NULL) {
     length += strlen(dir->value);
   } else {
     length += 50;
   }
 
-  if( dir->quantityString != NULL ){
+  if (dir->quantityString != NULL) {
     length += strlen(dir->quantityString);
   }
 
-  if( dir->unit != NULL ){
+  if (dir->unit != NULL) {
     length += strlen(dir->unit);
   } else {
     length += 50;
@@ -259,13 +238,13 @@ char * directionToString( void * data ){
 
   length += 100;
 
-  if( length != 15 ){
-    tempString = malloc( sizeof(char) * length );
+  if (length != 15) {
+    tempString = malloc(sizeof(char) * length);
   } else {
     return NULL;
   }
 
-  if( tempString == NULL ){
+  if (tempString == NULL) {
     printf("error, malloc failed - directionToString1\n");
     return NULL;
   }
@@ -273,35 +252,39 @@ char * directionToString( void * data ){
   // make an output string based on what kind it is
 
   // if its a text iten use value instead of name
-  if( strcmp(dir->type, "text") == 0 ){
-    sprintf(tempString, "      - type: text\n      - value: \"%s\"\n", dir->value);
+  if (strcmp(dir->type, "text") == 0) {
+    sprintf(tempString, "      - type: text\n      - value: \"%s\"\n",
+            dir->value);
 
-  // timers, cookware, and ingredients
+    // timers, cookware, and ingredients
   } else {
     // name and value
-    if( dir->value != NULL ){
-      sprintf(tempString, "      - type: %s\n      - name: \"%s\"\n", dir->type, dir->value);
+    if (dir->value != NULL) {
+      sprintf(tempString, "      - type: %s\n      - name: \"%s\"\n", dir->type,
+              dir->value);
     } else {
       sprintf(tempString, "      - type: %s\n      - name: \"\"\n", dir->type);
     }
 
     // quantity, string format
-    if( dir->quantityString != NULL ){
-      char * tempQuanString = malloc(sizeof(char) * strlen(dir->quantityString) + 30);
-      sprintf(tempQuanString, "      - quantity: \"%s\"\n", dir->quantityString);
+    if (dir->quantityString != NULL) {
+      char *tempQuanString =
+          malloc(sizeof(char) * strlen(dir->quantityString) + 30);
+      sprintf(tempQuanString, "      - quantity: \"%s\"\n",
+              dir->quantityString);
 
       strcat(tempString, tempQuanString);
       free(tempQuanString);
-    // quantity, double format
-    } else if( dir->quantity != -1 ){
-      char * tempQuanString = malloc(sizeof(char) * 30);
+      // quantity, double format
+    } else if (dir->quantity != -1) {
+      char *tempQuanString = malloc(sizeof(char) * 30);
       sprintf(tempQuanString, "      - quantity: %.3f\n", dir->quantity);
 
       strcat(tempString, tempQuanString);
       free(tempQuanString);
-    // no quantity - end of string
+      // no quantity - end of string
     } else {
-      char * tempQuanString = malloc(sizeof(char) * 30);
+      char *tempQuanString = malloc(sizeof(char) * 30);
       sprintf(tempQuanString, "      - quantity: \"\"\n");
 
       strcat(tempString, tempQuanString);
@@ -311,15 +294,15 @@ char * directionToString( void * data ){
 
     // add the unit if there is one, else add empty units
     // only ingredients/timers
-    if( strcmp(dir->type, "cookware") != 0 ){
-      if( dir->unit != NULL ){
-        char * unitString = malloc(sizeof(dir->unit) + 20);
+    if (strcmp(dir->type, "cookware") != 0) {
+      if (dir->unit != NULL) {
+        char *unitString = malloc(sizeof(dir->unit) + 20);
         sprintf(unitString, "      - units: \"%s\"\n", dir->unit);
 
         strcat(tempString, unitString);
         free(unitString);
       } else {
-        char * unitString = malloc(sizeof(char) * 50);
+        char *unitString = malloc(sizeof(char) * 50);
         strcpy(unitString, "      - units: \"\"\n");
 
         strcat(tempString, unitString);
@@ -331,38 +314,33 @@ char * directionToString( void * data ){
   return tempString;
 }
 
-int compareDirections( const void * first, const void * second ){
-  return 0;
-}
-
-
-
-
+int compareDirections(const void *first, const void *second) { return 0; }
 
 // * * * * * * * * * * * * * * * * * * * *
 // *********  Step Functions  ************
 // * * * * * * * * * * * * * * * * * * * *
 
-
-Step * createStep(){
-
+Step *createStep() {
   // initalize a list of directions
-  Step * tempStep = malloc(sizeof(Step));
+  Step *tempStep = malloc(sizeof(Step));
 
-  List * dirList = initializeList( directionToString, deleteDirection, compareDirections );
+  List *dirList =
+      initializeList(directionToString, deleteDirection, compareDirections);
   tempStep->directions = dirList;
 
-  List * ingredientList = initializeList(ingredientToString, dummyDeleteDirection, compareDirections);
+  List *ingredientList = initializeList(
+      ingredientToString, dummyDeleteDirection, compareDirections);
   tempStep->ingredientList = ingredientList;
 
-  List * equipmentList = initializeList(ingredientToString, dummyDeleteDirection, compareDirections);
+  List *equipmentList = initializeList(ingredientToString, dummyDeleteDirection,
+                                       compareDirections);
   tempStep->equipmentList = equipmentList;
 
   return tempStep;
 }
 
-void deleteStep( void * data ){
-  Step * step = data;
+void deleteStep(void *data) {
+  Step *step = data;
 
   freeList(step->directions);
   freeList(step->ingredientList);
@@ -370,18 +348,18 @@ void deleteStep( void * data ){
   free(step);
 }
 
-char * stepToString( void * data ){
-  Step * step = data;
+char *stepToString(void *data) {
+  Step *step = data;
 
-  char * stepString;
-  char * dirString;
-  char * ingredientString;
-  char * equipmentString;
+  char *stepString;
+  char *dirString;
+  char *ingredientString;
+  char *equipmentString;
 
   int length = 0;
 
   // get the directions string
-  if( getLength(step->directions) != 0 ){
+  if (getLength(step->directions) != 0) {
     dirString = toStringDelim(step->directions, "    - Direction");
   } else {
     stepString = malloc(sizeof(char) * 20);
@@ -390,7 +368,7 @@ char * stepToString( void * data ){
   }
 
   // get the ingredients string
-  if( getLength(step->ingredientList) != 0 ){
+  if (getLength(step->ingredientList) != 0) {
     ingredientString = toString(step->ingredientList);
   } else {
     ingredientString = malloc(20);
@@ -398,7 +376,7 @@ char * stepToString( void * data ){
   }
 
   // get the equipment string
-  if( getLength(step->equipmentList) != 0 ){
+  if (getLength(step->equipmentList) != 0) {
     equipmentString = toString(step->equipmentList);
   } else {
     equipmentString = malloc(20);
@@ -423,13 +401,7 @@ char * stepToString( void * data ){
   return stepString;
 }
 
-int compareSteps( const void * first, const void * second){
-  return 0;
-}
-
-
-
-
+int compareSteps(const void *first, const void *second) { return 0; }
 
 // * * * * * * * * * * * * * * * * * * * *
 // ********  Recipe Functions  ***********
@@ -437,67 +409,61 @@ int compareSteps( const void * first, const void * second){
 
 // creation functions
 
-Recipe * createRecipe(){
-
+Recipe *createRecipe() {
   // make a new recipe
-  Recipe * tempRec = malloc(sizeof(Recipe));
+  Recipe *tempRec = malloc(sizeof(Recipe));
 
   // steps
-  List * stepList = initializeList(stepToString, deleteStep, compareSteps);
+  List *stepList = initializeList(stepToString, deleteStep, compareSteps);
   tempRec->stepList = stepList;
 
   // metadata
-  List * metaDataList = initializeList(metadataToString, deleteMetadata, compareMetadata);
+  List *metaDataList =
+      initializeList(metadataToString, deleteMetadata, compareMetadata);
   tempRec->metaData = metaDataList;
 
   return tempRec;
 }
 
-void deleteRecipe( void * data ){
+void deleteRecipe(void *data) {
   // free all the lists
-
 }
 
-char * recipeToString( void * data ){
-  return "empty recipe\n";
-}
-
-
+char *recipeToString(void *data) { return "empty recipe\n"; }
 
 // * * * * * * * * * * * * * * * * * * * *
 // ********   Other Functions  ***********
 // * * * * * * * * * * * * * * * * * * * *
 
+// print ingredient - used for the ingredient list instead of a the usual
+// direction printing function also works for cookware
+char *ingredientToString(void *data) {
+  Direction *ingredient = data;
 
-// print ingredient - used for the ingredient list instead of a the usual direction printing function
-// also works for cookware
-char * ingredientToString( void * data ){
-  Direction * ingredient = data;
-
-  if( ingredient == NULL ){
+  if (ingredient == NULL) {
     return NULL;
   }
 
   int length = 0;
-  char * ingrString = NULL;
-  char * quanString = NULL;
-  char * unitString = NULL;
+  char *ingrString = NULL;
+  char *quanString = NULL;
+  char *unitString = NULL;
 
   // need value, quantity and unit if any
   length += strlen(ingredient->value);
 
   // if uses double  type
-  if(ingredient->quantity != -1){
+  if (ingredient->quantity != -1) {
     length += 10;
   }
 
   // if uses string type
-  if( ingredient->quantityString != NULL ){
+  if (ingredient->quantityString != NULL) {
     length += strlen(ingredient->quantityString);
   }
 
   // check for unit
-  if(ingredient->unit != NULL){
+  if (ingredient->unit != NULL) {
     length += strlen(ingredient->unit);
   }
 
@@ -506,7 +472,7 @@ char * ingredientToString( void * data ){
   // start making string
   ingrString = malloc(sizeof(char) * length);
 
-  if(ingrString == NULL){
+  if (ingrString == NULL) {
     printf("error, malloc failed - ingredientToString11\n");
     return NULL;
   }
@@ -514,9 +480,10 @@ char * ingredientToString( void * data ){
   sprintf(ingrString, "%s", ingredient->value);
 
   // add quantity string
-  if( ingredient->quantity == -1 ){
-    if( ingredient->quantityString != NULL ){
-      quanString = malloc(sizeof(char) * strlen(ingredient->quantityString) + 20);
+  if (ingredient->quantity == -1) {
+    if (ingredient->quantityString != NULL) {
+      quanString =
+          malloc(sizeof(char) * strlen(ingredient->quantityString) + 20);
       sprintf(quanString, ": %s", ingredient->quantityString);
     }
   } else {
@@ -525,7 +492,7 @@ char * ingredientToString( void * data ){
   }
 
   // there is no quantity and no quantity string, therefore no units
-  if( quanString == NULL ){
+  if (quanString == NULL) {
     return ingrString;
   } else {
     strcat(ingrString, quanString);
@@ -533,12 +500,12 @@ char * ingredientToString( void * data ){
 
   // add the unit string if there is one
   // if there isnt
-  if( ingredient->unit == NULL ){
+  if (ingredient->unit == NULL) {
     free(unitString);
     free(quanString);
     return ingrString;
 
-  // if there is
+    // if there is
   } else {
     unitString = malloc(sizeof(char) * strlen(ingredient->unit) + 20);
     sprintf(unitString, " %s", ingredient->unit);
@@ -552,36 +519,33 @@ char * ingredientToString( void * data ){
   return ingrString;
 }
 
-
-
-
-// print cookware - used for the ingredient list instead of a the usual direction printing function
-
+// print cookware - used for the ingredient list instead of a the usual
+// direction printing function
 
 // amount can be:
-//  - just a number - number + unit - just a word - word + unit - just a multiword - multiword + unit
+//  - just a number - number + unit - just a word - word + unit - just a
+//  multiword - multiword + unit
 // parses an amount string to get the unit and quantity
-char ** parseAmountString( char * amountString ){
-
-  if( amountString == NULL ){
+char **parseAmountString(char *amountString) {
+  if (amountString == NULL) {
     return NULL;
   }
 
-  char ** results = malloc(sizeof(char *) * 2);
-  char * quantityDest = NULL;
-  char * unitDest = NULL;
+  char **results = malloc(sizeof(char *) * 2);
+  char *quantityDest = NULL;
+  char *unitDest = NULL;
 
   // check if empty - an empty amount - if so set null results and return
-  if( amountString[0] == '\0' ){
+  if (amountString[0] == '\0') {
     results[0] = NULL;
     results[1] = NULL;
     return results;
   }
 
   // all other cases either string or string + unit string
-  char * token = strtok(amountString, "%");
+  char *token = strtok(amountString, "%");
 
-  if( token != NULL ){
+  if (token != NULL) {
     quantityDest = malloc(sizeof(char) * strlen(token) + 1);
     strcpy(quantityDest, token);
   } else {
@@ -593,7 +557,7 @@ char ** parseAmountString( char * amountString ){
 
   token = strtok(NULL, "%");
 
-  if( token != NULL ){
+  if (token != NULL) {
     unitDest = malloc(sizeof(char) * strlen(token) + 1);
     strcpy(unitDest, token);
   } else {
@@ -601,12 +565,12 @@ char ** parseAmountString( char * amountString ){
   }
 
   // remove white space
-  char * trimmedQuan = trimWhiteSpace(quantityDest);
+  char *trimmedQuan = trimWhiteSpace(quantityDest);
   results[0] = strdup(trimmedQuan);
   free(trimmedQuan);
 
-  if( unitDest != NULL ){
-    char * trimmedUnit = trimWhiteSpace(unitDest);
+  if (unitDest != NULL) {
+    char *trimmedUnit = trimWhiteSpace(unitDest);
     results[1] = strdup(trimmedUnit);
     free(trimmedUnit);
   } else {
@@ -619,37 +583,36 @@ char ** parseAmountString( char * amountString ){
   return results;
 }
 
-
 // parses a meta data string to get the identifier and content of metadata
-char ** parseMetaString( char * metaString ){
-  char * beginning;
-  char ** results;
+char **parseMetaString(char *metaString) {
+  char *beginning;
+  char **results;
   int i = 0;
 
-  if( metaString == NULL ){
+  if (metaString == NULL) {
     return NULL;
   }
 
   // remove first two '>'
-  if( metaString[0] == '>' && metaString[1] == '>' ){
+  if (metaString[0] == '>' && metaString[1] == '>') {
     metaString++;
     metaString++;
   }
   beginning = metaString;
 
   results = malloc(sizeof(char *) * 2);
-  if( results == NULL) {
+  if (results == NULL) {
     printf("error, malloc failed - parseMetaString1");
   }
 
   // loop through to find the first ':' then set to end of string
-  while( metaString[i] != ':' && metaString[i] != '\0'){
+  while (metaString[i] != ':' && metaString[i] != '\0') {
     metaString++;
   }
   metaString[i] = '\0';
 
   // copy the into the identifier
-  char * trimmed = trimWhiteSpace(beginning);
+  char *trimmed = trimWhiteSpace(beginning);
   results[0] = strdup(trimmed);
   free(trimmed);
 
@@ -662,49 +625,44 @@ char ** parseMetaString( char * metaString ){
   return results;
 }
 
-
-
-
-
-
 // Note: This function returns a pointer to a substring of the original string.
 // If the given string was allocated dynamically, the caller must not overwrite
 // that pointer with the returned value, since the original pointer must be
 // deallocated using the same allocator with which it was allocated.  The return
 // value must NOT be deallocated using free() etc.
 
-// function provided courtesy of stack overflow users Adam Rosenfield and Dave Gray, found here:
+// function provided courtesy of stack overflow users Adam Rosenfield and Dave
+// Gray, found here:
 // https://stackoverflow.com/questions/122616/how-do-i-trim-leading-trailing-whitespace-in-a-standard-way
 // slightly modified to remove the above issue
-char * trimWhiteSpace(char * str){
+char *trimWhiteSpace(char *str) {
   char *end;
 
   // Trim leading space
-  while(isspace((unsigned char)*str)) str++;
+  while (isspace((unsigned char)*str)) str++;
 
-  if(*str == 0)  // All spaces?
+  if (*str == 0)  // All spaces?
     return str;
 
   // Trim trailing space
   end = str + strlen(str) - 1;
-  while(end > str && isspace((unsigned char)*end)) end--;
+  while (end > str && isspace((unsigned char)*end)) end--;
 
   // Write new null terminator character
   end[1] = '\0';
 
-  char * output = strdup(str);
+  char *output = strdup(str);
 
   return output;
 }
 
-
-// check is if a given string is all numbers -  and can therefore be used in strtod
-// 1 is a true
-int checkIsNumber( char * input ){
+// check is if a given string is all numbers -  and can therefore be used in
+// strtod 1 is a true
+int checkIsNumber(char *input) {
   int i = 0;
 
-  while( input[i] != '\0' ){
-    if( isdigit(input[i]) == 0 ){
+  while (input[i] != '\0') {
+    if (isdigit(input[i]) == 0) {
       return 0;
     }
     i++;
