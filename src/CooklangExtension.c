@@ -6,7 +6,7 @@
 // python wrapper methods
 
 static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
-
+  double tempQuan;
   Py_ssize_t i;
   Py_ssize_t j;
   Py_ssize_t length;
@@ -61,8 +61,6 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 
   ingredients = PyDict_GetItemString(recipe, "ingredients");
 
-  printf("\nIngredients:\n");
-
   length = PyList_Size(ingredients);
   i = 0;
   if( length != 0 ){
@@ -70,16 +68,28 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
     while( i < length ){
       ingredient = PyList_GetItem(ingredients, i);
       printf("Got ing\n");
+
       // name
       attr = PyDict_GetItemString(ingredient, "name");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
       nameStr = PyBytes_AS_STRING(str);
       printf("Got name: %s\n", nameStr);
 
-      // quanitty
+      // quanitty - check if string or float
       attr = PyDict_GetItemString(ingredient, "quantity");
-      str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
-      quanStr = PyBytes_AS_STRING(str);
+      
+      // if its a float
+      if( PyFloat_Check(attr) ){
+        tempQuan = PyFloat_AsDouble(attr);
+        str = PyBytes_FromFormat("%ld", (long) tempQuan);
+        quanStr = PyBytes_AS_STRING(str);
+      
+      // a string
+      } else {
+        str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+        quanStr = PyBytes_AS_STRING(str);
+      }
+
       printf("Got quantity: %s\n", quanStr);
 
       // units
@@ -188,10 +198,20 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
           printf("      - name:     %s\n", nameStr);
 
 
-          // print quan
+          // quanitty - check if string or float
           attr = PyDict_GetItemString(direction, "quantity");
-          str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
-          quanStr = PyBytes_AS_STRING(str);
+          
+          // if its a float
+          if( PyFloat_Check(attr) ){
+            tempQuan = PyFloat_AsDouble(attr);
+            str = PyBytes_FromFormat("%ld", (long) tempQuan);
+            quanStr = PyBytes_AS_STRING(str);
+          
+          // a string
+          } else {
+            str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
+            quanStr = PyBytes_AS_STRING(str);
+          }
 
           printf("      - quantity: %s\n", quanStr);
 

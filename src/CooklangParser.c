@@ -79,13 +79,9 @@ void combineRecipes( Recipe * newRecipe, Recipe ** originalRecipe ){
   }
 
   // add new steps
-
-  // dont add steps with no directions
-
   stepIter = createIterator(newRecipe->stepList);
   while( newStep = nextElement(&stepIter), newStep != NULL ){
     if(getLength(newStep->directions) != 0){
-
       insertBack((*originalRecipe)->stepList, newStep);
     }
   }
