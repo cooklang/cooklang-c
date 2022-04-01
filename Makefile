@@ -11,7 +11,7 @@ bin/%.o: src/%.c
 
 # recompile lex file
 lex.yy.c: src/Cooklang.l
-	flex -Ca $< -o parserFiles/lex.yy.c
+	flex -Ca -o parserFiles/lex.yy.c $< 
 
 flex: lex.yy.c
 
@@ -28,7 +28,7 @@ library: Cooklang.tab.c $(OBJ)
 
 
 # make executable parser
-parser: Cooklang.tab.c $(OBJ)
+parser: Cooklang.tab.c $(OBJ) lex.yy.c
 	gcc -g parserFiles/$< $(OBJ) -o $@
 
 # clean binaries

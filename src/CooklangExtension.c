@@ -61,27 +61,32 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 
   ingredients = PyDict_GetItemString(recipe, "ingredients");
 
+  printf("\nIngredients:\n");
+
   length = PyList_Size(ingredients);
   i = 0;
   if( length != 0 ){
-
+    printf("i: %ld\n", i);
     while( i < length ){
       ingredient = PyList_GetItem(ingredients, i);
-
+      printf("Got ing\n");
       // name
       attr = PyDict_GetItemString(ingredient, "name");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
       nameStr = PyBytes_AS_STRING(str);
+      printf("Got name: %s\n", nameStr);
 
       // quanitty
       attr = PyDict_GetItemString(ingredient, "quantity");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
       quanStr = PyBytes_AS_STRING(str);
+      printf("Got quantity: %s\n", quanStr);
 
       // units
       attr = PyDict_GetItemString(ingredient, "units");
       str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
       unitStr = PyBytes_AS_STRING(str);
+      printf("Got units: %s\n", unitStr);
 
       printf("  - %s, %s %s\n", nameStr, quanStr, unitStr);
 
@@ -183,7 +188,6 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
           printf("      - name:     %s\n", nameStr);
 
 
-
           // print quan
           attr = PyDict_GetItemString(direction, "quantity");
           str = PyUnicode_AsEncodedString(attr, "utf-8", "~E~");
@@ -200,18 +204,14 @@ static PyObject * methodPrintRecipe(PyObject * self, PyObject * args){
 
             printf("      - units:    %s\n", unitStr);
           }
-
         }
-
         j++;
       }
-
       i++;
     }
   } else {
     printf("  none\n");
   }
-
 
   Py_INCREF(Py_None);
   return Py_None;
@@ -247,7 +247,7 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
   }
 
   // parse the recipe recipe
-  Recipe * parsedRecipe = parseRecipeString(recipeString);
+  Recipe * parsedRecipe = parseMultipleRecipeStrings(recipeString);
 
   // build a python object to represent the recipe
   PyObject * recipeObject = PyDict_New();
@@ -435,7 +435,8 @@ static PyObject * methodParseRecipe(PyObject *self, PyObject * args){
 }
 
 
-static PyObject * methodParseShoppingList(PyObject *self, PyObject * args){
+
+static PyObject * methodParseShoppingList(PyObject* self, PyObject * args){
 
   int check;
   int synCount = 0;

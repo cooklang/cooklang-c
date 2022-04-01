@@ -122,6 +122,7 @@ The same goes for the bison file, which can be rebuilt by using the following co
 ```
 bison Cooklang.y -d -v
 ```
+Also keep in mind that the parser, as its currently built, expects having exactly 18 shift/reduce errors. This is defined on line 28 in _Cooklang.y_. When rebuilding the parser, if there are anything but 18 shift/reduce errors, then the parser will not compile. To fix this you must remove line 28, or change it to match the amount of shift/reduce errors produced by your parser.
 
 
 ### Working with the parser:

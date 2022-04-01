@@ -1,21 +1,21 @@
 
 %{
 
+#define YYDEBUG 1
+#define YYERROR_VERBOSE 1
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "../include/CooklangParser.h"
 
-#define YYDEBUG 1
-
-int yylex();
-
-
-int yyerror ( Recipe * recipe, const char * s);
 
 extern void yyrestart( FILE * input_file );
-
+extern int yylineno;
+extern int column;
+int yyerror ( Recipe * recipe, const char * s);
+int yylex();
 
 
 
@@ -345,6 +345,7 @@ timer:
 
 
 int yyerror( Recipe * recipe, const char * s){
-  printf("\nError\n%s", s);
+  printf("\nError on line %d at col %d\n", yylineno, column);
+  printf("Error: %s\n", s);
   return 1;
 }

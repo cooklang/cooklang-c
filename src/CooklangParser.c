@@ -11,6 +11,8 @@ typedef struct yy_buffer_state * YY_BUFFER_STATE;
 extern YY_BUFFER_STATE yy_scan_string(char * str);
 extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
+
+
 // wrapper functions
 // this function will parse the recipe from a string
 Recipe * parseRecipeString( char * inputRecipeString ){
@@ -28,12 +30,67 @@ Recipe * parseRecipeString( char * inputRecipeString ){
 
   // feed input to lexer
   YY_BUFFER_STATE buffer = yy_scan_string(newInputString);
+  
   // parser
   yyparse(finalRecipe);
   yy_delete_buffer(buffer);
 
   return finalRecipe;
 }
+
+
+// this function parses a string that is made up of seperate lines
+Recipe * parseMultipleRecipeStrings( char * inputRecipeString ){
+  char * token;
+  char * savePtr;
+  Recipe * newRecipe;
+  Recipe * totalRecipe;
+
+  totalRecipe = createRecipe();
+
+  token = strtok_r(inputRecipeString, "\n", &savePtr);
+
+  // split each line up and parse each one
+  while( token != NULL ){
+    // get recipe for current string
+    newRecipe = parseRecipeString(token);
+
+    // add new recipe to total recipe
+    combineRecipes(newRecipe, &totalRecipe);
+
+    token = strtok_r(savePtr, "\n", &savePtr);
+  }
+
+  return totalRecipe;
+}
+
+
+// adds the new recipe to the original recipe
+void combineRecipes( Recipe * newRecipe, Recipe ** originalRecipe ){
+  Metadata * newMeta;
+  Step * newStep;
+  ListIterator metaIter;
+  ListIterator stepIter;
+
+  // add new metadata
+  metaIter = createIterator(newRecipe->metaData);
+  while( newMeta = nextElement(&metaIter), newMeta != NULL ){
+    insertBack((*originalRecipe)->metaData, newMeta);
+  }
+
+  // add new steps
+
+  // dont add steps with no directions
+
+  stepIter = createIterator(newRecipe->stepList);
+  while( newStep = nextElement(&stepIter), newStep != NULL ){
+    if(getLength(newStep->directions) != 0){
+
+      insertBack((*originalRecipe)->stepList, newStep);
+    }
+  }
+}
+
 
 
 Recipe * parseRecipe( char * fileName ){
@@ -63,12 +120,6 @@ Recipe * parseRecipe( char * fileName ){
 
   fclose(file);
 
-  // // initialize the iterators on the recipe
-  // if( finalRecipe->stepList != NULL ){
-  //   finalRecipe->stepIter = createIterator(finalRecipe->stepList);
-  // } else {
-  //   finalRecipe->stepIter = NULL;
-  // }
   return finalRecipe;
 }
 

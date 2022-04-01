@@ -211,7 +211,6 @@ class TestCanonical(unittest.TestCase):
                 pretty_print_result(expected_result)
                 print("____            Actual Output            ____")
                 pretty_print_result(actual_result)
-                print("____           Compare Results           ____")
                 unpassed.append(test)
             total += 1
         
