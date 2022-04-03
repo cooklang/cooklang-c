@@ -7,16 +7,34 @@ on:
     branches: [ main ]
 
 jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - uses: BSFishy/pip-action@v1
+      with:
+       packages: |
+         pre-commit
+    - run: pre-commit run -a
   build:
     runs-on: ubuntu-latest
-
+    needs: linter
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v3
+    - run: python setup.py build
+    - run: python setup.py install
+  test:
+    runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v3
     - uses: BSFishy/pip-action@v1
       with:
-        packages: |
-          pyyaml
+       packages: |
+         pyyaml
     - run: python setup.py build
     - run: python setup.py install
     - run: python -m unittest testing.testing
