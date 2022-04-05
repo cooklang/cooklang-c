@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.3.2.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_PARSERFILES_COOKLANG_TAB_H_INCLUDED
 # define YY_YY_PARSERFILES_COOKLANG_TAB_H_INCLUDED
@@ -44,42 +45,46 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    WORD = 258,
-    MULTIWORD = 259,
-    UNIT = 260,
-    NUMBER = 261,
-    LCURL = 262,
-    RCURL = 263,
-    PUNC_CHAR = 264,
-    NL = 265,
-    TILDE = 266,
-    HWORD = 267,
-    ATWORD = 268,
-    METADATA = 269,
-    COMMENT = 270,
-    WHTS = 271
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    WORD = 258,                    /* WORD  */
+    MULTIWORD = 259,               /* MULTIWORD  */
+    UNIT = 260,                    /* UNIT  */
+    NUMBER = 261,                  /* NUMBER  */
+    LCURL = 262,                   /* LCURL  */
+    RCURL = 263,                   /* RCURL  */
+    PUNC_CHAR = 264,               /* PUNC_CHAR  */
+    NL = 265,                      /* NL  */
+    TILDE = 266,                   /* TILDE  */
+    HWORD = 267,                   /* HWORD  */
+    ATWORD = 268,                  /* ATWORD  */
+    METADATA = 269,                /* METADATA  */
+    COMMENT = 270,                 /* COMMENT  */
+    WHTS = 271                     /* WHTS  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 34 "src/Cooklang.y" /* yacc.c:1921  */
+#line 34 "src/Cooklang.y"
 
   char * string;
   char character;
   double number;
 
-#line 81 "parserFiles/Cooklang.tab.h" /* yacc.c:1921  */
-};
+#line 86 "parserFiles/Cooklang.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -88,6 +93,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE yylval;
 
+
 int yyparse (Recipe * recipe);
+
 
 #endif /* !YY_YY_PARSERFILES_COOKLANG_TAB_H_INCLUDED  */
