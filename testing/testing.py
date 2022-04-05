@@ -4,6 +4,7 @@ from typing import Dict, Tuple
 import cooklang
 import yaml
 
+from .testing_comment import TestComment  # noqa
 from .testing_metadata import TestMetadata  # noqa
 from .testing_number import TestNumber  # noqa
 from .testing_words import TestWords  # noqa
