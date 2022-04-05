@@ -15,6 +15,10 @@ class TestWords(unittest.TestCase):
                 "output_steps": "recette de cm ",
             },
             {
+                "input": "recette de croque->monsieur\n",
+                "output_steps": "recette de croque->monsieur",
+            },
+            {
                 "input": "recette de [croque]-monsieur\n",
                 "output_steps": "recette de [croque]-monsieur",
             },
