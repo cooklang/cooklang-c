@@ -4,6 +4,9 @@ from typing import Dict, Tuple
 import cooklang
 import yaml
 
+from .testing_metadata import TestMetadata  # noqa
+from .testing_number import TestNumber  # noqa
+
 POSSIBLE_FIELDS = {
     "type",
     "name",
