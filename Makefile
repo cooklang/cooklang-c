@@ -11,15 +11,15 @@ bin/%.o: src/%.c
 
 # recompile lex file
 lex.yy.c: src/Cooklang.l
-	flex -Ca $< -o parserFiles/lex.yy.c
+	flex -Ca -o parserFiles/lex.yy.c $<
 
 flex: lex.yy.c
 
 # recompile bison file
-Cooklang.tab.c: src/Cooklang.y
+parserFiles/Cooklang.tab.c: src/Cooklang.y
 	bison $< -d -v -o parserFiles/Cooklang.tab.c
 
-bison: Cooklang.tab.c
+bison: parserFiles/Cooklang.tab.c
 
 # make shared library parser file
 library: Cooklang.tab.c $(OBJ)
@@ -28,13 +28,13 @@ library: Cooklang.tab.c $(OBJ)
 
 
 # make executable parser
-parser: Cooklang.tab.c $(OBJ)
+parser: parserFiles/Cooklang.tab.c $(OBJ) parserFiles/lex.yy.c
 	gcc -g parserFiles/$< $(OBJ) -o $@
 
 # clean binaries
 binary_clean:
-	rm -f bin/*.o *.o *.so *.out parser
+	rm -rf bin/*.o *.o *.so *.out parser build/*
 
 # clean everything
 full_clean: binary_clean
-	rm -f bin/*.d  test parserFiles/Cooklang.tab.c parserFiles/Cooklang.tab.h parserFiles/Cooklang.output parserFiles/lex.yy.c
+	rm -rf bin/*.d test parserFiles/*
