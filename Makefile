@@ -22,9 +22,10 @@ parserFiles/Cooklang.tab.c: src/Cooklang.y
 bison: parserFiles/Cooklang.tab.c
 
 # make shared library parser file
-library: Cooklang.tab.c $(OBJ)
-	gcc -fPIC -DLIB -c -g Cooklang.tab.c
-	gcc -shared -o Cooklang.so $(OBJ) Cooklang.tab.o
+library: parserFiles/Cooklang.tab.c $(OBJ)
+	gcc -fPIC -DLIB -c -g -o bin/Cooklang.tab.o parserFiles/Cooklang.tab.c
+	gcc -shared -o bin/Cooklang.so $(OBJ) bin/Cooklang.tab.o
+	$(info Created in 'bin/Cooklang.so')
 
 
 # make executable parser
