@@ -30,7 +30,7 @@ library: parserFiles/Cooklang.tab.c $(OBJ)
 
 # make executable parser
 parser: parserFiles/Cooklang.tab.c $(OBJ) parserFiles/lex.yy.c
-	gcc -g parserFiles/$< $(OBJ) -o $@
+	gcc -g $< $(OBJ) -o $@
 
 # clean binaries
 binary_clean:
