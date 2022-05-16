@@ -18,8 +18,6 @@ git clone https://github.com/cooklang/cook-in-c.git
 ```
 
 
-
-
 ## Setup
 It is easiest to use the parser with the python module. To do so, navigate to the directory containing the setup.py file. The module can be built using the command:
 ```
