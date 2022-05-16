@@ -16,7 +16,7 @@ lex.yy.c: src/Cooklang.l
 flex: lex.yy.c
 
 # recompile bison file
-parserFiles/Cooklang.tab.c: src/Cooklang.y
+Cooklang.tab.c: src/Cooklang.y
 	bison $< -d -v -o parserFiles/Cooklang.tab.c
 
 bison: parserFiles/Cooklang.tab.c

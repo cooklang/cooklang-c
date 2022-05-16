@@ -338,10 +338,7 @@ timer:
 %%
 
 
-
-
-#include "lex.yy.c"
-
+#include "../parserFiles/lex.yy.c"
 
 
 int yyerror( Recipe * recipe, const char * s){
