@@ -16,7 +16,7 @@ lex.yy.c: src/Cooklang.l
 flex: lex.yy.c
 
 # recompile bison file
-parserFiles/Cooklang.tab.c: src/Cooklang.y
+Cooklang.tab.c: src/Cooklang.y
 	bison $< -d -v -o parserFiles/Cooklang.tab.c
 
 bison: parserFiles/Cooklang.tab.c
@@ -30,7 +30,7 @@ library: parserFiles/Cooklang.tab.c $(OBJ)
 
 # make executable parser
 parser: parserFiles/Cooklang.tab.c $(OBJ) parserFiles/lex.yy.c
-	gcc -g parserFiles/$< $(OBJ) -o $@
+	gcc -g $< $(OBJ) -o $@
 
 # clean binaries
 binary_clean:
