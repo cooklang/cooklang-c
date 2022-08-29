@@ -12,6 +12,10 @@
 #ifndef COOKLANG_LEXER_H
 #define COOKLANG_LEXER_H
 
-int help(void);
+#include <cooklang/cooklang.h>
+
+
+void init_lexer(const wchar_t *input);
+token_t next_token(void);
 
 #endif
