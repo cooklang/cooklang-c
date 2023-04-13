@@ -9,6 +9,6 @@
 
 
 /** In save.c */
-extern bool lexer_tests(ttest_report_ctx_t *rc);
+extern bool scanner_tests(ttest_report_ctx_t *rc);
 
 #endif

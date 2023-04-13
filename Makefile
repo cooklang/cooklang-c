@@ -54,7 +54,7 @@ VERSION_FLAGS = -DVERSION_MAJOR=$(VERSION_MAJOR) \
                 -DVERSION_PATCH=$(VERSION_PATCH) \
                 -DVERSION_DEVEL=$(VERSION_DEVEL)
 
-INCLUDE = -I include
+INCLUDE = -I$(PWD)/include -Wall
 CPPFLAGS += $(VERSION_FLAGS) -MMD -MP
 CFLAGS += $(INCLUDE)
 CFLAGS += -std=c11 -Wall -Wextra -pedantic \
@@ -85,7 +85,7 @@ endif
 BUILDDIR_SHARED = $(BUILDDIR)/shared
 BUILDDIR_STATIC = $(BUILDDIR)/static
 
-LIB_SRC_FILES = lexer.c
+LIB_SRC_FILES = reader.c scanner.c loader.c parser.c
 LIB_SRC := $(addprefix src/,$(LIB_SRC_FILES))
 LIB_OBJ = $(patsubst %.c,%.o, $(addprefix $(BUILDDIR)/,$(LIB_SRC)))
 LIB_DEP = $(patsubst %.c,%.d, $(addprefix $(BUILDDIR)/,$(LIB_SRC)))
@@ -104,7 +104,7 @@ ifeq ($(UNAME_S),Darwin)
 	LIB_PATH = DYLD_FALLBACK_LIBRARY_PATH=$(BUILDDIR)
 endif
 
-TEST_SRC_FILES = units/lexer.c units/test.c
+TEST_SRC_FILES = units/scanner.c units/test.c
 TEST_SRC := $(addprefix test/,$(TEST_SRC_FILES))
 TEST_OBJ = $(patsubst %.c,%.o, $(addprefix $(BUILDDIR)/,$(TEST_SRC)))
 TEST_DEP = $(patsubst %.c,%.d, $(addprefix $(BUILDDIR)/,$(TEST_SRC)))
@@ -167,8 +167,8 @@ install: $(BUILDDIR)/$(LIB_SH_MAJ) $(BUILDDIR)/$(LIB_STATIC) $(BUILDDIR)/$(LIB_P
 	(cd $(DESTDIR)$(PREFIX)/$(LIBDIR) && { ln -s -f $(LIB_SH_VER) $(LIB_SHARED) || { rm -f $(LIB_SHARED) && ln -s $(LIB_SH_VER) $(LIB_SHARED); }; })
 	$(INSTALL) $(BUILDDIR)/$(LIB_STATIC) $(DESTDIR)$(PREFIX)/$(LIBDIR)/$(LIB_STATIC)
 	chmod 644 $(DESTDIR)$(PREFIX)/$(LIBDIR)/$(LIB_STATIC)
-	$(INSTALL) -d $(DESTDIR)$(PREFIX)/$(INCLUDEDIR)/cooklang
-	$(INSTALL) -m 644 include/cooklang/* $(DESTDIR)$(PREFIX)/$(INCLUDEDIR)/cooklang
+	$(INSTALL) -d $(DESTDIR)$(PREFIX)/$(INCLUDEDIR)
+	$(INSTALL) -m 644 include/* $(DESTDIR)$(PREFIX)/$(INCLUDEDIR)
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)/$(LIBDIR)/pkgconfig
 	$(INSTALL) -m 644 $(BUILDDIR)/$(LIB_PKGCON) $(DESTDIR)$(PREFIX)/$(LIBDIR)/pkgconfig/$(LIB_PKGCON)
 

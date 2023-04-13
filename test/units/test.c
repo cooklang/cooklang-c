@@ -9,8 +9,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <cooklang/cooklang.h>
-
 #include "ttest.h"
 #include "test.h"
 
@@ -69,7 +67,7 @@ int main(int argc, char *argv[])
 
 	rc = ttest_init(test_list, quiet);
 
-	pass &= lexer_tests(&rc);
+	pass &= scanner_tests(&rc);
 
 	ttest_report(&rc);
 
