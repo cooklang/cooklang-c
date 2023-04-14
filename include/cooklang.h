@@ -155,6 +155,14 @@ typedef struct cooklang_mark_s {
  */
 
 typedef enum cooklang_token_type_e {
+    /** An empty token. */
+    COOKLANG_NO_TOKEN,
+
+    /** A STREAM-START token. */
+    COOKLANG_STREAM_START_TOKEN,
+    /** A STREAM-END token. */
+    COOKLANG_STREAM_END_TOKEN,
+
     COOKLANG_WORD_TOKEN,
     COOKLANG_INTEGER_TOKEN,
     COOKLANG_DECIMAL_TOKEN,
@@ -212,6 +220,9 @@ typedef struct cooklang_token_s {
 static inline const char * cooklang_token_type_to_string(cooklang_token_type_t type)
 {
     static const char * const strings[COOKLANG_COUNT_TOKEN] = {
+        [COOKLANG_NO_TOKEN]               = "COOKLANG_NO_TOKEN",
+        [COOKLANG_STREAM_START_TOKEN]     = "COOKLANG_STREAM_START_TOKEN",
+        [COOKLANG_STREAM_END_TOKEN]       = "COOKLANG_STREAM_END_TOKEN",
         [COOKLANG_WORD_TOKEN]             = "WORD_TOKEN",
         [COOKLANG_INTEGER_TOKEN]          = "INTEGER_TOKEN",
         [COOKLANG_DECIMAL_TOKEN]          = "DECIMAL_TOKEN",

@@ -85,7 +85,7 @@ endif
 BUILDDIR_SHARED = $(BUILDDIR)/shared
 BUILDDIR_STATIC = $(BUILDDIR)/static
 
-LIB_SRC_FILES = reader.c scanner.c loader.c parser.c
+LIB_SRC_FILES = reader.c scanner.c loader.c parser.c api.c
 LIB_SRC := $(addprefix src/,$(LIB_SRC_FILES))
 LIB_OBJ = $(patsubst %.c,%.o, $(addprefix $(BUILDDIR)/,$(LIB_SRC)))
 LIB_DEP = $(patsubst %.c,%.d, $(addprefix $(BUILDDIR)/,$(LIB_SRC)))

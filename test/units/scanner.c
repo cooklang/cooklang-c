@@ -40,6 +40,10 @@ static bool test_hello(ttest_report_ctx_t *report)
 
     cooklang_parser_initialize(&parser);
 
+    cooklang_parser_set_input_string(&parser, input, strlen(input));
+
+    cooklang_parser_scan(&parser, &token);
+    ASSERT_TOKEN_TYPE(tc, token, COOKLANG_STREAM_START_TOKEN);
     cooklang_parser_scan(&parser, &token);
     ASSERT_TOKEN_TYPE(tc, token, COOKLANG_WORD_TOKEN);
     cooklang_parser_scan(&parser, &token);
