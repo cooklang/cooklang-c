@@ -1,0 +1,10 @@
+prefix=PREFIX
+exec_prefix=${prefix}
+libdir=${exec_prefix}/LIBDIR
+includedir=${prefix}/INCLUDEDIR
+
+Name: libcooklang
+Description: Cooklang recipe file parsing and serialisation
+Version: VERSION
+Libs: -L${libdir} -lcooklang
+Cflags: -I${includedir}
