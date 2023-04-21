@@ -179,6 +179,7 @@ cooklang_parser_initialize(cooklang_parser_t *parser)
     assert(parser);     /* Non-NULL parser object expected. */
 
     memset(parser, 0, sizeof(cooklang_parser_t));
+
     if (!BUFFER_INIT(parser, parser->raw_buffer, INPUT_RAW_BUFFER_SIZE))
         goto error;
     if (!BUFFER_INIT(parser, parser->buffer, INPUT_BUFFER_SIZE))

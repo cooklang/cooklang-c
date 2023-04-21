@@ -186,6 +186,20 @@ cooklang_parser_fetch_stream_start(cooklang_parser_t *parser);
 static int
 cooklang_parser_fetch_stream_end(cooklang_parser_t *parser);
 
+static int
+cooklang_parser_fetch_eol(cooklang_parser_t *parser);
+
+static int
+cooklang_parser_fetch_whitespace(cooklang_parser_t *parser);
+
+static int
+cooklang_parser_fetch_number(cooklang_parser_t *parser);
+
+static int
+cooklang_parser_fetch_special_symbol(cooklang_parser_t *parser, cooklang_token_type_t type);
+
+static int
+cooklang_parser_fetch_word(cooklang_parser_t *parser);
 
 /*
  * Token scanners.
@@ -318,16 +332,94 @@ cooklang_parser_fetch_next_token(cooklang_parser_t *parser)
 
     /*
      * Ensure that the buffer contains at least 4 characters.  4 is the length
-     * of the longest indicators ('--- ' and '... ').
+     * of the longest indicators ('--' and '[-').
      */
 
-    if (!CACHE(parser, 4))
+    if (!CACHE(parser, 2))
         return 0;
 
     /* Is it the end of the stream? */
 
     if (IS_Z(parser->buffer))
         return cooklang_parser_fetch_stream_end(parser);
+
+    /* Is it a line break? */
+
+    if (IS_BREAK(parser->buffer))
+        return cooklang_parser_fetch_eol(parser);
+
+    /* Is it a whitespace? */
+
+    if (IS_BLANK(parser->buffer))
+        return cooklang_parser_fetch_whitespace(parser);
+
+    /* Is it a number? */
+
+    if (IS_DIGIT(parser->buffer))
+        return cooklang_parser_fetch_number(parser);
+
+    /* Is it a colon symbol? */
+
+    if (CHECK(parser->buffer, ':'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_COLON_TOKEN);
+
+    /* Is it "at" symbol? */
+
+    if (CHECK(parser->buffer, '@'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_AT_TOKEN);
+
+    /* Is it a percent symbol? */
+
+    if (CHECK(parser->buffer, '%'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_PERCENT_TOKEN);
+
+    /* Is it an opening brace symbol? */
+
+    if (CHECK(parser->buffer, '{'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_BRACES_LEFT_TOKEN);
+
+    /* Is it a closing brace symbol? */
+
+    if (CHECK(parser->buffer, '}'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_BRACES_RIGHT_TOKEN);
+
+    /* Is it a pipe symbol? */
+
+    if (CHECK(parser->buffer, '|'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_PIPE_TOKEN);
+
+    /* Is it a larger symbol? */
+
+    if (CHECK(parser->buffer, '>'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_CHEVRON_TOKEN);
+
+    /* Is it a tilde symbol? */
+
+    if (CHECK(parser->buffer, '~'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_TILDE_TOKEN);
+
+    /* Is it a hash symbol? */
+
+    if (CHECK(parser->buffer, '#'))
+        return cooklang_parser_fetch_special_symbol(parser,
+                COOKLANG_HASH_TOKEN);
+
+//     if CharacterSet.punctuationCharacters.contains(currentCharacter) || CharacterSet.symbols.contains(currentCharacter) {
+//         return punctuation()
+//     }
+
+    if (IS_ALPHA(parser->buffer))
+        return cooklang_parser_fetch_word(parser);
+
+// return .eof
 
 
     /*
@@ -355,6 +447,172 @@ cooklang_parser_fetch_stream_start(cooklang_parser_t *parser)
 
     STREAM_START_TOKEN_INIT(token, parser->encoding,
             parser->mark, parser->mark);
+
+    if (!ENQUEUE(parser, parser->tokens, token))
+        return 0;
+
+    return 1;
+}
+
+
+/*
+ * Produce the COOKLANG_EOL_TOKEN token.
+ */
+
+static int
+cooklang_parser_fetch_eol(cooklang_parser_t *parser)
+{
+    cooklang_mark_t start_mark, end_mark;
+    cooklang_token_t token;
+
+    /* Consume the token. */
+
+    start_mark = parser->mark;
+
+    while (IS_BREAK(parser->buffer)) {
+        SKIP_LINE(parser);
+    }
+
+    end_mark = parser->mark;
+
+    /* Create the COOKLANG_EOL_TOKEN token. */
+
+    TOKEN_INIT(token, COOKLANG_EOL_TOKEN, start_mark, end_mark);
+
+    /* Append the token to the queue. */
+
+    if (!ENQUEUE(parser, parser->tokens, token))
+        return 0;
+
+    return 1;
+}
+
+
+
+/*
+ * Produce the COOKLANG_WHITESPACE_TOKEN token.
+ */
+
+static int
+cooklang_parser_fetch_whitespace(cooklang_parser_t *parser)
+{
+    cooklang_mark_t start_mark, end_mark;
+    cooklang_token_t token;
+
+    /* Consume the token. */
+
+    start_mark = parser->mark;
+
+    while (CHECK(parser->buffer,' ') ||
+            (CHECK(parser->buffer, '\t'))) {
+        SKIP(parser);
+    }
+
+    end_mark = parser->mark;
+
+    /* Create the COOKLANG_WHITESPACE_TOKEN token. */
+
+    TOKEN_INIT(token, COOKLANG_WHITESPACE_TOKEN, start_mark, end_mark);
+
+    /* Append the token to the queue. */
+
+    if (!ENQUEUE(parser, parser->tokens, token))
+        return 0;
+
+    return 1;
+}
+
+
+/*
+ * Produce the COOKLANG_INTEGER_TOKEN token.
+ */
+
+static int
+cooklang_parser_fetch_number(cooklang_parser_t *parser)
+{
+    cooklang_mark_t start_mark, end_mark;
+    cooklang_token_t token;
+
+    /* Consume the token. */
+
+    start_mark = parser->mark;
+
+    while (IS_DIGIT(parser->buffer)) {
+        SKIP(parser);
+    }
+
+    end_mark = parser->mark;
+
+    /* Create the COOKLANG_INTEGER_TOKEN token. */
+
+    TOKEN_INIT(token, COOKLANG_INTEGER_TOKEN, start_mark, end_mark);
+
+    /* Append the token to the queue. */
+
+    if (!ENQUEUE(parser, parser->tokens, token))
+        return 0;
+
+    return 1;
+}
+
+
+
+/*
+ * Produce the COOKLANG_WORD_TOKEN token.
+ */
+
+static int
+cooklang_parser_fetch_word(cooklang_parser_t *parser)
+{
+    cooklang_mark_t start_mark, end_mark;
+    cooklang_token_t token;
+
+    /* Consume the token. */
+
+    start_mark = parser->mark;
+
+    while (IS_ALPHA(parser->buffer)) {
+        SKIP(parser);
+    }
+
+    end_mark = parser->mark;
+
+    /* Create the COOKLANG_WORD_TOKEN token. */
+
+    TOKEN_INIT(token, COOKLANG_WORD_TOKEN, start_mark, end_mark);
+
+    /* Append the token to the queue. */
+
+    if (!ENQUEUE(parser, parser->tokens, token))
+        return 0;
+
+    return 1;
+}
+/*
+ * Produce the COOKLANG_COLON_TOKEN, COOKLANG_AT_TOKEN, COOKLANG_PERCENT_TOKEN,
+ *             COOKLANG_BRACES_LEFT_TOKEN, COOKLANG_BRACES_RIGHT_TOKEN,
+ *             COOKLANG_PIPE_TOKEN, COOKLANG_CHEVRON_TOKEN, COOKLANG_TILDE_TOKEN,
+ *             COOKLANG_HASH_TOKEN tokens.
+ */
+
+static int
+cooklang_parser_fetch_special_symbol(cooklang_parser_t *parser, cooklang_token_type_t type)
+{
+    cooklang_mark_t start_mark, end_mark;
+    cooklang_token_t token;
+
+    /* Consume the token. */
+
+    start_mark = parser->mark;
+    SKIP(parser);
+
+    end_mark = parser->mark;
+
+    /* Create the COOKLANG_AT_TOKEN token. */
+
+    TOKEN_INIT(token, type, start_mark, end_mark);
+
+    /* Append the token to the queue. */
 
     if (!ENQUEUE(parser, parser->tokens, token))
         return 0;
@@ -418,35 +676,20 @@ cooklang_parser_scan_to_next_token(cooklang_parser_t *parser)
 
         if (!CACHE(parser, 1)) return 0;
 
-        while (CHECK(parser->buffer,' ') ||
-                (CHECK(parser->buffer, '\t'))) {
-            SKIP(parser);
-            if (!CACHE(parser, 1)) return 0;
-        }
-
         /* Eat a comment until a line break. */
 
-        if (CHECK(parser->buffer, '#')) {
+        if (CHECK_AT(parser->buffer, '-', 0) && CHECK_AT(parser->buffer, '-', 1)) {
             while (!IS_BREAKZ(parser->buffer)) {
                 SKIP(parser);
                 if (!CACHE(parser, 1)) return 0;
             }
         }
 
-        /* If it is a line break, eat it. */
 
-        if (IS_BREAK(parser->buffer))
-        {
-            if (!CACHE(parser, 2)) return 0;
-            SKIP_LINE(parser);
+        /* We have found a token. */
 
-        }
-        else
-        {
-            /* We have found a token. */
+        break;
 
-            break;
-        }
     }
 
     return 1;
