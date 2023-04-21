@@ -22,17 +22,10 @@ typedef struct test_data {
     cooklang_token_t token;
 } test_data_t;
 
-#define ASSERT_TOKEN_TYPE(tc, propesed_token, expected_token_type) do { \
-    if (propesed_token.type != expected_token_type) { \
-        cooklang_token_delete(&token); \
-        cooklang_parser_delete(&parser); \
-        return ttest_fail(&tc, "Line %d: expected %s, got %s", __LINE__, cooklang_token_type_to_string(expected_token_type), cooklang_token_type_to_string(propesed_token.type)); \
-    } \
-    } while(0)
-
 
 #define EXPECT_NEXT_TOKEN(tc, td, expected_token_type) do { \
-    cooklang_parser_scan(&td.parser, &td.token); \
+    if (!cooklang_parser_scan(&td.parser, &td.token)) \
+        return ttest_fail(&tc, "Unexpected exit from scan"); \
     if (td.token.type != expected_token_type) { \
         cleanup(&td); \
         return ttest_fail(&tc, "Line %d: expected %s, got %s", __LINE__, cooklang_token_type_to_string(expected_token_type), cooklang_token_type_to_string(td.token.type)); \
@@ -49,6 +42,7 @@ static void init_test_data(test_data_t *data, const cooklang_char_t *input) {
 static void cleanup(test_data_t *data) {
     cooklang_token_delete(&data->token);
     cooklang_parser_delete(&data->parser);
+    memset(data, 0, sizeof(test_data_t));
 }
 
 /**
@@ -738,7 +732,7 @@ static bool test_ingridients_one_liner(ttest_report_ctx_t *report)
         return true;
     }
 
-    const cooklang_char_t* input = (cooklang_char_t *)"Add @onions{3%medium} chopped finely";
+    cooklang_char_t* input = (cooklang_char_t *)"Add @onions{3%medium} chopped finely";
     init_test_data(&td, input);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_STREAM_START_TOKEN);
 
@@ -900,12 +894,16 @@ static bool test_block_comments(ttest_report_ctx_t *report)
 
     const cooklang_char_t* input = (cooklang_char_t *)"visible [- hidden -] visible";
     init_test_data(&td, input);
+    printf("\nhere %s\n", td.parser.raw_buffer.start);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_STREAM_START_TOKEN);
 
+    printf("\nhere %s\n", td.parser.buffer.pointer);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WORD_TOKEN);
+    printf("\nhere %s\n", td.parser.buffer.pointer);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WHITESPACE_TOKEN);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WHITESPACE_TOKEN);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WORD_TOKEN);
+    printf("\nhere %s\n", td.parser.buffer.pointer);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_STREAM_END_TOKEN);
 
     cleanup(&td);
@@ -1279,9 +1277,10 @@ static bool test_equipment(ttest_report_ctx_t *report)
     }
 
     const cooklang_char_t* input = (cooklang_char_t *)"put into #oven";
-    init_test_data(&td, input);
-    EXPECT_NEXT_TOKEN(tc, td, COOKLANG_STREAM_START_TOKEN);
 
+    init_test_data(&td, input);
+
+    EXPECT_NEXT_TOKEN(tc, td, COOKLANG_STREAM_START_TOKEN);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WORD_TOKEN);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WHITESPACE_TOKEN);
     EXPECT_NEXT_TOKEN(tc, td, COOKLANG_WORD_TOKEN);
@@ -1414,7 +1413,8 @@ static bool test_ingridients_multi_liner(ttest_report_ctx_t *report)
         return true;
     }
 
-    const cooklang_char_t* input = (cooklang_char_t *)"Add @onions{3%medium} chopped finely"
+    const cooklang_char_t* input = (cooklang_char_t *)
+                            "Add @onions{3%medium} chopped finely\n"
                             "Bonne appetite!";
 
     init_test_data(&td, input);

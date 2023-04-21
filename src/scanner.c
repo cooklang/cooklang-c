@@ -327,11 +327,12 @@ cooklang_parser_fetch_next_token(cooklang_parser_t *parser)
 
     /* Eat whitespaces and comments until we reach the next token. */
 
-    if (!cooklang_parser_scan_to_next_token(parser))
+    if (!cooklang_parser_scan_to_next_token(parser)) {
         return 0;
+    }
 
     /*
-     * Ensure that the buffer contains at least 4 characters.  4 is the length
+     * Ensure that the buffer contains at least 2 characters.  2 is the length
      * of the longest indicators ('--' and '[-').
      */
 
@@ -418,8 +419,6 @@ cooklang_parser_fetch_next_token(cooklang_parser_t *parser)
 
     if (IS_ALPHA(parser->buffer))
         return cooklang_parser_fetch_word(parser);
-
-// return .eof
 
 
     /*
@@ -664,19 +663,9 @@ cooklang_parser_scan_to_next_token(cooklang_parser_t *parser)
         if (parser->mark.column == 0 && IS_BOM(parser->buffer))
             SKIP(parser);
 
-        /*
-         * Eat whitespaces.
-         *
-         * Tabs are allowed:
-         *
-         *  - in the flow context;
-         *  - in the block context, but not at the beginning of the line or
-         *  after '-', '?', or ':' (complex value).
-         */
-
-        if (!CACHE(parser, 1)) return 0;
-
         /* Eat a comment until a line break. */
+
+        if (!CACHE(parser, 2)) return 0;
 
         if (CHECK_AT(parser->buffer, '-', 0) && CHECK_AT(parser->buffer, '-', 1)) {
             while (!IS_BREAKZ(parser->buffer)) {
@@ -685,6 +674,30 @@ cooklang_parser_scan_to_next_token(cooklang_parser_t *parser)
             }
         }
 
+        /* Eat a comment until a line break. */
+
+        if (!CACHE(parser, 2)) return 0;
+
+        if (CHECK_AT(parser->buffer, '[', 0) && CHECK_AT(parser->buffer, '-', 1)) {
+            while (!(CHECK_AT(parser->buffer, '-', 0) && CHECK_AT(parser->buffer, ']', 1))) {
+
+                if (IS_Z_AT(parser->buffer, 0))
+                    break;
+
+                if (IS_Z_AT(parser->buffer, 1)) {
+                    SKIP(parser);
+                    break;
+                }
+
+                SKIP(parser);
+                if (!CACHE(parser, 2)) return 0;
+            }
+            /* Eat final "-" and "]". */
+            if (CHECK(parser->buffer, '-'))
+                SKIP(parser);
+            if (CHECK(parser->buffer, ']'))
+                SKIP(parser);
+        }
 
         /* We have found a token. */
 

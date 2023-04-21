@@ -235,18 +235,18 @@ cooklang_string_read_handler(void *data, unsigned char *buffer, size_t size,
 {
     cooklang_parser_t *parser = (cooklang_parser_t *)data;
 
-    if (parser->input.string.current == parser->input.string.end) {
+    if (parser->input.string.pointer == parser->input.string.end) {
         *size_read = 0;
         return 1;
     }
 
     if (size > (size_t)(parser->input.string.end
-                - parser->input.string.current)) {
-        size = parser->input.string.end - parser->input.string.current;
+                - parser->input.string.pointer)) {
+        size = parser->input.string.end - parser->input.string.pointer;
     }
 
-    memcpy(buffer, parser->input.string.current, size);
-    parser->input.string.current += size;
+    memcpy(buffer, parser->input.string.pointer, size);
+    parser->input.string.pointer += size;
     *size_read = size;
     return 1;
 }
@@ -281,7 +281,7 @@ cooklang_parser_set_input_string(cooklang_parser_t *parser,
     parser->read_handler_data = parser;
 
     parser->input.string.start = input;
-    parser->input.string.current = input;
+    parser->input.string.pointer = input;
     parser->input.string.end = input+size;
 }
 

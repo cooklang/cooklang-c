@@ -500,7 +500,7 @@ typedef struct cooklang_parser_s {
             /** The string end pointer. */
             const unsigned char *end;
             /** The string current position. */
-            const unsigned char *current;
+            const unsigned char *pointer;
         } string;
 
         /** File input data. */
